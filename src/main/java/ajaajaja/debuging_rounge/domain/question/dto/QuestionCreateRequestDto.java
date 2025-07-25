@@ -1,6 +1,6 @@
 package ajaajaja.debuging_rounge.domain.question.dto;
 
-import ajaajaja.debuging_rounge.domain.question.domain.Question;
+import ajaajaja.debuging_rounge.domain.question.entity.Question;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

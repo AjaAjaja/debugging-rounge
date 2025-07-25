@@ -1,4 +1,4 @@
-package ajaajaja.debuging_rounge.domain.question.domain;
+package ajaajaja.debuging_rounge.domain.question.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

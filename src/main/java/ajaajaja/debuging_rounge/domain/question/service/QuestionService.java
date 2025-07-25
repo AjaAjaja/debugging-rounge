@@ -1,6 +1,6 @@
 package ajaajaja.debuging_rounge.domain.question.service;
 
-import ajaajaja.debuging_rounge.domain.question.domain.Question;
+import ajaajaja.debuging_rounge.domain.question.entity.Question;
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionCreateRequestDto;
 import ajaajaja.debuging_rounge.domain.question.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
