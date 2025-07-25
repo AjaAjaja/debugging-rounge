@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: debuging-rounge
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/debugging_rounge
+    username: root
+    password: 8520
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+cors:
+  allowed-origin: http://localhost:3000
