@@ -2,6 +2,7 @@ package ajaajaja.debuging_rounge.domain.question.controller;
 
 import ajaajaja.debuging_rounge.domain.question.service.QuestionService;
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionCreateRequestDto;
+import ajaajaja.debuging_rounge.global.util.UriHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/question")
+@RequestMapping("/questions")
 public class QuestionController {
 
     private final QuestionService questionService;
@@ -19,6 +20,9 @@ public class QuestionController {
     public ResponseEntity<Long> createQuestion(@RequestBody @Valid QuestionCreateRequestDto questionCreateRequestDto) {
         Long questionId = questionService.createQuestion(questionCreateRequestDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(questionId);
+        return ResponseEntity
+                .created(UriHelper.buildCreatedUri(questionId))
+                .body(questionId);
     }
+
 }
