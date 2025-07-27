@@ -28,4 +28,9 @@ public class Question extends BaseEntity {
     public static Question of(String title, String content) {
         return new Question(title, content);
     }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
