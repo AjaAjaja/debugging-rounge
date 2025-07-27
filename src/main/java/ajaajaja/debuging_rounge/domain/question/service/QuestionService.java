@@ -25,20 +25,19 @@ public class QuestionService {
     }
 
     public QuestionDetailResponseDto findQuestionById(Long id) {
-        Question question = getQuestionEntityById(id);
+        Question question = findQuestionByIdOrThrow(id);
 
         return QuestionDetailResponseDto.fromEntity(question);
     }
 
     @Transactional
     public void updateQuestion(Long id, QuestionUpdateRequestDto questionUpdateRequestDto) {
-        Question question = getQuestionEntityById(id);
+        Question question = findQuestionByIdOrThrow(id);
 
-        question.updateTitle(questionUpdateRequestDto.getTitle());
-        question.updateContent(questionUpdateRequestDto.getContent());
+        question.update(questionUpdateRequestDto.getTitle(), questionUpdateRequestDto.getContent());
     }
 
-    private Question getQuestionEntityById(Long id) {
+    private Question findQuestionByIdOrThrow(Long id) {
         return questionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("질문을 찾을 수 없습니다."));
     }

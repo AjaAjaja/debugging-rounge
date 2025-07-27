@@ -33,10 +33,10 @@ public class QuestionController {
 
     @PutMapping("/{id}")
     public  ResponseEntity<Void> updateQuestion(
-            @PathVariable("id") Long questionId,
+            @PathVariable("id") Long id,
             @RequestBody @Valid QuestionUpdateRequestDto questionUpdateRequestDto
     ){
-        questionService.updateQuestion(questionId, questionUpdateRequestDto);
+        questionService.updateQuestion(id, questionUpdateRequestDto);
 
         return ResponseEntity.noContent().build(); // 204 No Content 반환
     }
