@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 public class QuestionCreateRequestDto {
 
     @NotBlank(message = "제목은 필수 입력 항목입니다.")
