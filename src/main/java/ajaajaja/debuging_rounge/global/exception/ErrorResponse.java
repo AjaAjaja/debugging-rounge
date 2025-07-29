@@ -3,18 +3,27 @@ package ajaajaja.debuging_rounge.global.exception;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 public class ErrorResponse {
 
     private final int status;
 
-    private final String errorMessage;
-
     private final String code;
 
-    public static ErrorResponse of(ErrorCode errorCode, String errorMessage) {
-        return new ErrorResponse(errorCode.getHttpStatus().value(), errorMessage, errorCode.name());
+    private final List<String> errorMessages;
+
+    private final LocalDateTime timestamp;
+
+    public static ErrorResponse of(ErrorCode errorCode, List<String> errorMessages) {
+        return new ErrorResponse(
+                errorCode.getHttpStatus().value(),
+                errorCode.name(),
+                errorMessages,
+                LocalDateTime.now());
     }
 
 }

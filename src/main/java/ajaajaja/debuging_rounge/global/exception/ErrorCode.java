@@ -13,7 +13,7 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR("error.internal_server", HttpStatus.INTERNAL_SERVER_ERROR),
     QUESTION_NOT_FOUND("error.question.not_found", HttpStatus.NOT_FOUND);
 
-
     private final String messageKey;
+
     private final HttpStatus httpStatus;
 }
