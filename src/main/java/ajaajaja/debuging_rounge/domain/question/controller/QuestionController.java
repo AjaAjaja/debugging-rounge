@@ -1,12 +1,12 @@
 package ajaajaja.debuging_rounge.domain.question.controller;
 
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionDetailResponseDto;
+import ajaajaja.debuging_rounge.domain.question.dto.QuestionUpdateRequestDto;
 import ajaajaja.debuging_rounge.domain.question.service.QuestionService;
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionCreateRequestDto;
 import ajaajaja.debuging_rounge.global.util.UriHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,5 +29,15 @@ public class QuestionController {
     @GetMapping("/{id}")
     public ResponseEntity<QuestionDetailResponseDto> findQuestion(@PathVariable("id") Long id) {
         return ResponseEntity.ok(questionService.findQuestionById(id));
+    }
+
+    @PutMapping("/{id}")
+    public  ResponseEntity<Void> updateQuestion(
+            @PathVariable("id") Long id,
+            @RequestBody @Valid QuestionUpdateRequestDto questionUpdateRequestDto
+    ){
+        questionService.updateQuestion(id, questionUpdateRequestDto);
+
+        return ResponseEntity.noContent().build(); // 204 No Content 반환
     }
 }
