@@ -32,12 +32,19 @@ public class QuestionController {
     }
 
     @PutMapping("/{id}")
-    public  ResponseEntity<Void> updateQuestion(
+    public ResponseEntity<Void> updateQuestion(
             @PathVariable("id") Long id,
             @RequestBody @Valid QuestionUpdateRequestDto questionUpdateRequestDto
     ){
         questionService.updateQuestion(id, questionUpdateRequestDto);
 
         return ResponseEntity.noContent().build(); // 204 No Content 반환
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteQuestion(@PathVariable("id") Long id){
+        questionService.deleteQuestion(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

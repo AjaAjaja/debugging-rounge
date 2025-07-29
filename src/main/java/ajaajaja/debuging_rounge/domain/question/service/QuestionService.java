@@ -37,6 +37,12 @@ public class QuestionService {
         question.update(questionUpdateRequestDto.getTitle(), questionUpdateRequestDto.getContent());
     }
 
+    public void deleteQuestion(Long id){
+        Question question = findQuestionByIdOrThrow(id);
+
+        questionRepository.delete(question);
+    }
+
     private Question findQuestionByIdOrThrow(Long id) {
         return questionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("질문을 찾을 수 없습니다."));
