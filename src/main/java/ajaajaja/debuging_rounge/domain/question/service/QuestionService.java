@@ -5,7 +5,7 @@ import ajaajaja.debuging_rounge.domain.question.dto.QuestionUpdateRequestDto;
 import ajaajaja.debuging_rounge.domain.question.entity.Question;
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionCreateRequestDto;
 import ajaajaja.debuging_rounge.domain.question.repository.QuestionRepository;
-import jakarta.persistence.EntityNotFoundException;
+import ajaajaja.debuging_rounge.domain.question.exception.QuestionNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,6 +39,6 @@ public class QuestionService {
 
     private Question findQuestionByIdOrThrow(Long id) {
         return questionRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("질문을 찾을 수 없습니다."));
+                .orElseThrow(QuestionNotFoundException::new);
     }
 }
