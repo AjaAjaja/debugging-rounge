@@ -6,11 +6,11 @@ import lombok.Getter;
 
 @Getter
 public class QuestionUpdateRequestDto {
-    @NotBlank(message = "제목은 필수 입력 항목입니다.")
-    @Size(max = 50, message = "제목은 최대 50자까지 가능합니다.")
+    @NotBlank(message = "error.question.title.required")
+    @Size(max = 50, message = "error.question.title.size")
     private String title;
 
-    @NotBlank(message = "내용은 필수 입력 항목입니다.")
-    @Size(max = 10000, message = "내용은 최대 10,000자까지 작성할 수 있습니다.")
+    @NotBlank(message = "error.question.content.required")
+    @Size(max = 10000, message = "error.question.content.size")
     private String content;
 }
