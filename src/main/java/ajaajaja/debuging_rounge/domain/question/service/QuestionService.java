@@ -4,6 +4,7 @@ import ajaajaja.debuging_rounge.domain.question.dto.QuestionDetailResponseDto;
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionUpdateRequestDto;
 import ajaajaja.debuging_rounge.domain.question.entity.Question;
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionCreateRequestDto;
+import ajaajaja.debuging_rounge.domain.question.exception.QuestionNotFoundForDeleteException;
 import ajaajaja.debuging_rounge.domain.question.repository.QuestionRepository;
 import ajaajaja.debuging_rounge.domain.question.exception.QuestionNotFoundException;
 import jakarta.transaction.Transactional;
@@ -44,7 +45,7 @@ public class QuestionService {
 
     private void deleteQuestionOrThrow(Long id) {
         Question question = questionRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("질문을 찾을 수 없어 삭제할 수 없습니다."));
+                .orElseThrow(QuestionNotFoundForDeleteException::new);
 
         questionRepository.delete(question);
     }
