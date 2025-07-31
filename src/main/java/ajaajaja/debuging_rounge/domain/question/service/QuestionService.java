@@ -37,6 +37,18 @@ public class QuestionService {
         question.update(questionUpdateRequestDto.getTitle(), questionUpdateRequestDto.getContent());
     }
 
+    @Transactional
+    public void deleteQuestion(Long id) {
+        deleteQuestionOrThrow(id);
+    }
+
+    private void deleteQuestionOrThrow(Long id) {
+        Question question = questionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("질문을 찾을 수 없어 삭제할 수 없습니다."));
+
+        questionRepository.delete(question);
+    }
+
     private Question findQuestionByIdOrThrow(Long id) {
         return questionRepository.findById(id)
                 .orElseThrow(QuestionNotFoundException::new);
