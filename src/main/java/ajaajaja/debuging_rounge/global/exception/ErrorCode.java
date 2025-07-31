@@ -11,7 +11,8 @@ public enum ErrorCode {
     INVALID_REQUEST("error.invalid_request",HttpStatus.BAD_REQUEST),
     NOT_FOUND("error.not_found", HttpStatus.NOT_FOUND),
     INTERNAL_SERVER_ERROR("error.internal_server", HttpStatus.INTERNAL_SERVER_ERROR),
-    QUESTION_NOT_FOUND("error.question.not_found", HttpStatus.NOT_FOUND);
+    QUESTION_NOT_FOUND("error.question.not_found", HttpStatus.NOT_FOUND),
+    QUESTION_NOT_FOUND_FOR_DELETE("error.question.not_found_for_delete", HttpStatus.NOT_FOUND);
 
     private final String messageKey;
 
