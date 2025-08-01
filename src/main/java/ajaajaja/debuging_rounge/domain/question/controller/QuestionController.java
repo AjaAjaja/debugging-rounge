@@ -1,6 +1,7 @@
 package ajaajaja.debuging_rounge.domain.question.controller;
 
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionDetailResponseDto;
+import ajaajaja.debuging_rounge.domain.question.dto.QuestionListResponseDto;
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionUpdateRequestDto;
 import ajaajaja.debuging_rounge.domain.question.service.QuestionService;
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionCreateRequestDto;
@@ -9,6 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +27,12 @@ public class QuestionController {
         return ResponseEntity
                 .created(UriHelper.buildCreatedUri(questionId))
                 .body(questionId);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<QuestionListResponseDto>> findAllQuestions() {
+        List<QuestionListResponseDto> questions = questionService.findAllQuestions();
+        return ResponseEntity.ok(questions);
     }
 
     @GetMapping("/{id}")

@@ -1,6 +1,7 @@
 package ajaajaja.debuging_rounge.domain.question.service;
 
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionDetailResponseDto;
+import ajaajaja.debuging_rounge.domain.question.dto.QuestionListResponseDto;
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionUpdateRequestDto;
 import ajaajaja.debuging_rounge.domain.question.entity.Question;
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionCreateRequestDto;
@@ -10,6 +11,8 @@ import ajaajaja.debuging_rounge.domain.question.exception.QuestionNotFoundExcept
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,10 @@ public class QuestionService {
         Question savedQuestion = questionRepository.save(question);
 
         return savedQuestion.getId();
+    }
+
+    public List<QuestionListResponseDto> findAllQuestions() {
+        return questionRepository.findAllWithPreview();
     }
 
     public QuestionDetailResponseDto findQuestionById(Long id) {
