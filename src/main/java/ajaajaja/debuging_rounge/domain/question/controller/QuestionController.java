@@ -30,8 +30,8 @@ public class QuestionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<QuestionListResponseDto>> findAllQuestions() {
-        List<QuestionListResponseDto> questions = questionService.findAllQuestions();
+    public ResponseEntity<List<QuestionListResponseDto>> findQuestionsWithPreview() {
+        List<QuestionListResponseDto> questions = questionService.findQuestionsWithPreview();
         return ResponseEntity.ok(questions);
     }
 

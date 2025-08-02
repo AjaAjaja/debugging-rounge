@@ -8,9 +8,9 @@ import ajaajaja.debuging_rounge.domain.question.dto.QuestionCreateRequestDto;
 import ajaajaja.debuging_rounge.domain.question.exception.QuestionNotFoundForDeleteException;
 import ajaajaja.debuging_rounge.domain.question.repository.QuestionRepository;
 import ajaajaja.debuging_rounge.domain.question.exception.QuestionNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,8 +28,8 @@ public class QuestionService {
         return savedQuestion.getId();
     }
 
-    public List<QuestionListResponseDto> findAllQuestions() {
-        return questionRepository.findAllWithPreview();
+    public List<QuestionListResponseDto> findQuestionsWithPreview() {
+        return questionRepository.findQuestionsWithPreview();
     }
 
     public QuestionDetailResponseDto findQuestionById(Long id) {

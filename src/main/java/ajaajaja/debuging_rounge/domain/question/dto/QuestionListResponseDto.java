@@ -19,8 +19,8 @@ public class QuestionListResponseDto {
                 .replaceAll("\\s{2,}", " ")     // 연속 공백 하나로
                 .trim(); // 앞뒤 공백 제거
 
-        return cleaned.length() > 100
-                ? cleaned.substring(0, 100) + "..."
+        return cleaned.length() > 50
+                ? cleaned.substring(0, 50) + "..."
                 : cleaned;
     }
 }

@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-    @Query("SELECT new ajaajaja.debuging_rounge.domain.question.dto.QuestionListResponseDto(q.title, SUBSTRING(q.content, 1, 200)) FROM Question q")
-    List<QuestionListResponseDto> findAllWithPreview();
+    @Query("SELECT new ajaajaja.debuging_rounge.domain.question.dto.QuestionListResponseDto(q.title, SUBSTRING(q.content, 1, 100)) FROM Question q")
+    List<QuestionListResponseDto> findQuestionsWithPreview();
 }
