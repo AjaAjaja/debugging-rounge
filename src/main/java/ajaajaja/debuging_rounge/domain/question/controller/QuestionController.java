@@ -1,9 +1,9 @@
 package ajaajaja.debuging_rounge.domain.question.controller;
 
+import ajaajaja.debuging_rounge.domain.question.dto.QuestionCreateRequestDto;
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionDetailResponseDto;
 import ajaajaja.debuging_rounge.domain.question.dto.QuestionUpdateRequestDto;
 import ajaajaja.debuging_rounge.domain.question.service.QuestionService;
-import ajaajaja.debuging_rounge.domain.question.dto.QuestionCreateRequestDto;
 import ajaajaja.debuging_rounge.global.util.UriHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

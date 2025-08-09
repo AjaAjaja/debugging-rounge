@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
             return error.getField() + ": " + message;
         }).collect(Collectors.toList());
 
-        ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_REQUEST, errorMessages);
+        ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.REQUEST_INVALID, errorMessages);
 
         return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
@@ -42,4 +42,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ErrorResponse> handleException(Exception e, Locale locale) {
+
+        ErrorCode errorCode = ErrorCode.SERVER_INTERNAL_ERROR;
+        String message = messageSource.getMessage(errorCode.getMessageKey(), null, locale);
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode, List.of(message));
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
 }

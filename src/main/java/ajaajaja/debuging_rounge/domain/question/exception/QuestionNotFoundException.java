@@ -1,7 +1,7 @@
 package ajaajaja.debuging_rounge.domain.question.exception;
 
-import ajaajaja.debuging_rounge.global.exception.ErrorCode;
 import ajaajaja.debuging_rounge.global.exception.BusinessException;
+import ajaajaja.debuging_rounge.global.exception.ErrorCode;
 
 public class QuestionNotFoundException extends BusinessException {
 

@@ -4,7 +4,6 @@ import ajaajaja.debuging_rounge.domain.question.entity.Question;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class QuestionCreateRequestDto {
