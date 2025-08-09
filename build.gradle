@@ -23,6 +23,7 @@ repositories {
     mavenCentral()
 }
 
+// Spring Cloud 2025.0.x(Northfields) ← Spring Boot 3.5.x와 매칭
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:2024.0.1"
@@ -30,30 +31,30 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-
-    // --- Spring Boot Web 관련 ---
-    implementation 'org.springframework.boot:spring-boot-starter-web'           // 웹 개발에 필요한 기본 의존성 (스프링 MVC, Tomcat 등)
-    implementation 'org.springframework.boot:spring-boot-starter-validation'    // Bean Validation (javax.validation) 지원
-    implementation 'org.springframework.boot:spring-boot-starter-security'      // Spring Security (인증/인가 등 보안 기능)
-    implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
-
+    // Security / OAuth2 / Resource Server
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    // Nimbus: 직접 서명/파싱 구현 시 사용 (Boot 관리 버전 사용)
     implementation 'com.nimbusds:nimbus-jose-jwt'
 
-    // --- 데이터베이스 & JPA 관련 ---
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'      // JPA 및 Hibernate를 통한 DB 연동
-    runtimeOnly 'com.mysql:mysql-connector-j'                                   // MySQL JDBC 드라이버 (실행 시 필요)
+    // DB
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
-    // --- Lombok (코드 자동 생성) ---
-    compileOnly 'org.projectlombok:lombok'                                      // 컴파일 시에만 필요한 Lombok (소스 코드 어노테이션)
-    annotationProcessor 'org.projectlombok:lombok'                              // 컴파일 타임에 Lombok 어노테이션 처리
+    // Vault
+    implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
 
-    // --- 테스트 관련 ---
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // --- Test ---
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    // JUnit, Mockito, Spring Test 등 테스트 프레임워크 모음
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'                // JUnit 5 런처 (테스트 실행 시에만 필요)
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 
