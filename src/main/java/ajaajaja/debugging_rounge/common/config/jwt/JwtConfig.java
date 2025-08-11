@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
 
 @Configuration
 public class JwtConfig {
@@ -46,7 +47,8 @@ public class JwtConfig {
     }
 
     private NimbusJwtDecoder buildDecoder() {
-        SecretKey key = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
+        byte[] secretKeyByte = Base64.getDecoder().decode(secretKey);
+        SecretKey key = new SecretKeySpec(secretKeyByte, "HmacSHA256");
         return NimbusJwtDecoder.withSecretKey(key).build();
     }
 }

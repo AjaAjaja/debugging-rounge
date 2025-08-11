@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -54,7 +55,8 @@ public class JwtProvider {
                     .build();
 
             SignedJWT signedJWT = new SignedJWT(header, claims);
-            signedJWT.sign(new MACSigner(secretKey.getBytes()));
+            byte[] secretKeyByte = Base64.getDecoder().decode(secretKey);
+            signedJWT.sign(new MACSigner(secretKeyByte));
 
             return signedJWT.serialize();
         } catch (JOSEException e) {
@@ -64,9 +66,10 @@ public class JwtProvider {
 
     public Date extractExpiration(String token) {
         try {
+            byte[] secretKeyByte = getSecretKeyByte(secretKey);
             SignedJWT signedJWT = SignedJWT.parse(token);
 
-            MACVerifier verifier = new MACVerifier(secretKey.getBytes());
+            MACVerifier verifier = new MACVerifier(secretKeyByte);
             if (!signedJWT.verify(verifier)) {
                 throw new JwtValidationException();
             }
@@ -78,6 +81,10 @@ public class JwtProvider {
             throw new JwtValidationException();
         }
 
+    }
+
+    private byte[] getSecretKeyByte(String secretKey) {
+        return Base64.getDecoder().decode(secretKey);
     }
 
 }
