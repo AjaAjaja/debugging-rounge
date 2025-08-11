@@ -2,7 +2,7 @@ package ajaajaja.debugging_rounge.feature.auth.api;
 
 import ajaajaja.debugging_rounge.feature.auth.api.dto.AccessTokenResponse;
 import ajaajaja.debugging_rounge.feature.auth.api.dto.TokenDto;
-import ajaajaja.debugging_rounge.feature.auth.api.application.TokenService;
+import ajaajaja.debugging_rounge.feature.auth.application.TokenService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +27,7 @@ public class AuthController {
         Long userId = Long.valueOf(jwt.getSubject());
         String refreshToken = jwt.getTokenValue();
 
-        TokenDto tokenDto = tokenService.reIssueTokens(userId, refreshToken);
+        TokenDto tokenDto = tokenService.reissueTokens(userId, refreshToken);
         AccessTokenResponse tokenResponse = AccessTokenResponse.of(tokenDto.getAccessToken());
 
         if (tokenDto.getRefreshToken() != null) {

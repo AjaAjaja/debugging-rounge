@@ -1,4 +1,4 @@
-package ajaajaja.debugging_rounge.feature.auth.api.application;
+package ajaajaja.debugging_rounge.feature.auth.application;
 
 import ajaajaja.debugging_rounge.feature.user.domain.User;
 import ajaajaja.debugging_rounge.feature.user.application.UserService;

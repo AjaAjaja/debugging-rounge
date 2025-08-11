@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth;
 
-import ajaajaja.debugging_rounge.feature.auth.api.application.TokenService;
+import ajaajaja.debugging_rounge.feature.auth.application.TokenService;
 import ajaajaja.debugging_rounge.feature.auth.api.dto.AccessTokenResponse;
 import ajaajaja.debugging_rounge.feature.auth.api.dto.TokenDto;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BlackRefreshToken {
+public class BlacklistedRefreshToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +21,12 @@ public class BlackRefreshToken {
 
     private Long userId;
 
-    public BlackRefreshToken(String refreshToken, Long userId) {
+    public BlacklistedRefreshToken(String refreshToken, Long userId) {
         this.refreshToken = refreshToken;
         this.userId = userId;
     }
 
-    public static BlackRefreshToken of(String refreshToken, Long userId) {
-        return new BlackRefreshToken(refreshToken, userId);
+    public static BlacklistedRefreshToken of(String refreshToken, Long userId) {
+        return new BlacklistedRefreshToken(refreshToken, userId);
     }
 }
