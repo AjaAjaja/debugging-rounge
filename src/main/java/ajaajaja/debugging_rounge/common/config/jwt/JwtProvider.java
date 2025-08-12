@@ -1,6 +1,5 @@
-package ajaajaja.debugging_rounge.feature.auth.infrastructure.security;
+package ajaajaja.debugging_rounge.common.config.jwt;
 
-import ajaajaja.debugging_rounge.common.config.jwt.JwtProperties;
 import ajaajaja.debugging_rounge.feature.auth.api.exception.JwtCreationException;
 import ajaajaja.debugging_rounge.feature.auth.api.exception.JwtParsingException;
 import ajaajaja.debugging_rounge.feature.auth.api.exception.JwtValidationException;
@@ -13,7 +12,6 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,13 +22,17 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
-@RequiredArgsConstructor
 public class JwtProvider {
 
     private final JwtProperties jwtProperties;
+    private final byte[] hmacKey;
 
-    @Value("${spring.security.oauth2.resourceserver.jwt.secret-key}")
-    private String secretKey;
+    public JwtProvider(
+            JwtProperties jwtProperties,
+            @Value("${spring.security.oauth2.resourceserver.jwt.secret-key}") String secretKey) {
+        this.jwtProperties = jwtProperties;
+        hmacKey = Base64.getDecoder().decode(secretKey);
+    }
 
     public String createToken(String subject, TokenType tokenType) {
 
@@ -55,8 +57,7 @@ public class JwtProvider {
                     .build();
 
             SignedJWT signedJWT = new SignedJWT(header, claims);
-            byte[] secretKeyByte = Base64.getDecoder().decode(secretKey);
-            signedJWT.sign(new MACSigner(secretKeyByte));
+            signedJWT.sign(new MACSigner(hmacKey));
 
             return signedJWT.serialize();
         } catch (JOSEException e) {
@@ -66,10 +67,9 @@ public class JwtProvider {
 
     public Date extractExpiration(String token) {
         try {
-            byte[] secretKeyByte = getSecretKeyByte(secretKey);
             SignedJWT signedJWT = SignedJWT.parse(token);
 
-            MACVerifier verifier = new MACVerifier(secretKeyByte);
+            MACVerifier verifier = new MACVerifier(hmacKey);
             if (!signedJWT.verify(verifier)) {
                 throw new JwtValidationException();
             }
@@ -81,10 +81,6 @@ public class JwtProvider {
             throw new JwtValidationException();
         }
 
-    }
-
-    private byte[] getSecretKeyByte(String secretKey) {
-        return Base64.getDecoder().decode(secretKey);
     }
 
 }

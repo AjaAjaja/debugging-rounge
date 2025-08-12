@@ -7,7 +7,7 @@ import ajaajaja.debugging_rounge.feature.auth.domain.RefreshToken;
 import ajaajaja.debugging_rounge.feature.auth.domain.TokenType;
 import ajaajaja.debugging_rounge.feature.auth.domain.repository.BlacklistedRefreshTokenRepository;
 import ajaajaja.debugging_rounge.feature.auth.domain.repository.RefreshTokenRepository;
-import ajaajaja.debugging_rounge.feature.auth.infrastructure.security.JwtProvider;
+import ajaajaja.debugging_rounge.common.config.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
