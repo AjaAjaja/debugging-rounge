@@ -2,6 +2,7 @@ package ajaajaja.debugging_rounge.common.exception;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +37,18 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e, Locale locale) {
 
         ErrorCode errorCode = e.getErrorCode();
+        String message = messageSource.getMessage(errorCode.getMessageKey(), null, locale);
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode, List.of(message));
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    protected ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(
+            DataIntegrityViolationException e,
+            Locale locale) {
+
+        ErrorCode errorCode = ErrorCode.REQUEST_INVALID;
         String message = messageSource.getMessage(errorCode.getMessageKey(), null, locale);
         ErrorResponse errorResponse = ErrorResponse.of(errorCode, List.of(message));
 

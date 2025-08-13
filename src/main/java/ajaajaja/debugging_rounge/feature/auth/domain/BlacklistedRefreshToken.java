@@ -1,32 +1,47 @@
 package ajaajaja.debugging_rounge.feature.auth.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        name = "blacklisted_refresh_token",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_blacklisted_refresh_token_user",
+                        columnNames = {"user_id"}     // 사용자당 1개 제한
+                ),
+                @UniqueConstraint(
+                        name = "uk_blacklisted_refresh_token_hash",
+                        columnNames = {"token_hash"}
+                )
+        }
+)
 public class BlacklistedRefreshToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String refreshToken;
+    @JdbcTypeCode(SqlTypes.BINARY) // Hibernate 6+
+    @Column(nullable = false, columnDefinition = "BINARY(32)")
+    private byte[] tokenHash;
 
+    @Column(nullable = false)
     private Long userId;
 
-    public BlacklistedRefreshToken(String refreshToken, Long userId) {
-        this.refreshToken = refreshToken;
+    public BlacklistedRefreshToken(byte[] tokenHash, Long userId) {
+        this.tokenHash = tokenHash;
         this.userId = userId;
     }
 
-    public static BlacklistedRefreshToken of(String refreshToken, Long userId) {
-        return new BlacklistedRefreshToken(refreshToken, userId);
+    public static BlacklistedRefreshToken of(byte[] tokenHash, Long userId) {
+        return new BlacklistedRefreshToken(tokenHash, userId);
     }
 }

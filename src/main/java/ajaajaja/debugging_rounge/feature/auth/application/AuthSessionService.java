@@ -19,19 +19,19 @@ public class AuthSessionService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final BlacklistedRefreshTokenRepository blacklistedRefreshTokenRepository;
 
-    public void rotateToken(Long userId, String oldRefreshToken, String newRefreshToken) {
-        int changed = refreshTokenRepository.rotate(userId, oldRefreshToken, newRefreshToken);
+    public void rotateToken(byte[] oldTokenHash, byte[] newTokenHash, Long userId) {
+        int changed = refreshTokenRepository.rotate(userId, oldTokenHash, newTokenHash);
         if (changed != 1) {
             throw new RefreshTokenInvalidException();
         }
-        blacklistedRefreshTokenRepository.save(BlacklistedRefreshToken.of(oldRefreshToken, userId));
+        blacklistedRefreshTokenRepository.save(BlacklistedRefreshToken.of(oldTokenHash, userId));
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void killAllSessions(Long userId) {
         List<RefreshToken> refreshTokens = refreshTokenRepository.findAllByUserId(userId);
         List<BlacklistedRefreshToken> blacklisted = refreshTokens.stream()
-                .map(rt -> BlacklistedRefreshToken.of(rt.getRefreshToken(), rt.getUserId())).toList();
+                .map(rt -> BlacklistedRefreshToken.of(rt.getTokenHash(), rt.getUserId())).toList();
         blacklistedRefreshTokenRepository.saveAll(blacklisted);
         refreshTokenRepository.deleteAllByUserId(userId);
     }

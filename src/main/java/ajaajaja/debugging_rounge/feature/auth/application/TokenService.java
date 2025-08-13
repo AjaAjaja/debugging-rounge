@@ -1,6 +1,7 @@
 package ajaajaja.debugging_rounge.feature.auth.application;
 
 import ajaajaja.debugging_rounge.common.config.jwt.JwtProperties;
+import ajaajaja.debugging_rounge.common.config.jwt.TokenHasher;
 import ajaajaja.debugging_rounge.feature.auth.api.dto.TokenDto;
 import ajaajaja.debugging_rounge.feature.auth.api.exception.RefreshTokenInvalidException;
 import ajaajaja.debugging_rounge.feature.auth.domain.RefreshToken;
@@ -21,6 +22,7 @@ public class TokenService {
 
     private final JwtProvider jwtProvider;
     private final JwtProperties jwtProperties;
+    private final TokenHasher tokenHasher;
     private final AuthSessionService authSessionService;
     private final RefreshTokenRepository refreshTokenRepository;
     private final BlacklistedRefreshTokenRepository blacklistedRefreshTokenRepository;
@@ -29,13 +31,14 @@ public class TokenService {
     public TokenDto issueTokens(Long userId) {
 
         String newRefreshToken = createRefreshToken(userId);
+        byte[] newRefreshTokenHash = tokenHasher.hmacSha256(newRefreshToken);
 
         Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByUserId(userId);
         if (optionalRefreshToken.isPresent()) {
             RefreshToken oldRefreshToken = optionalRefreshToken.get();
-            authSessionService.rotateToken(userId, oldRefreshToken.getRefreshToken(), newRefreshToken);
+            authSessionService.rotateToken(oldRefreshToken.getTokenHash(), newRefreshTokenHash, userId);
         } else {
-            refreshTokenRepository.save(RefreshToken.of(newRefreshToken, userId));
+            refreshTokenRepository.save(RefreshToken.of(newRefreshTokenHash, userId));
         }
 
         String newAccessToken = createAccessToken(userId);
@@ -45,20 +48,22 @@ public class TokenService {
     @Transactional
     public TokenDto reissueTokens(Long userId, String refreshToken) {
 
-        if (blacklistedRefreshTokenRepository.existsByRefreshToken(refreshToken)) {
+        byte[] oldRefreshTokenHash = tokenHasher.hmacSha256(refreshToken);
+        if (blacklistedRefreshTokenRepository.existsByTokenHash(oldRefreshTokenHash)) {
             authSessionService.killAllSessions(userId);
             throw new RefreshTokenInvalidException();
         }
 
-        Boolean owned = refreshTokenRepository.existsByUserIdAndRefreshToken(userId, refreshToken);
+        Boolean owned = refreshTokenRepository.existsByTokenHashAndUserId(oldRefreshTokenHash, userId);
         if (!owned) {
             authSessionService.killAllSessions(userId);
             throw new RefreshTokenInvalidException();
         }
 
         String newRefreshToken = createRefreshToken(userId);
+        byte[] newRefreshTokenHash = tokenHasher.hmacSha256(newRefreshToken);
 
-        authSessionService.rotateToken(userId, refreshToken, newRefreshToken);
+        authSessionService.rotateToken(oldRefreshTokenHash, newRefreshTokenHash, userId);
 
         String newAccessToken = createAccessToken(userId);
         return TokenDto.of(newAccessToken, newRefreshToken);
