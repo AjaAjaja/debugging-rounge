@@ -33,6 +33,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             Locale locale) throws IOException {
         response.setStatus(ErrorCode.AUTHENTICATION_FAILED.getHttpStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8");
 
         String message = messageSource.getMessage(ErrorCode.AUTHENTICATION_FAILED.getMessageKey(), null, locale);
         ErrorResponse error = ErrorResponse.of(ErrorCode.AUTHENTICATION_FAILED, List.of(message));

@@ -3,7 +3,6 @@ package ajaajaja.debugging_rounge.feature.auth.infrastructure.security;
 import ajaajaja.debugging_rounge.common.exception.ErrorCode;
 import ajaajaja.debugging_rounge.common.exception.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     private final ObjectMapper objectMapper;
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         sendError(response, request.getLocale());
     }
 
@@ -34,6 +33,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
             Locale locale) throws IOException {
         response.setStatus(ErrorCode.AUTHORIZATION_FAILED.getHttpStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8");
 
         String message = messageSource.getMessage(ErrorCode.AUTHORIZATION_FAILED.getMessageKey(), null, locale);
         ErrorResponse error = ErrorResponse.of(ErrorCode.AUTHORIZATION_FAILED, List.of(message));
