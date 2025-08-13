@@ -21,6 +21,9 @@ import org.hibernate.type.SqlTypes;
                         name = "uk_refresh_token_hash",
                         columnNames = {"token_hash"}
                 )
+        },
+        indexes = {
+                @Index(name = "idx_refresh_token_hash_user", columnList = "token_hash, user_id")
         }
 )
 public class RefreshToken {
@@ -29,7 +32,7 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JdbcTypeCode(SqlTypes.BINARY) // Hibernate 6+
+    @JdbcTypeCode(SqlTypes.BINARY)
     @Column(nullable = false, columnDefinition = "BINARY(32)")
     private byte[] tokenHash;
 

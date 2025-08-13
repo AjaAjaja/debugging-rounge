@@ -14,10 +14,6 @@ import org.hibernate.type.SqlTypes;
         name = "blacklisted_refresh_token",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "uk_blacklisted_refresh_token_user",
-                        columnNames = {"user_id"}     // 사용자당 1개 제한
-                ),
-                @UniqueConstraint(
                         name = "uk_blacklisted_refresh_token_hash",
                         columnNames = {"token_hash"}
                 )
