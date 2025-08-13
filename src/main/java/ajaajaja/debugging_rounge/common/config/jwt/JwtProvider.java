@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class JwtProvider {
@@ -50,6 +51,7 @@ public class JwtProvider {
                     .issueTime(issueTime)
                     .expirationTime(expirationTime)
                     .claim("type", String.valueOf(tokenType))
+                    .jwtID(UUID.randomUUID().toString())
                     .build();
 
             JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.HS256)
