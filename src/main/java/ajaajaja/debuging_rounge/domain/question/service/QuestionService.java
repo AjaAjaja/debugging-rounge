@@ -9,10 +9,10 @@ import ajaajaja.debuging_rounge.domain.question.exception.QuestionNotFoundForDel
 import ajaajaja.debuging_rounge.domain.question.repository.QuestionRepository;
 import ajaajaja.debuging_rounge.domain.question.exception.QuestionNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +28,8 @@ public class QuestionService {
         return savedQuestion.getId();
     }
 
-    public List<QuestionListResponseDto> findQuestionsWithPreview() {
-        return questionRepository.findQuestionsWithPreview();
+    public Page<QuestionListResponseDto> findQuestionsWithPreview(Pageable pageable) {
+        return questionRepository.findQuestionsWithPreview(pageable);
     }
 
     public QuestionDetailResponseDto findQuestionById(Long id) {

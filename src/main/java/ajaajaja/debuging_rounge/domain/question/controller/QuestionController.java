@@ -8,10 +8,10 @@ import ajaajaja.debuging_rounge.domain.question.dto.QuestionCreateRequestDto;
 import ajaajaja.debuging_rounge.global.util.UriHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,8 +30,8 @@ public class QuestionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<QuestionListResponseDto>> findQuestionsWithPreview() {
-        List<QuestionListResponseDto> questions = questionService.findQuestionsWithPreview();
+    public ResponseEntity<Page<QuestionListResponseDto>> findQuestionsWithPreview(Pageable pageable) {
+        Page<QuestionListResponseDto> questions = questionService.findQuestionsWithPreview(pageable);
         return ResponseEntity.ok(questions);
     }
 
