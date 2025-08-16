@@ -1,47 +1,63 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.5.3'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.5.3'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'ajaajaja'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
+}
+
+// Spring Cloud 2025.0.x(Northfields) ← Spring Boot 3.5.x와 매칭
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2024.0.1"
+    }
 }
 
 dependencies {
-	// --- Spring Boot Web 관련 ---
-	implementation 'org.springframework.boot:spring-boot-starter-web'           // 웹 개발에 필요한 기본 의존성 (스프링 MVC, Tomcat 등)
-	implementation 'org.springframework.boot:spring-boot-starter-validation'    // Bean Validation (javax.validation) 지원
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	// --- 데이터베이스 & JPA 관련 ---
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'      // JPA 및 Hibernate를 통한 DB 연동
-	runtimeOnly 'com.mysql:mysql-connector-j'                                   // MySQL JDBC 드라이버 (실행 시 필요)
+    // Security / OAuth2 / Resource Server
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    // Nimbus: 직접 서명/파싱 구현 시 사용 (Boot 관리 버전 사용)
+    implementation 'com.nimbusds:nimbus-jose-jwt'
 
-	// --- Lombok (코드 자동 생성) ---
-	compileOnly 'org.projectlombok:lombok'                                      // 컴파일 시에만 필요한 Lombok (소스 코드 어노테이션)
-	annotationProcessor 'org.projectlombok:lombok'                              // 컴파일 타임에 Lombok 어노테이션 처리
+    // DB
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
-	// --- 테스트 관련 ---
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'     // JUnit, Mockito, Spring Test 등 테스트 프레임워크 모음
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'                // JUnit 5 런처 (테스트 실행 시에만 필요)
+    // Vault
+    implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // --- Test ---
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

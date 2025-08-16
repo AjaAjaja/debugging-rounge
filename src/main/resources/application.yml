@@ -1,20 +1,60 @@
 spring:
   application:
-    name: debuging-rounge
+    name: debugging-rounge
+
+  config:
+    import: "vault://"
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    vault:
+      uri: ${VAULT_ADDR:http://localhost:8200}
+      authentication: TOKEN
+      token: ${VAULT_TOKEN}
+      kv:
+        enabled: true
+        backend: secret
+        default-context: debugging-rounge
+
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/debugging_rounge
-    username: root
-    password: 8520
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
-cors:
-  allowed-origin: http://localhost:3000
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            scope:
+              - email
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: email
+
+jwt:
+  token:
+    access-expiration: 30m
+    refresh-expiration: 14d
+    renew-threshold: 24h
+
+  cookie:
+    name: refreshToken
+    path: /auth
+    max-age: 14d
+    same-site: None
+    secure: true
+    http-only: true
+
+frontend:
+  base-url: http://localhost:3000
