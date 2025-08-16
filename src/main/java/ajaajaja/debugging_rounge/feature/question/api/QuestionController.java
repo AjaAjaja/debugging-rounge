@@ -1,12 +1,15 @@
 package ajaajaja.debugging_rounge.feature.question.api;
 
+import ajaajaja.debugging_rounge.common.util.UriHelper;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionCreateRequestDto;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionDetailResponseDto;
+import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionListResponseDto;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionUpdateRequestDto;
 import ajaajaja.debugging_rounge.feature.question.application.QuestionService;
-import ajaajaja.debugging_rounge.common.util.UriHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +27,12 @@ public class QuestionController {
         return ResponseEntity
                 .created(UriHelper.buildCreatedUri(questionId))
                 .body(questionId);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<QuestionListResponseDto>> findQuestionsWithPreview(Pageable pageable) {
+        Page<QuestionListResponseDto> questions = questionService.findQuestionsWithPreview(pageable);
+        return ResponseEntity.ok(questions);
     }
 
     @GetMapping("/{id}")

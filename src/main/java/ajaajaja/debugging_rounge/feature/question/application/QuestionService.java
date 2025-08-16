@@ -2,14 +2,17 @@ package ajaajaja.debugging_rounge.feature.question.application;
 
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionCreateRequestDto;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionDetailResponseDto;
+import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionListResponseDto;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionUpdateRequestDto;
 import ajaajaja.debugging_rounge.feature.question.domain.Question;
 import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionNotFoundException;
 import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionNotFoundForDeleteException;
 import ajaajaja.debugging_rounge.feature.question.domain.QuestionRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,10 @@ public class QuestionService {
         Question savedQuestion = questionRepository.save(question);
 
         return savedQuestion.getId();
+    }
+
+    public Page<QuestionListResponseDto> findQuestionsWithPreview(Pageable pageable) {
+        return questionRepository.findQuestionsWithPreview(pageable);
     }
 
     public QuestionDetailResponseDto findQuestionById(Long id) {
