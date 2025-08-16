@@ -1,5 +1,6 @@
 package ajaajaja.debugging_rounge.feature.auth.domain;
 
+import ajaajaja.debugging_rounge.common.jpa.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,7 +20,7 @@ import org.hibernate.type.SqlTypes;
                 )
         }
 )
-public class BlacklistedRefreshToken {
+public class BlacklistedRefreshToken extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +30,6 @@ public class BlacklistedRefreshToken {
     @Column(nullable = false, columnDefinition = "BINARY(32)")
     private byte[] tokenHash;
 
-    @Column(nullable = false)
     private Long userId;
 
     public BlacklistedRefreshToken(byte[] tokenHash, Long userId) {

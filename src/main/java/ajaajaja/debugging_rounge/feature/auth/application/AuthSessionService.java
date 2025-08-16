@@ -36,4 +36,17 @@ public class AuthSessionService {
         refreshTokenRepository.deleteAllByUserId(userId);
     }
 
+    public void revokeToken(byte[] tokenHash) {
+        var optionalRefreshToken = refreshTokenRepository.findByTokenHash(tokenHash);
+        if (optionalRefreshToken.isEmpty()) {
+            blacklistedRefreshTokenRepository.insertIgnore(tokenHash, null);
+            return;
+        }
+
+        Long userId = optionalRefreshToken.get().getUserId();
+        blacklistedRefreshTokenRepository.insertIgnore(tokenHash, userId);
+
+        refreshTokenRepository.deleteByTokenHashAndUserId(tokenHash, userId);
+    }
+
 }

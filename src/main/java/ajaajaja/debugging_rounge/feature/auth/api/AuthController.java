@@ -7,9 +7,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +22,7 @@ public class AuthController {
 
     private final TokenService tokenService;
 
-    @GetMapping("/refresh")
+    @PostMapping("/refresh")
     public AccessTokenResponse reIssue(@AuthenticationPrincipal Jwt jwt,
                                        HttpServletResponse response) {
 
@@ -37,6 +39,18 @@ public class AuthController {
         }
 
         return tokenResponse;
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+            @CookieValue(name="#{@jwtProperties.cookie.name}", required=false) String refreshToken,
+            HttpServletResponse response) {
+        tokenService.logout(refreshToken);
+        ResponseCookie expireRefreshCookie = tokenService.expireRefreshCookie();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, expireRefreshCookie.toString());
+
+        return ResponseEntity.noContent().build();
     }
 }
 

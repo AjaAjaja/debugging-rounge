@@ -5,8 +5,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 import java.util.Locale;
@@ -43,10 +45,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    protected ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(
-            DataIntegrityViolationException e,
-            Locale locale) {
+    @ExceptionHandler({
+            DataIntegrityViolationException.class,
+            HttpRequestMethodNotSupportedException.class,
+            NoResourceFoundException.class
+    })
+    protected ResponseEntity<ErrorResponse> handleRequestInvalidRequest(Exception e, Locale locale) {
 
         ErrorCode errorCode = ErrorCode.REQUEST_INVALID;
         String message = messageSource.getMessage(errorCode.getMessageKey(), null, locale);

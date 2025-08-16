@@ -1,6 +1,7 @@
 package ajaajaja.debugging_rounge.feature.auth.application;
 
 import ajaajaja.debugging_rounge.common.config.jwt.JwtProperties;
+import ajaajaja.debugging_rounge.common.config.jwt.JwtProvider;
 import ajaajaja.debugging_rounge.common.config.jwt.TokenHasher;
 import ajaajaja.debugging_rounge.feature.auth.api.dto.TokenDto;
 import ajaajaja.debugging_rounge.feature.auth.api.exception.RefreshTokenInvalidException;
@@ -8,7 +9,6 @@ import ajaajaja.debugging_rounge.feature.auth.domain.RefreshToken;
 import ajaajaja.debugging_rounge.feature.auth.domain.TokenType;
 import ajaajaja.debugging_rounge.feature.auth.domain.repository.BlacklistedRefreshTokenRepository;
 import ajaajaja.debugging_rounge.feature.auth.domain.repository.RefreshTokenRepository;
-import ajaajaja.debugging_rounge.common.config.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -69,6 +69,15 @@ public class TokenService {
         return TokenDto.of(newAccessToken, newRefreshToken);
     }
 
+    @Transactional
+    public void logout(String refreshToken) {
+        if (refreshToken == null || refreshToken.isBlank()) {
+            return;
+        }
+        byte[] tokenHash = tokenHasher.hmacSha256(refreshToken);
+        authSessionService.revokeToken(tokenHash);
+    }
+
     public ResponseCookie createRefreshCookie(String refreshToken) {
         return ResponseCookie.from(jwtProperties.getCookie().getName(), refreshToken)
                 .httpOnly(jwtProperties.getCookie().isHttpOnly())
@@ -76,6 +85,16 @@ public class TokenService {
                 .sameSite(jwtProperties.getCookie().getSameSite()) // TODO 추후에 프론트와 같은 도메인으로 만들어 csrf 공격 방지
                 .path(jwtProperties.getCookie().getPath())
                 .maxAge(jwtProperties.getCookie().getMaxAge())
+                .build();
+    }
+
+    public ResponseCookie expireRefreshCookie() {
+        return ResponseCookie.from(jwtProperties.getCookie().getName(), "")
+                .httpOnly(jwtProperties.getCookie().isHttpOnly())
+                .secure(jwtProperties.getCookie().isSecure())
+                .sameSite(jwtProperties.getCookie().getSameSite()) // TODO 추후에 프론트와 같은 도메인으로 만들어 csrf 공격 방지
+                .path(jwtProperties.getCookie().getPath())
+                .maxAge(0)
                 .build();
     }
 

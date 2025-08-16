@@ -13,7 +13,11 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
 
     Boolean existsByTokenHashAndUserId(byte[] tokenHash, Long userId);
     Optional<RefreshToken> findByUserId(Long userId);
+
+    Optional<RefreshToken> findByTokenHash(byte[] tokenHash);
     List<RefreshToken> findAllByUserId(Long userId);
+
+    void deleteByTokenHashAndUserId(byte[] tokenHash, Long userId);
     void deleteAllByUserId(Long userId);
     @Modifying(clearAutomatically = true)
     @Query("update RefreshToken rt" +

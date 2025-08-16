@@ -1,5 +1,6 @@
 package ajaajaja.debugging_rounge.feature.auth.domain;
 
+import ajaajaja.debugging_rounge.common.jpa.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,7 +27,7 @@ import org.hibernate.type.SqlTypes;
                 @Index(name = "idx_refresh_token_hash_user", columnList = "token_hash, user_id")
         }
 )
-public class RefreshToken {
+public class RefreshToken extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +39,6 @@ public class RefreshToken {
 
     @Column(nullable = false)
     private Long userId;
-
     public RefreshToken(byte[] tokenHash, Long userId) {
         this.tokenHash = tokenHash;
         this.userId = userId;

@@ -1,12 +1,13 @@
 package ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth;
 
-import ajaajaja.debugging_rounge.feature.auth.application.TokenService;
 import ajaajaja.debugging_rounge.feature.auth.api.dto.AccessTokenResponse;
 import ajaajaja.debugging_rounge.feature.auth.api.dto.TokenDto;
+import ajaajaja.debugging_rounge.feature.auth.application.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,9 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
     private final TokenService tokenService;
     private final ObjectMapper objectMapper;
+
+    @Value("${frontend.base-url}")
+    private String frontendBase;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
@@ -37,6 +41,8 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         response.setContentType("application/json; charset=UTF-8");
         response.getWriter()
                 .write(objectMapper.writeValueAsString(AccessTokenResponse.of(tokenDto.getAccessToken())));
+        response.setStatus(HttpServletResponse.SC_FOUND);
+        response.setHeader("Location", frontendBase + "/oauth2/redirect");
     }
 
 }

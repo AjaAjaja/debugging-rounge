@@ -50,11 +50,11 @@ jwt:
 
   cookie:
     name: refreshToken
-    path: /auth/refresh
+    path: /auth
     max-age: 14d
     same-site: None
     secure: true
     http-only: true
 
-cors:
-  allowed-origin: http://localhost:3000
+frontend:
+  base-url: http://localhost:3000
