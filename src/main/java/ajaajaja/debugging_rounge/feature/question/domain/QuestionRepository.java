@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-    @Query("SELECT new ajaajaja.debugging_rounge.feature.question.api.dto.QuestionListResponseDto(q.title, SUBSTRING(q.content, 1, 100)) FROM Question q")
+    @Query("SELECT new ajaajaja.debugging_rounge.feature.question.api.dto.QuestionListResponseDto(q.id, q.title, SUBSTRING(q.content, 1, 100)) FROM Question q")
     Page<QuestionListResponseDto> findQuestionsWithPreview(Pageable pageable);
 }

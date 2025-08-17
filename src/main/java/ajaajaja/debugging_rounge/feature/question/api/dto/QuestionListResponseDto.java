@@ -4,10 +4,12 @@ import lombok.Getter;
 
 @Getter
 public class QuestionListResponseDto {
+    private final Long questionId;
     private final String title;
     private final String previewContent;
 
-    public QuestionListResponseDto(String title, String contentSnippet) {
+    public QuestionListResponseDto(Long questionId, String title, String contentSnippet) {
+        this.questionId = questionId;
         this.title = title;
         this.previewContent = cleanAndTrim(contentSnippet);
     }
