@@ -16,8 +16,11 @@ public class QuestionCreateRequestDto {
     @Size(max = 10000, message = "error.question.content.size")
     private String content;
 
-    public Question toEntity(QuestionCreateRequestDto questionCreateRequestDto) {
-        return Question.of(questionCreateRequestDto.getTitle(), questionCreateRequestDto.getContent());
+    public Question toEntity(QuestionCreateRequestDto questionCreateRequestDto, Long userId) {
+        return Question.of(
+                questionCreateRequestDto.getTitle(),
+                questionCreateRequestDto.getContent(),
+                userId);
     }
 
 }
