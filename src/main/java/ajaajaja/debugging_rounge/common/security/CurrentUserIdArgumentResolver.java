@@ -1,16 +1,19 @@
 package ajaajaja.debugging_rounge.common.security;
 
+import ajaajaja.debugging_rounge.common.exception.auth.AuthenticationPrincipalInvalidException;
+import ajaajaja.debugging_rounge.common.exception.auth.AuthenticationRequiredException;
+import ajaajaja.debugging_rounge.common.exception.auth.UserIdentifierInvalidException;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import org.springframework.security.oauth2.jwt.Jwt;
 
 @Component
 public class CurrentUserIdArgumentResolver implements HandlerMethodArgumentResolver {
@@ -36,7 +39,7 @@ public class CurrentUserIdArgumentResolver implements HandlerMethodArgumentResol
         }
 
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
-            throw new InsufficientAuthenticationException("인증 정보가 유효하지 않습니다.");
+            throw new AuthenticationRequiredException();
         }
 
         Long userId = extractUserIdOrThrow(auth);
@@ -45,13 +48,13 @@ public class CurrentUserIdArgumentResolver implements HandlerMethodArgumentResol
 
     private Long extractUserIdOrThrow(Authentication auth) {
         if (!(auth.getPrincipal() instanceof Jwt jwt)) {
-                throw new InsufficientAuthenticationException("잘못된 인증 주체입니다.");
+                throw new AuthenticationPrincipalInvalidException();
         }
         String sub = jwt.getClaimAsString("sub");
         try {
             return Long.valueOf(sub);
         } catch (Exception e) {
-            throw new InsufficientAuthenticationException("유효하지 않은 사용자 식별자입니다.");
+            throw new UserIdentifierInvalidException();
         }
     }
 
