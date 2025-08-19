@@ -1,21 +1,27 @@
 package ajaajaja.debugging_rounge.feature.question.api.dto;
 
-import ajaajaja.debugging_rounge.feature.question.domain.Question;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class QuestionDetailResponseDto {
 
-    private final Long id;
-
+    private final Long questionId;
     private final String title;
-
     private final String content;
+    private final String authorEmail;
+    private final Long authorId;
+    private Long loginUserId;
 
-    public static QuestionDetailResponseDto fromEntity(Question question) {
-        return new QuestionDetailResponseDto(question.getId(), question.getTitle(), question.getContent());
+    public QuestionDetailResponseDto(Long questionId, String title, String content, String authorEmail, Long authorId) {
+        this.questionId = questionId;
+        this.title = title;
+        this.content = content;
+        this.authorEmail = authorEmail;
+        this.authorId = authorId;
+    }
+
+    public void addLoginUserId(Long loginUserId) {
+        this.loginUserId = loginUserId;
     }
 
 }

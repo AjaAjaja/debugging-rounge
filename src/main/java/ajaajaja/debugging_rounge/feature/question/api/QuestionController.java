@@ -1,5 +1,6 @@
 package ajaajaja.debugging_rounge.feature.question.api;
 
+import ajaajaja.debugging_rounge.common.security.CurrentUserId;
 import ajaajaja.debugging_rounge.common.util.UriHelper;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionCreateRequestDto;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionDetailResponseDto;
@@ -21,8 +22,10 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping
-    public ResponseEntity<Long> createQuestion(@RequestBody @Valid QuestionCreateRequestDto questionCreateRequestDto) {
-        Long questionId = questionService.createQuestion(questionCreateRequestDto);
+    public ResponseEntity<Long> createQuestion(
+            @CurrentUserId Long userId,
+            @RequestBody @Valid QuestionCreateRequestDto questionCreateRequestDto) {
+        Long questionId = questionService.createQuestion(questionCreateRequestDto, userId);
 
         return ResponseEntity
                 .created(UriHelper.buildCreatedUri(questionId))
@@ -35,24 +38,26 @@ public class QuestionController {
         return ResponseEntity.ok(questions);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<QuestionDetailResponseDto> findQuestion(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(questionService.findQuestionById(id));
+    @GetMapping("/{questionId}")
+    public ResponseEntity<QuestionDetailResponseDto> findQuestion(
+            @PathVariable("questionId") Long questionId,
+            @CurrentUserId(required = false) Long userId) {
+        return ResponseEntity.ok(questionService.findQuestionById(questionId, userId));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{questionId}")
     public ResponseEntity<Void> updateQuestion(
-            @PathVariable("id") Long id,
+            @PathVariable("questionId") Long questionId,
             @RequestBody @Valid QuestionUpdateRequestDto questionUpdateRequestDto
     ){
-        questionService.updateQuestion(id, questionUpdateRequestDto);
+        questionService.updateQuestion(questionId, questionUpdateRequestDto);
 
         return ResponseEntity.noContent().build(); // 204 No Content 반환
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteQuestion(@PathVariable("id") Long id){
-        questionService.deleteQuestion(id);
+    @DeleteMapping("/{questionId}")
+    public ResponseEntity<Void> deleteQuestion(@PathVariable("questionId") Long questionId){
+        questionService.deleteQuestion(questionId);
 
         return ResponseEntity.noContent().build();
     }

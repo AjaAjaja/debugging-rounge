@@ -5,9 +5,9 @@ import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionDetailResponse
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionListResponseDto;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionUpdateRequestDto;
 import ajaajaja.debugging_rounge.feature.question.domain.Question;
+import ajaajaja.debugging_rounge.feature.question.domain.QuestionRepository;
 import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionNotFoundException;
 import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionNotFoundForDeleteException;
-import ajaajaja.debugging_rounge.feature.question.domain.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,45 +20,48 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    public Long createQuestion(QuestionCreateRequestDto questionCreateRequestDto) {
-        Question question = questionCreateRequestDto.toEntity(questionCreateRequestDto);
+    @Transactional
+    public Long createQuestion(QuestionCreateRequestDto questionCreateRequestDto, Long userId) {
+        Question question = questionCreateRequestDto.toEntity(questionCreateRequestDto, userId);
 
         Question savedQuestion = questionRepository.save(question);
 
         return savedQuestion.getId();
     }
 
+    @Transactional(readOnly = true)
     public Page<QuestionListResponseDto> findQuestionsWithPreview(Pageable pageable) {
         return questionRepository.findQuestionsWithPreview(pageable);
     }
 
-    public QuestionDetailResponseDto findQuestionById(Long id) {
-        Question question = findQuestionByIdOrThrow(id);
+    @Transactional(readOnly = true)
+    public QuestionDetailResponseDto findQuestionById(Long questionId, Long userId) {
+        QuestionDetailResponseDto questionDetailResponseDto =
+                questionRepository.findQuestionDetailById(questionId).orElseThrow(QuestionNotFoundException::new);
+        if (userId != null) {
+            questionDetailResponseDto.addLoginUserId(userId);
+        }
 
-        return QuestionDetailResponseDto.fromEntity(question);
+        return questionDetailResponseDto;
     }
 
     @Transactional
-    public void updateQuestion(Long id, QuestionUpdateRequestDto questionUpdateRequestDto) {
-        Question question = findQuestionByIdOrThrow(id);
+    public void updateQuestion(Long questionId, QuestionUpdateRequestDto questionUpdateRequestDto) {
+        Question question = questionRepository.findById(questionId).orElseThrow(QuestionNotFoundException::new);
 
         question.update(questionUpdateRequestDto.getTitle(), questionUpdateRequestDto.getContent());
     }
 
     @Transactional
-    public void deleteQuestion(Long id) {
-        deleteQuestionOrThrow(id);
+    public void deleteQuestion(Long questionId) {
+        deleteQuestionOrThrow(questionId);
     }
 
-    private void deleteQuestionOrThrow(Long id) {
-        Question question = questionRepository.findById(id)
+    private void deleteQuestionOrThrow(Long questionId) {
+        Question question = questionRepository.findById(questionId)
                 .orElseThrow(QuestionNotFoundForDeleteException::new);
 
         questionRepository.delete(question);
     }
 
-    private Question findQuestionByIdOrThrow(Long id) {
-        return questionRepository.findById(id)
-                .orElseThrow(QuestionNotFoundException::new);
-    }
 }
