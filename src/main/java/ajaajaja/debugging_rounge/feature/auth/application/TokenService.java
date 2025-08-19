@@ -4,7 +4,7 @@ import ajaajaja.debugging_rounge.common.config.jwt.JwtProperties;
 import ajaajaja.debugging_rounge.common.config.jwt.JwtProvider;
 import ajaajaja.debugging_rounge.common.config.jwt.TokenHasher;
 import ajaajaja.debugging_rounge.feature.auth.api.dto.TokenDto;
-import ajaajaja.debugging_rounge.feature.auth.api.exception.RefreshTokenInvalidException;
+import ajaajaja.debugging_rounge.common.exception.auth.RefreshTokenInvalidException;
 import ajaajaja.debugging_rounge.feature.auth.domain.RefreshToken;
 import ajaajaja.debugging_rounge.feature.auth.domain.TokenType;
 import ajaajaja.debugging_rounge.feature.auth.domain.repository.BlacklistedRefreshTokenRepository;

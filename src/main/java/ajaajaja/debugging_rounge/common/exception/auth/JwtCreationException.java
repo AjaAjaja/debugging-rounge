@@ -1,4 +1,4 @@
-package ajaajaja.debugging_rounge.feature.auth.api.exception;
+package ajaajaja.debugging_rounge.common.exception.auth;
 
 import ajaajaja.debugging_rounge.common.exception.BusinessException;
 import ajaajaja.debugging_rounge.common.exception.ErrorCode;

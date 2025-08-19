@@ -21,8 +21,10 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND  ("error.refresh_token_not_found",  HttpStatus.UNAUTHORIZED),
     REFRESH_TOKEN_INVALID("error.refresh_token.invalid", HttpStatus.UNAUTHORIZED),
     AUTHENTICATION_FAILED("error.authentication.failed", HttpStatus.UNAUTHORIZED),
-    AUTHORIZATION_FAILED("error.authorization.failed", HttpStatus.FORBIDDEN);
-
+    AUTHORIZATION_FAILED("error.authorization.failed", HttpStatus.FORBIDDEN),
+    AUTHENTICATION_REQUIRED("error.authentication.required", HttpStatus.UNAUTHORIZED),
+    AUTHENTICATION_PRINCIPAL_INVALID("error.authentication.principal_invalid", HttpStatus.UNAUTHORIZED),
+    USER_IDENTIFIER_INVALID("error.user.identifier_invalid", HttpStatus.UNAUTHORIZED);
 
     private final String messageKey;
 
