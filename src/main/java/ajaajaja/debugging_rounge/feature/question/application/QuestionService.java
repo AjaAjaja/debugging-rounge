@@ -58,7 +58,9 @@ public class QuestionService {
 
         validateAuthor(question.getUserId(), loginUserId, QuestionUpdateForbiddenExceptionCustom::new);
 
-        question.update(questionUpdateRequestDto.getTitle(), questionUpdateRequestDto.getContent());
+        if (hasChanges(question, questionUpdateRequestDto)) {
+            question.update(questionUpdateRequestDto.getTitle(), questionUpdateRequestDto.getContent());
+        }
     }
 
     @Transactional
@@ -75,6 +77,11 @@ public class QuestionService {
         if (!Objects.equals(authorId, loginUserId)) {
             throw ex.get();
         }
+    }
+
+    private boolean hasChanges(Question question, QuestionUpdateRequestDto dto) {
+        return !Objects.equals(question.getTitle(), dto.getTitle())
+                || !Objects.equals(question.getContent(), dto.getContent());
     }
 
 }
