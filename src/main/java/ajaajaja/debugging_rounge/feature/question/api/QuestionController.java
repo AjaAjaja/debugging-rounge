@@ -48,16 +48,19 @@ public class QuestionController {
     @PutMapping("/{questionId}")
     public ResponseEntity<Void> updateQuestion(
             @PathVariable("questionId") Long questionId,
-            @RequestBody @Valid QuestionUpdateRequestDto questionUpdateRequestDto
+            @RequestBody @Valid QuestionUpdateRequestDto questionUpdateRequestDto,
+            @CurrentUserId Long loginUserId
     ){
-        questionService.updateQuestion(questionId, questionUpdateRequestDto);
+        questionService.updateQuestion(questionId, questionUpdateRequestDto, loginUserId);
 
         return ResponseEntity.noContent().build(); // 204 No Content 반환
     }
 
     @DeleteMapping("/{questionId}")
-    public ResponseEntity<Void> deleteQuestion(@PathVariable("questionId") Long questionId){
-        questionService.deleteQuestion(questionId);
+    public ResponseEntity<Void> deleteQuestion(
+            @PathVariable("questionId") Long questionId,
+            @CurrentUserId Long loginUserId){
+        questionService.deleteQuestion(questionId, loginUserId);
 
         return ResponseEntity.noContent().build();
     }
