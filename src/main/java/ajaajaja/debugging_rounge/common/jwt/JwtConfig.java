@@ -1,6 +1,5 @@
-package ajaajaja.debugging_rounge.common.config.jwt;
+package ajaajaja.debugging_rounge.common.jwt;
 
-import ajaajaja.debugging_rounge.feature.auth.domain.TokenType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

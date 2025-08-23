@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.feature.auth.application;
 
-import ajaajaja.debugging_rounge.common.exception.auth.RefreshTokenInvalidException;
+import ajaajaja.debugging_rounge.common.jwt.exception.RefreshTokenInvalidException;
 import ajaajaja.debugging_rounge.feature.auth.domain.BlacklistedRefreshToken;
 import ajaajaja.debugging_rounge.feature.auth.domain.RefreshToken;
 import ajaajaja.debugging_rounge.feature.auth.domain.repository.BlacklistedRefreshTokenRepository;

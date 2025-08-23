@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.feature.question.api;
 
-import ajaajaja.debugging_rounge.common.security.CurrentUserId;
+import ajaajaja.debugging_rounge.common.security.annotation.CurrentUserId;
 import ajaajaja.debugging_rounge.common.util.UriHelper;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionCreateRequestDto;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionDetailResponseDto;

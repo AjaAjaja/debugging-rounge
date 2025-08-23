@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.feature.user.api;
 
-import ajaajaja.debugging_rounge.common.security.CurrentUserId;
+import ajaajaja.debugging_rounge.common.security.annotation.CurrentUserId;
 import ajaajaja.debugging_rounge.feature.user.application.UserService;
 import ajaajaja.debugging_rounge.feature.user.dto.UserProfileDto;
 import lombok.RequiredArgsConstructor;

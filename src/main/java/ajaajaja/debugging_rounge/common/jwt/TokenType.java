@@ -1,4 +1,4 @@
-package ajaajaja.debugging_rounge.feature.auth.domain;
+package ajaajaja.debugging_rounge.common.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

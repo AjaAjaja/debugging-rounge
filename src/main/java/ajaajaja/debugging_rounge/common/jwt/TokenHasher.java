@@ -1,4 +1,4 @@
-package ajaajaja.debugging_rounge.common.config.jwt;
+package ajaajaja.debugging_rounge.common.jwt;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

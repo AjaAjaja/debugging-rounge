@@ -1,8 +1,8 @@
-package ajaajaja.debugging_rounge.common.security;
+package ajaajaja.debugging_rounge.common.security.annotation;
 
-import ajaajaja.debugging_rounge.common.exception.auth.AuthenticationPrincipalInvalidException;
-import ajaajaja.debugging_rounge.common.exception.auth.AuthenticationRequiredException;
-import ajaajaja.debugging_rounge.common.exception.auth.UserIdentifierInvalidException;
+import ajaajaja.debugging_rounge.common.jwt.exception.AuthenticationPrincipalInvalidException;
+import ajaajaja.debugging_rounge.common.jwt.exception.AuthenticationRequiredException;
+import ajaajaja.debugging_rounge.common.jwt.exception.UserIdentifierInvalidException;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.InsufficientAuthenticationException;

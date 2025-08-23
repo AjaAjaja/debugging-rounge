@@ -1,8 +1,8 @@
 package ajaajaja.debugging_rounge.feature.question.application;
 
-import ajaajaja.debugging_rounge.common.exception.auth.CustomAuthorizationException;
-import ajaajaja.debugging_rounge.common.exception.auth.QuestionDeleteForbiddenException;
-import ajaajaja.debugging_rounge.common.exception.auth.QuestionUpdateForbiddenExceptionCustom;
+import ajaajaja.debugging_rounge.common.jwt.exception.CustomAuthorizationException;
+import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionDeleteForbiddenException;
+import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionUpdateForbiddenException;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionCreateRequestDto;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionDetailResponseDto;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionListResponseDto;
@@ -56,7 +56,7 @@ public class QuestionService {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(QuestionNotFoundException::new);
 
-        validateAuthor(question.getUserId(), loginUserId, QuestionUpdateForbiddenExceptionCustom::new);
+        validateAuthor(question.getUserId(), loginUserId, QuestionUpdateForbiddenException::new);
 
         if (hasChanges(question, questionUpdateRequestDto)) {
             question.update(questionUpdateRequestDto.getTitle(), questionUpdateRequestDto.getContent());
