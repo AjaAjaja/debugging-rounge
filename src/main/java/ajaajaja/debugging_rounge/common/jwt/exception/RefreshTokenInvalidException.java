@@ -1,7 +1,6 @@
-package ajaajaja.debugging_rounge.common.exception.auth;
+package ajaajaja.debugging_rounge.common.jwt.exception;
 
 import ajaajaja.debugging_rounge.common.exception.ErrorCode;
-import ajaajaja.debugging_rounge.common.exception.auth.CustomAuthenticationException;
 
 public class RefreshTokenInvalidException extends CustomAuthenticationException {
     public RefreshTokenInvalidException() {

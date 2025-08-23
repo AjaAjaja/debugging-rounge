@@ -1,4 +1,4 @@
-package ajaajaja.debugging_rounge.common.exception.auth;
+package ajaajaja.debugging_rounge.common.jwt.exception;
 
 import ajaajaja.debugging_rounge.common.exception.ErrorCode;
 import org.springframework.security.authentication.InsufficientAuthenticationException;

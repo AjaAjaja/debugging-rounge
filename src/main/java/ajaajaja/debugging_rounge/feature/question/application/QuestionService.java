@@ -1,8 +1,8 @@
 package ajaajaja.debugging_rounge.feature.question.application;
 
-import ajaajaja.debugging_rounge.common.exception.auth.CustomAuthorizationException;
-import ajaajaja.debugging_rounge.common.exception.auth.QuestionDeleteForbiddenException;
-import ajaajaja.debugging_rounge.common.exception.auth.QuestionUpdateForbiddenExceptionCustom;
+import ajaajaja.debugging_rounge.common.jwt.exception.CustomAuthorizationException;
+import ajaajaja.debugging_rounge.common.jwt.exception.QuestionDeleteForbiddenException;
+import ajaajaja.debugging_rounge.common.jwt.exception.QuestionUpdateForbiddenExceptionCustom;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionCreateRequestDto;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionDetailResponseDto;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionListResponseDto;

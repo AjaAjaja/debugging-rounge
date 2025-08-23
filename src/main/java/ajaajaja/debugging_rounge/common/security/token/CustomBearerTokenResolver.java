@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.common.security.token;
 
-import ajaajaja.debugging_rounge.common.exception.auth.RefreshTokenNotFoundException;
+import ajaajaja.debugging_rounge.common.jwt.exception.RefreshTokenNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
