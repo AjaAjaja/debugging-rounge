@@ -1,11 +1,8 @@
-package ajaajaja.debugging_rounge.feature.auth.application;
+package ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth;
 
-import ajaajaja.debugging_rounge.feature.user.domain.User;
-import ajaajaja.debugging_rounge.feature.user.application.UserService;
 import ajaajaja.debugging_rounge.feature.auth.domain.SocialType;
-import ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth.CustomOAuth2User;
-import ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth.OAuth2UserInfo;
-import ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth.OAuth2UserInfoFactory;
+import ajaajaja.debugging_rounge.feature.user.application.UserService;
+import ajaajaja.debugging_rounge.feature.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
