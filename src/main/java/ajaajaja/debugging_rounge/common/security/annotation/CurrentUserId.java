@@ -1,4 +1,4 @@
-package ajaajaja.debugging_rounge.common.security;
+package ajaajaja.debugging_rounge.common.security.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

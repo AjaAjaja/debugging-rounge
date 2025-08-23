@@ -1,4 +1,4 @@
-package ajaajaja.debugging_rounge.feature.auth.infrastructure.security;
+package ajaajaja.debugging_rounge.common.security.token;
 
 import ajaajaja.debugging_rounge.common.exception.auth.RefreshTokenNotFoundException;
 import jakarta.servlet.http.Cookie;

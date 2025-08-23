@@ -1,4 +1,4 @@
-package ajaajaja.debugging_rounge.common.security;
+package ajaajaja.debugging_rounge.common.security.annotation;
 
 import ajaajaja.debugging_rounge.common.exception.auth.AuthenticationPrincipalInvalidException;
 import ajaajaja.debugging_rounge.common.exception.auth.AuthenticationRequiredException;

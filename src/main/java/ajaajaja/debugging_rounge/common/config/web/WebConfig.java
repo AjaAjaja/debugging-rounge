@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.common.config.web;
 
-import ajaajaja.debugging_rounge.common.security.CurrentUserIdArgumentResolver;
+import ajaajaja.debugging_rounge.common.security.annotation.CurrentUserIdArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
