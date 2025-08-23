@@ -1,9 +1,8 @@
-package ajaajaja.debugging_rounge.common.config.jwt;
+package ajaajaja.debugging_rounge.common.jwt;
 
 import ajaajaja.debugging_rounge.common.exception.auth.JwtCreationException;
 import ajaajaja.debugging_rounge.common.exception.auth.JwtParsingException;
 import ajaajaja.debugging_rounge.common.exception.auth.JwtValidationException;
-import ajaajaja.debugging_rounge.feature.auth.domain.TokenType;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;

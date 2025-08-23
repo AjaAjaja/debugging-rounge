@@ -1,4 +1,4 @@
-package ajaajaja.debugging_rounge.common.config.jwt;
+package ajaajaja.debugging_rounge.common.jwt;
 
 import lombok.Getter;
 import lombok.Setter;
