@@ -24,7 +24,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     Optional<QuestionDetailResponseDto> findQuestionDetailById(@Param("questionId") Long questionId);
 
     @Query("SELECT new ajaajaja.debugging_rounge.feature.question.api.dto." +
-            "QuestionListResponseDto(q.id, q.title, SUBSTRING(q.content, 1, 100), u.email) " +
+            "QuestionListResponseDto(q.id, q.title, SUBSTRING(CAST(q.content AS string), 1, 100), u.email) " +
             "FROM Question q JOIN User u ON q.userId = u.id")
     Page<QuestionListResponseDto> findQuestionsWithPreview(Pageable pageable);
 }
