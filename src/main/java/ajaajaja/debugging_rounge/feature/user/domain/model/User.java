@@ -7,7 +7,6 @@ import lombok.*;
 
 @Entity
 @Getter
-@Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
@@ -30,6 +29,14 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+
+    @Builder(access = AccessLevel.PRIVATE)
+    private User(String email, SocialType socialType, Role role) {
+        this.email = java.util.Objects.requireNonNull(email);
+        this.socialType = java.util.Objects.requireNonNull(socialType);
+        this.role= role;
+    }
 
     public static User of(String email, SocialType socialType) {
         return User.builder()
