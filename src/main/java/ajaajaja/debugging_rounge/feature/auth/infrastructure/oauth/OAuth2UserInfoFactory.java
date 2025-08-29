@@ -1,10 +1,6 @@
 package ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth;
 
 import ajaajaja.debugging_rounge.feature.auth.domain.SocialType;
-import ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth.GoogleOAuth2UserInfo;
-import ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth.KakaoOAuth2UserInfo;
-import ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth.NaverOAuth2UserInfo;
-import ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth.OAuth2UserInfo;
 
 import java.util.Map;
 

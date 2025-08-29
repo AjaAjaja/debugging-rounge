@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth;
 
-import ajaajaja.debugging_rounge.feature.user.domain.User;
+import ajaajaja.debugging_rounge.feature.user.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
