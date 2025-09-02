@@ -3,6 +3,7 @@ package ajaajaja.debugging_rounge.feature.question.domain;
 import ajaajaja.debugging_rounge.common.jpa.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,12 +20,13 @@ public class Question extends BaseEntity {
     private String title;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Column(nullable = false)
     private Long userId;
 
+    @Builder(access = AccessLevel.PRIVATE)
     public Question(String title, String content, Long userId) {
         this.title = title;
         this.content = content;
@@ -32,7 +34,11 @@ public class Question extends BaseEntity {
     }
 
     public static Question of(String title, String content, Long userId) {
-        return new Question(title, content, userId);
+        return Question.builder()
+                .title(title)
+                .content(content)
+                .userId(userId)
+                .build();
     }
 
     public void update(String title, String content) {

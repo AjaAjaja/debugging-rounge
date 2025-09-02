@@ -12,9 +12,9 @@ import java.util.Optional;
 public interface UserJpaRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmailAndSocialType(String email, SocialType socialType);
     @Query("""
-              select u.id as id, u.email as email, u.socialType as socialType
-              from User u
-              where u.id = :id
+              SELECT u.id AS id, u.email AS email, u.socialType AS socialType
+              FROM User u
+              WHERE u.id = :id
             """)
     Optional<UserProfileView> findUserProfileViewById(@Param("id") Long id);
 }

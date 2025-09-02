@@ -22,16 +22,16 @@ public class UserFacade implements GetUserProfileQuery, FindOrRegisterUserUseCas
     private final SaveUserPort saveUserPort;
     private final LoadUserProfileViewPort loadUserProfileViewPort;
 
+    @Override
     @Transactional
     public User findOrRegister(String email, SocialType socialType) {
         return loadUserPort.findByEmailAndSocialType(email, socialType)
                 .orElseGet(() -> saveUserPort.save(User.of(email, socialType)));
     }
 
+    @Override
     public UserProfileDto getUserProfile(Long userId) {
         return loadUserProfileViewPort.findUserProfileViewById(userId).orElseThrow(UserNotFoundException::new);
     }
-
-
 
 }
