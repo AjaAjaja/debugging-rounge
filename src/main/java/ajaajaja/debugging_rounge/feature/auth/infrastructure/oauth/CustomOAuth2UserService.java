@@ -1,7 +1,7 @@
 package ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth;
 
 import ajaajaja.debugging_rounge.feature.auth.domain.SocialType;
-import ajaajaja.debugging_rounge.feature.user.application.UserFacade;
+import ajaajaja.debugging_rounge.feature.user.application.port.in.FindOrRegisterUserUseCase;
 import ajaajaja.debugging_rounge.feature.user.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -16,8 +16,7 @@ import org.springframework.stereotype.Service;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
-    private final UserFacade userFacade;
-
+    private final FindOrRegisterUserUseCase findOrRegisterUserUseCase;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
@@ -27,7 +26,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.create(socialType, oAuth2User.getAttributes());
 
-        User user = userFacade.findOrRegister(oAuth2UserInfo.getEmail(), socialType);
+        User user = findOrRegisterUserUseCase.findOrRegister(oAuth2UserInfo.getEmail(), socialType);
 
         return new CustomOAuth2User(user, oAuth2User.getAttributes());
     }

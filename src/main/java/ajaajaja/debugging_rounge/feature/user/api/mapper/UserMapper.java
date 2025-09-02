@@ -5,6 +5,6 @@ import ajaajaja.debugging_rounge.feature.user.application.dto.UserProfileDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface UserProfileMapper {
+public interface UserMapper {
     UserProfileResponse toResponse(UserProfileDto view);
 }
