@@ -1,8 +1,9 @@
 package ajaajaja.debugging_rounge.feature.auth.infrastructure.oauth;
 
-import ajaajaja.debugging_rounge.feature.auth.api.dto.AccessTokenResponse;
-import ajaajaja.debugging_rounge.feature.auth.api.dto.TokenDto;
-import ajaajaja.debugging_rounge.feature.auth.application.TokenService;
+import ajaajaja.debugging_rounge.feature.auth.api.RefreshCookieFactory;
+import ajaajaja.debugging_rounge.feature.auth.application.dto.AccessTokenResponse;
+import ajaajaja.debugging_rounge.feature.auth.application.dto.TokenPair;
+import ajaajaja.debugging_rounge.feature.auth.application.port.in.IssueTokensUseCase;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +21,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final TokenService tokenService;
+    private final IssueTokensUseCase issueTokensUseCase;
+    private final RefreshCookieFactory refreshCookieFactory;
     private final ObjectMapper objectMapper;
 
     @Value("${frontend.base-url}")
@@ -33,14 +35,14 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         Long userId = Long.valueOf(oAuth2User.getName());
 
-        TokenDto tokenDto = tokenService.issueTokens(userId);
+        TokenPair tokenPair = issueTokensUseCase.issueTokens(userId);
 
-        ResponseCookie cookie = tokenService.createRefreshCookie(tokenDto.getRefreshToken());
+        ResponseCookie cookie = refreshCookieFactory.createRefreshCookie(tokenPair.refreshToken());
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         response.setContentType("application/json; charset=UTF-8");
         response.getWriter()
-                .write(objectMapper.writeValueAsString(AccessTokenResponse.of(tokenDto.getAccessToken())));
+                .write(objectMapper.writeValueAsString(AccessTokenResponse.of(tokenPair.accessToken())));
         response.setStatus(HttpServletResponse.SC_FOUND);
         response.setHeader("Location", frontendBase + "/oauth2/redirect");
     }
