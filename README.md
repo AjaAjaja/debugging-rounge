@@ -1,5 +1,5 @@
 # Debugging Rounge (Backend)
-개발 관련 질문을 올리면 답변을 달 수 있는 Q&A 게시판 백엔드 프로젝트입니다.
+개발 관련 질문을 올리면 답변을 달 수 있는 Q&A 게시판 백엔드 프로젝트
 
 ## 프로젝트 핵심
 - 질문/답변 게시판 CRUD
@@ -17,10 +17,10 @@
 - Testing: JUnit 5, Spring Boot Test
 
 ## 아키텍처 (Hexagonal / Ports & Adapters)
-- In Port: 유즈케이스 인터페이스 (예: IssueTokensUseCase, CreateQuestionUseCase 등)
-- Out Port: 외부 의존성 추상화 (예: JwtPort, UserPort, QuestionPort 등)
+- In Port: 시스템 외부 요청(웹, OAuth 요청)을 유즈케이스 단위 별로 나누어 모은 인터페이스 (예: IssueTokensUseCase, CreateQuestionUseCase 등)
+- Out Port: 시스템이 외부 의존성(DB, Hasher, SHA-256 등)을 모은 인터페이스 (예: JwtPort, UserPort, QuestionPort 등)
 - Adapter: Port 구현체 (예: JPA 리포지토리, JWT 발급기, 해시/암호화 모듈)
-- Facade: 복잡한 인증 흐름을 묶는 진입점 (AuthFacade, QuestionFacade, UserFacade 등)
+- Facade: Facade는 여러 **In Port(유즈케이스)**를 처리하는 진입점으로, 한 곳에서 정책 일관성과 트랜잭션 경계를 유지하며 구현합니다. 반면 Service라는 이름은 도메인 서비스인지 애플리케이션 서비스인지 모호해지기 쉬워 설계 의도가 흐려질 수 있어 Facade를 사용(AuthFacade, QuestionFacade, UserFacade 등)
 
 ## 인증/인가 설계 개요
 - 로그인 흐름: Google OAuth2 → 사용자 조회/등록(findOrRegister) → JWT 발급 (Access, Refresh)
