@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 public record AnswerCreateRequest(
         @NotBlank(message = "error.answer.content.required")
-        @Size(min = 10, message = "error.answer.content.size")
+        @Size(min = 10, max = 10000, message = "error.answer.content.size")
         String content
 ) {
     public AnswerCreateDto toDto(Long questionId, Long userId) {
