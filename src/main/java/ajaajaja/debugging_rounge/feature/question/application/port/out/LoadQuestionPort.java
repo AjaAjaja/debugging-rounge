@@ -12,4 +12,5 @@ public interface LoadQuestionPort {
     Optional<Question> findById(Long id);
     Optional<QuestionDetailDto> findQuestionDetailById(Long id);
     Page<QuestionListDto> findQuestionsWithPreview(Pageable pageable);
+    Boolean existsQuestionById(Long id);
 }

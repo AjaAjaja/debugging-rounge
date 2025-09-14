@@ -32,4 +32,6 @@ public interface QuestionJpaRepository extends JpaRepository<Question, Long> {
             ORDER BY q.id DESC
             """)
     Page<QuestionListView> findQuestionsWithPreview(Pageable pageable);
+
+    Boolean existsQuestionById(Long id);
 }
