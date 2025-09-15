@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Length;
 
 @Entity
 @Getter
@@ -19,8 +20,7 @@ public class Question extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String title;
 
-    @Lob
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, length = Length.LONG)
     private String content;
 
     @Column(nullable = false)
