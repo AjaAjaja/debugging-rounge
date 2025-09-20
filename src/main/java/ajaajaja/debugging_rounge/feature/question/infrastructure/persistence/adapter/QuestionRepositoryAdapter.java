@@ -43,6 +43,11 @@ public class QuestionRepositoryAdapter implements SaveQuestionPort, LoadQuestion
     }
 
     @Override
+    public Boolean existsQuestionById(Long id) {
+        return questionJpaRepository.existsQuestionById(id);
+    }
+
+    @Override
     public void deleteById(Long id) {
         questionJpaRepository.deleteById(id);
     }

@@ -1,4 +1,4 @@
-package ajaajaja.debugging_rounge.feature.question.domain;
+package ajaajaja.debugging_rounge.feature.answer.domain;
 
 import ajaajaja.debugging_rounge.common.jpa.BaseEntity;
 import jakarta.persistence.*;
@@ -11,38 +11,34 @@ import org.hibernate.Length;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Question extends BaseEntity {
+public class Answer extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
-    private String title;
-
     @Column(nullable = false, length = Length.LONG)
     private String content;
+
+    @Column(nullable = false)
+    private Long questionId;
 
     @Column(nullable = false)
     private Long userId;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Question(String title, String content, Long userId) {
-        this.title = title;
+    public Answer(String content, Long questionId, Long userId) {
         this.content = content;
+        this.questionId = questionId;
         this.userId = userId;
     }
 
-    public static Question of(String title, String content, Long userId) {
-        return Question.builder()
-                .title(title)
+    public static Answer of(String content, Long questionId, Long userId) {
+        return Answer.builder()
                 .content(content)
+                .questionId(questionId)
                 .userId(userId)
                 .build();
     }
 
-    public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
 }
