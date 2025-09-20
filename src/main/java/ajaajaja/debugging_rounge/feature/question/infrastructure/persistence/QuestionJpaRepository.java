@@ -24,8 +24,8 @@ public interface QuestionJpaRepository extends JpaRepository<Question, Long> {
     Optional<QuestionDetailView> findQuestionDetailById(@Param("questionId") Long questionId);
 
     @Query("""
-            SELECT q.id AS id, q.title AS title, 
-            SUBSTRING(CAST(q.content AS string), 1, 100) AS previewContent , u.email AS email
+            SELECT q.id AS id, q.title AS title,
+            SUBSTRING(q.content, 1, 100) AS previewContent , u.email AS email
             FROM Question q
             JOIN User u
             ON q.userId = u.id
