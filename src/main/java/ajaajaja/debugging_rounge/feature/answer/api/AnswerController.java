@@ -44,7 +44,9 @@ public class AnswerController {
     ) {
         Page<AnswerDetailDto> answersPage = getAnswersQuery.findAllByQuestionId(questionId, pageable);
 
-        Page<AnswerDetailResponse> answersResponsePage = answersPage.map(dto -> answerMapper.toResponse(dto, currentUserId));
+        Page<AnswerDetailResponse> answersResponsePage =
+                answersPage.map(dto -> answerMapper.toResponse(dto, currentUserId));
+
         return ResponseEntity.ok(answersResponsePage);
     }
 }

@@ -39,7 +39,7 @@ public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery {
     @Override
     public Page<AnswerDetailDto> findAllByQuestionId(Long questionId, Pageable pageable) {
 
-        Page<AnswerDetailDto> answersPage = loadAnswerPort.findPageByQuestionId(questionId, pageable);
+        Page<AnswerDetailDto> answersPage = loadAnswerPort.findAllByQuestionId(questionId, pageable);
 
         if (answersPage.isEmpty() && !loadQuestionPort.existsQuestionById(questionId)) {
             throw new QuestionNotFoundException();

@@ -22,8 +22,8 @@ public class AnswerRepositoryAdapter implements SaveAnswerPort, LoadAnswerPort {
     }
 
     @Override
-    public Page<AnswerDetailDto> findPageByQuestionId(Long questionId, Pageable pageable) {
-        return answerJpaRepository.findPageByQuestionId(questionId, pageable).map(this::toDto);
+    public Page<AnswerDetailDto> findAllByQuestionId(Long questionId, Pageable pageable) {
+        return answerJpaRepository.findAllByQuestionId(questionId, pageable).map(this::toDto);
     }
 
     private AnswerDetailDto toDto(AnswerDetailView answerDetailView) {

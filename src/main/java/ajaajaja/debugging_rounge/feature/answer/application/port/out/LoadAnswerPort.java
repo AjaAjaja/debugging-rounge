@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface LoadAnswerPort {
-    Page<AnswerDetailDto> findPageByQuestionId(Long questionId, Pageable pageable);
+    Page<AnswerDetailDto> findAllByQuestionId(Long questionId, Pageable pageable);
 }
