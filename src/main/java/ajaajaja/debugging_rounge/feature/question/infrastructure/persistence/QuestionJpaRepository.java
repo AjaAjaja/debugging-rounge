@@ -29,7 +29,6 @@ public interface QuestionJpaRepository extends JpaRepository<Question, Long> {
             FROM Question q
             JOIN User u
             ON q.userId = u.id
-            ORDER BY q.id DESC
             """)
     Page<QuestionListView> findQuestionsWithPreview(Pageable pageable);
 
