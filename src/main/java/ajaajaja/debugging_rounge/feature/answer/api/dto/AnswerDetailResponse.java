@@ -4,6 +4,6 @@ public record AnswerDetailResponse(
         Long id,
         String content,
         Long userId,
-        Long loginUserId
+        Boolean mine
 ) {
 }

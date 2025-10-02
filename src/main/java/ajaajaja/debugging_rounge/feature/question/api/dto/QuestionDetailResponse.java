@@ -11,11 +11,6 @@ public class QuestionDetailResponse {
     private String title;
     private String content;
     private String authorEmail;
-    private Long authorId;
-    private Long loginUserId;
-
-    public void addLoginUserId(Long loginUserId) {
-        this.loginUserId = loginUserId;
-    }
+    private Boolean mine;
 
 }

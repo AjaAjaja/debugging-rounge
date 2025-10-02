@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.feature.question.api;
 
-import ajaajaja.debugging_rounge.common.security.annotation.CurrentUserId;
+import ajaajaja.debugging_rounge.common.security.annotation.LoginUserId;
 import ajaajaja.debugging_rounge.common.util.UriHelper;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionCreateRequest;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionDetailResponse;
@@ -33,7 +33,7 @@ public class QuestionController {
 
     @PostMapping
     public ResponseEntity<Long> createQuestion(
-            @CurrentUserId Long userId,
+            @LoginUserId Long userId,
             @RequestBody @Valid QuestionCreateRequest questionCreateRequest) {
 
         QuestionCreateDto questionCreateDto =
@@ -48,12 +48,10 @@ public class QuestionController {
     @GetMapping("/{questionId}")
     public ResponseEntity<QuestionDetailResponse> findQuestion(
             @PathVariable("questionId") Long questionId,
-            @CurrentUserId(required = false) Long userId) {
+            @LoginUserId(required = false) Long loginUserId) {
         QuestionDetailDto questionDetailDto = getQuestionDetailQuery.findQuestionById(questionId);
-        QuestionDetailResponse questionDetailResponse = questionMapper.toResponse(questionDetailDto);
-        if (userId != null) {
-            questionDetailResponse.addLoginUserId(userId);
-        }
+        QuestionDetailResponse questionDetailResponse = questionMapper.toResponse(questionDetailDto, loginUserId);
+
         return ResponseEntity.ok(questionDetailResponse);
     }
 
@@ -67,7 +65,7 @@ public class QuestionController {
     public ResponseEntity<Void> updateQuestion(
             @PathVariable("questionId") Long questionId,
             @RequestBody @Valid QuestionUpdateRequest questionUpdateRequest,
-            @CurrentUserId Long loginUserId
+            @LoginUserId Long loginUserId
     ){
         QuestionUpdateDto questionUpdateDto = QuestionUpdateDto.of(
                 questionId, questionUpdateRequest.title(), questionUpdateRequest.content(), loginUserId);
@@ -79,7 +77,7 @@ public class QuestionController {
     @DeleteMapping("/{questionId}")
     public ResponseEntity<Void> deleteQuestion(
             @PathVariable("questionId") Long questionId,
-            @CurrentUserId Long loginUserId){
+            @LoginUserId Long loginUserId){
         deleteQuestionUseCase.deleteQuestion(questionId, loginUserId);
 
         return ResponseEntity.noContent().build();

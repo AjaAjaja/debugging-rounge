@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.feature.answer.api;
 
-import ajaajaja.debugging_rounge.common.security.annotation.CurrentUserId;
+import ajaajaja.debugging_rounge.common.security.annotation.LoginUserId;
 import ajaajaja.debugging_rounge.common.util.UriHelper;
 import ajaajaja.debugging_rounge.feature.answer.api.dto.AnswerCreateRequest;
 import ajaajaja.debugging_rounge.feature.answer.api.dto.AnswerDetailResponse;
@@ -28,7 +28,7 @@ public class AnswerController {
     public ResponseEntity<Long> createAnswer(
             @PathVariable("questionId") Long questionId,
             @RequestBody @Valid AnswerCreateRequest answerCreateRequest,
-            @CurrentUserId Long userId
+            @LoginUserId Long userId
     ) {
         Long answerId = createAnswerUseCase.createAnswer(answerCreateRequest.toDto(questionId, userId));
         return ResponseEntity
@@ -39,7 +39,7 @@ public class AnswerController {
     @GetMapping("/questions/{questionId}/answers")
     public ResponseEntity<Page<AnswerDetailResponse>> getAnswersByQuestionId(
             @PathVariable("questionId") Long questionId,
-            @CurrentUserId Long currentUserId,
+            @LoginUserId Long currentUserId,
             Pageable pageable
     ) {
         Page<AnswerDetailDto> answersPage = getAnswersQuery.findAllByQuestionId(questionId, pageable);

@@ -20,7 +20,7 @@ public class CurrentUserIdArgumentResolver implements HandlerMethodArgumentResol
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(CurrentUserId.class);
+        return parameter.hasParameterAnnotation(LoginUserId.class);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class CurrentUserIdArgumentResolver implements HandlerMethodArgumentResol
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
-        CurrentUserId ann = parameter.getParameterAnnotation(CurrentUserId.class);
+        LoginUserId ann = parameter.getParameterAnnotation(LoginUserId.class);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (!ann.required()) {
