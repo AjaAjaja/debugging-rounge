@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.feature.user.api;
 
-import ajaajaja.debugging_rounge.common.security.annotation.CurrentUserId;
+import ajaajaja.debugging_rounge.common.security.annotation.LoginUserId;
 import ajaajaja.debugging_rounge.feature.user.api.dto.UserProfileResponse;
 import ajaajaja.debugging_rounge.feature.user.api.mapper.UserMapper;
 import ajaajaja.debugging_rounge.feature.user.application.dto.UserProfileDto;
@@ -20,7 +20,7 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping("/me")
-    public ResponseEntity<UserProfileResponse> getCurrentUserProfile(@CurrentUserId Long userId) {
+    public ResponseEntity<UserProfileResponse> getCurrentUserProfile(@LoginUserId Long userId) {
         UserProfileDto userProfile = getUserProfileQuery.getUserProfile(userId);
         return ResponseEntity.ok(userMapper.toResponse(userProfile));
     }

@@ -10,7 +10,9 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface QuestionMapper {
-    QuestionDetailResponse toResponse(QuestionDetailDto questionDetailDto);
+    @Mapping(target = "mine",
+            expression = "java( loginUserId != null && java.util.Objects.equals(questionDetailDto.authorId(), loginUserId))")
+    QuestionDetailResponse toResponse(QuestionDetailDto questionDetailDto, Long loginUserId);
 
     @Mapping(target = "previewContent", source = "previewContent", qualifiedByName = "clean")
     QuestionListResponse toResponse(QuestionListDto dto);
