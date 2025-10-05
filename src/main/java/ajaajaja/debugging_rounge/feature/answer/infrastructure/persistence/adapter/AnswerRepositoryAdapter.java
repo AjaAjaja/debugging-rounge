@@ -30,7 +30,8 @@ public class AnswerRepositoryAdapter implements SaveAnswerPort, LoadAnswerPort {
         return new AnswerDetailDto(
                 answerDetailView.getId(),
                 answerDetailView.getContent(),
-                answerDetailView.getUserId()
+                answerDetailView.getAuthorId(),
+                answerDetailView.getAuthorEmail()
         );
     }
 }

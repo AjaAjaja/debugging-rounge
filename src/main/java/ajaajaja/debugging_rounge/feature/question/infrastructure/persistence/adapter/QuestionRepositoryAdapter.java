@@ -7,6 +7,7 @@ import ajaajaja.debugging_rounge.feature.question.application.port.out.LoadQuest
 import ajaajaja.debugging_rounge.feature.question.application.port.out.SaveQuestionPort;
 import ajaajaja.debugging_rounge.feature.question.domain.Question;
 import ajaajaja.debugging_rounge.feature.question.infrastructure.persistence.QuestionJpaRepository;
+import ajaajaja.debugging_rounge.feature.question.infrastructure.persistence.adapter.mapper.QuestionDtoMapper;
 import ajaajaja.debugging_rounge.feature.question.infrastructure.persistence.projection.QuestionDetailView;
 import ajaajaja.debugging_rounge.feature.question.infrastructure.persistence.projection.QuestionListView;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.Optional;
 public class QuestionRepositoryAdapter implements SaveQuestionPort, LoadQuestionPort, DeleteQuestionPort {
 
     private final QuestionJpaRepository questionJpaRepository;
+    private final QuestionDtoMapper questionDtoMapper;
 
     @Override
     public Question save(Question question) {
@@ -34,7 +36,7 @@ public class QuestionRepositoryAdapter implements SaveQuestionPort, LoadQuestion
 
     @Override
     public Optional<QuestionDetailDto> findQuestionDetailById(Long id) {
-        return questionJpaRepository.findQuestionDetailById(id).map(this::toDto);
+        return questionJpaRepository.findQuestionDetailById(id).map(questionDtoMapper::toDto);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class QuestionRepositoryAdapter implements SaveQuestionPort, LoadQuestion
                 questionDetailView.getId(),
                 questionDetailView.getTitle(),
                 questionDetailView.getContent(),
-                questionDetailView.getUserId(),
+                questionDetailView.getAuthorId(),
                 questionDetailView.getEmail());
     }
 

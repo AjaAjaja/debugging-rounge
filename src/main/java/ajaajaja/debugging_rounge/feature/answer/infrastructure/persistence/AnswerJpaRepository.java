@@ -13,8 +13,11 @@ public interface AnswerJpaRepository extends JpaRepository<Answer, Long> {
             value = """
             SELECT a.id AS id,
                    a.content AS content,
-                   a.userId AS userId
+                   a.authorId AS authorId,
+                   u.email AS authorEmail
             FROM Answer a
+            JOIN User u
+            ON a.authorId = u.id
             WHERE a.questionId = :questionId
             """,
             countQuery = """
