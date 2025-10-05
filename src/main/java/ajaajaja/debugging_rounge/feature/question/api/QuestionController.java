@@ -2,15 +2,13 @@ package ajaajaja.debugging_rounge.feature.question.api;
 
 import ajaajaja.debugging_rounge.common.security.annotation.LoginUserId;
 import ajaajaja.debugging_rounge.common.util.UriHelper;
+import ajaajaja.debugging_rounge.feature.answer.api.mapper.AnswerMapper;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionCreateRequest;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionDetailResponse;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionListResponse;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionUpdateRequest;
-import ajaajaja.debugging_rounge.feature.question.api.mapper.QuestionMapper;
-import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionCreateDto;
-import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionDetailDto;
-import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionListDto;
-import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionUpdateDto;
+import ajaajaja.debugging_rounge.feature.question.api.mapper.QuestionResponseMapper;
+import ajaajaja.debugging_rounge.feature.question.application.dto.*;
 import ajaajaja.debugging_rounge.feature.question.application.port.in.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +23,12 @@ import org.springframework.web.bind.annotation.*;
 public class QuestionController {
 
     private final CreateQuestionUseCase createQuestionUseCase;
-    private final GetQuestionDetailQuery getQuestionDetailQuery;
+    private final GetQuestionWithAnswersQuery getQuestionWithAnswersQuery;
     private final GetQuestionListWithPreviewQuery getQuestionListWithPreviewQuery;
     private final UpdateQuestionUseCase updateQuestionUseCase;
     private final DeleteQuestionUseCase deleteQuestionUseCase;
-    private final QuestionMapper questionMapper;
+    private final QuestionResponseMapper questionResponseMapper;
+    private final AnswerMapper answerMapper;
 
     @PostMapping
     public ResponseEntity<Long> createQuestion(
@@ -46,11 +45,16 @@ public class QuestionController {
     }
 
     @GetMapping("/{questionId}")
-    public ResponseEntity<QuestionDetailResponse> findQuestion(
+    public ResponseEntity<QuestionDetailResponse> findQuestionWithAnswers(
             @PathVariable("questionId") Long questionId,
-            @LoginUserId(required = false) Long loginUserId) {
-        QuestionDetailDto questionDetailDto = getQuestionDetailQuery.findQuestionById(questionId);
-        QuestionDetailResponse questionDetailResponse = questionMapper.toResponse(questionDetailDto, loginUserId);
+            @LoginUserId(required = false) Long loginUserId,
+            Pageable answerPageable) {
+
+        QuestionWithAnswersDto questionWithAnswersDto =
+                getQuestionWithAnswersQuery.getQuestionWithAnswers(questionId, loginUserId, answerPageable);
+
+        QuestionDetailResponse questionDetailResponse =
+                questionResponseMapper.toQuestionDetailResponse(questionWithAnswersDto, loginUserId);
 
         return ResponseEntity.ok(questionDetailResponse);
     }
@@ -58,7 +62,7 @@ public class QuestionController {
     @GetMapping
     public ResponseEntity<Page<QuestionListResponse>> findQuestionsWithPreview(Pageable pageable) {
         Page<QuestionListDto> questionListDtos = getQuestionListWithPreviewQuery.findQuestionsWithPreview(pageable);
-        return ResponseEntity.ok(questionListDtos.map(questionMapper::toResponse));
+        return ResponseEntity.ok(questionListDtos.map(questionResponseMapper::toQuestionListResponse));
     }
 
     @PutMapping("/{questionId}")

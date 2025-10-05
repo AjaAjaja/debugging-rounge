@@ -6,5 +6,7 @@ public interface AnswerDetailView {
 
     String getContent();
 
-    Long getUserId();
+    Long getAuthorId();
+
+    String getAuthorEmail();
 }

@@ -1,16 +1,14 @@
 package ajaajaja.debugging_rounge.feature.question.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import ajaajaja.debugging_rounge.feature.answer.api.dto.AnswerDetailResponse;
+import org.springframework.data.domain.Page;
 
-@Getter
-@AllArgsConstructor
-public class QuestionDetailResponse {
-
-    private Long questionId;
-    private String title;
-    private String content;
-    private String authorEmail;
-    private Boolean mine;
-
+public record QuestionDetailResponse(
+        Long questionId,
+        String title,
+        String content,
+        String authorEmail,
+        Boolean mine,
+        Page<AnswerDetailResponse> answers
+) {
 }

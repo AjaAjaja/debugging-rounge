@@ -24,20 +24,20 @@ public class Answer extends BaseEntity {
     private Long questionId;
 
     @Column(nullable = false)
-    private Long userId;
+    private Long authorId;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Answer(String content, Long questionId, Long userId) {
+    public Answer(String content, Long questionId, Long authorId) {
         this.content = content;
         this.questionId = questionId;
-        this.userId = userId;
+        this.authorId = authorId;
     }
 
-    public static Answer of(String content, Long questionId, Long userId) {
+    public static Answer of(String content, Long questionId, Long authorId) {
         return Answer.builder()
                 .content(content)
                 .questionId(questionId)
-                .userId(userId)
+                .authorId(authorId)
                 .build();
     }
 

@@ -1,10 +1,9 @@
 package ajaajaja.debugging_rounge.feature.question.application;
 
 import ajaajaja.debugging_rounge.common.jwt.exception.CustomAuthorizationException;
-import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionCreateDto;
-import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionDetailDto;
-import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionListDto;
-import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionUpdateDto;
+import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
+import ajaajaja.debugging_rounge.feature.answer.application.port.out.LoadAnswerPort;
+import ajaajaja.debugging_rounge.feature.question.application.dto.*;
 import ajaajaja.debugging_rounge.feature.question.application.port.in.*;
 import ajaajaja.debugging_rounge.feature.question.application.port.out.DeleteQuestionPort;
 import ajaajaja.debugging_rounge.feature.question.application.port.out.LoadQuestionPort;
@@ -28,13 +27,15 @@ import java.util.function.Supplier;
 @Transactional(readOnly = true)
 public class QuestionFacade implements
         CreateQuestionUseCase,
-        GetQuestionDetailQuery, GetQuestionListWithPreviewQuery,
+        GetQuestionDetailQuery, GetQuestionWithAnswersQuery,
+        GetQuestionListWithPreviewQuery,
         UpdateQuestionUseCase,
         DeleteQuestionUseCase {
 
 
     private final SaveQuestionPort saveQuestionPort;
     private final LoadQuestionPort loadQuestionPort;
+    private final LoadAnswerPort loadAnswerPort;
     private final DeleteQuestionPort deleteQuestionPort;
 
     @Override
@@ -48,13 +49,22 @@ public class QuestionFacade implements
     }
 
     @Override
+    public QuestionDetailDto findQuestionById(Long questionId) {
+        return null;
+    }
+
+    @Override
     public Page<QuestionListDto> findQuestionsWithPreview(Pageable pageable) {
         return loadQuestionPort.findQuestionsWithPreview(pageable);
     }
 
     @Override
-    public QuestionDetailDto findQuestionById(Long questionId) {
-        return loadQuestionPort.findQuestionDetailById(questionId).orElseThrow(QuestionNotFoundException::new);
+    public QuestionWithAnswersDto getQuestionWithAnswers(Long questionId, Long loginUserId, Pageable answerPageable) {
+        QuestionDetailDto questionDetailDto =
+                loadQuestionPort.findQuestionDetailById(questionId).orElseThrow(QuestionNotFoundException::new);
+        Page<AnswerDetailDto> answerDetailDtoPage = loadAnswerPort.findAllByQuestionId(questionId, answerPageable);
+
+        return QuestionWithAnswersDto.of(questionDetailDto, answerDetailDtoPage);
     }
 
     @Override
@@ -63,7 +73,7 @@ public class QuestionFacade implements
         Question question = loadQuestionPort.findById(questionUpdateDto.id())
                 .orElseThrow(QuestionNotFoundException::new);
 
-        validateAuthor(question.getUserId(), questionUpdateDto.loginUserId(), QuestionUpdateForbiddenException::new);
+        validateAuthor(question.getAuthorId(), questionUpdateDto.loginUserId(), QuestionUpdateForbiddenException::new);
 
         if (hasChanges(question, questionUpdateDto)) {
             question.update(questionUpdateDto.title(), questionUpdateDto.content());
@@ -76,7 +86,7 @@ public class QuestionFacade implements
         Question question = loadQuestionPort.findById(questionId)
                 .orElseThrow(QuestionNotFoundForDeleteException::new);
 
-        validateAuthor(question.getUserId(), loginUserId, QuestionDeleteForbiddenException::new);
+        validateAuthor(question.getAuthorId(), loginUserId, QuestionDeleteForbiddenException::new);
 
         deleteQuestionPort.deleteById(question.getId());
     }

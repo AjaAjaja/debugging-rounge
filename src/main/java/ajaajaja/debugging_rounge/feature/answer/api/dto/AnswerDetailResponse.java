@@ -4,6 +4,7 @@ public record AnswerDetailResponse(
         Long id,
         String content,
         Long userId,
+        String authorEmail,
         Boolean mine
 ) {
 }

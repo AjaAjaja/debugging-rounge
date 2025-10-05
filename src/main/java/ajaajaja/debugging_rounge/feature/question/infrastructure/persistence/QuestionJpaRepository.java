@@ -18,17 +18,17 @@ public interface QuestionJpaRepository extends JpaRepository<Question, Long> {
             SELECT q.id AS id, q.title AS title, q.content AS content, u.email AS email, u.id AS userId
             FROM Question q
             JOIN User u
-            ON q.userId = u.id
+            ON q.authorId = u.id
             WHERE q.id = :questionId
             """)
     Optional<QuestionDetailView> findQuestionDetailById(@Param("questionId") Long questionId);
 
     @Query("""
             SELECT q.id AS id, q.title AS title,
-            SUBSTRING(q.content, 1, 100) AS previewContent , u.email AS email
+            SUBSTRING(q.content, 1, 100) AS previewContent, u.email AS email
             FROM Question q
             JOIN User u
-            ON q.userId = u.id
+            ON q.authorId = u.id
             """)
     Page<QuestionListView> findQuestionsWithPreview(Pageable pageable);
 

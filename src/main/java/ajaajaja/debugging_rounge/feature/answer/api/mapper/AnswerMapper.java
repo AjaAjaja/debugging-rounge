@@ -8,6 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AnswerMapper {
     @Mapping(target = "mine",
-            expression = "java( loginUserId != null && java.util.Objects.equals(answerDetailDto.userId(), loginUserId))")
+            expression = "java( loginUserId != null && java.util.Objects.equals(answerDetailDto.authorId(), loginUserId))")
     AnswerDetailResponse toResponse(AnswerDetailDto answerDetailDto, Long loginUserId);
 }

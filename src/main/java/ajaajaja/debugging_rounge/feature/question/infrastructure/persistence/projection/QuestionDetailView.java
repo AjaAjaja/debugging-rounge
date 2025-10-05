@@ -9,5 +9,5 @@ public interface QuestionDetailView {
 
     String getEmail();
 
-    Long getUserId();
+    Long getAuthorId();
 }
