@@ -12,5 +12,5 @@ public interface BlacklistedRefreshTokenRepository extends JpaRepository<Blackli
     @Modifying
     @Query(value = "INSERT IGNORE INTO blacklisted_refresh_token (token_hash, user_id, created_date, last_modified_date) " +
             "VALUES (:hash, :userId, NOW(6), NOW(6))", nativeQuery = true)
-    int insertIgnore(@Param("hash") byte[] hash, @Param("authorId") Long userId);
+    int insertIgnore(@Param("hash") byte[] hash, @Param("userId") Long userId);
 }
