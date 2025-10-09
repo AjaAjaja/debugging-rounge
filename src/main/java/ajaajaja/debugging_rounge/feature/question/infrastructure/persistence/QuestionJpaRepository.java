@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface QuestionJpaRepository extends JpaRepository<Question, Long> {
 
     @Query("""
-            SELECT q.id AS id, q.title AS title, q.content AS content, u.email AS email, u.id AS userId
+            SELECT q.id AS id, q.title AS title, q.content AS content, u.email AS email, u.id AS authorId
             FROM Question q
             JOIN User u
             ON q.authorId = u.id
