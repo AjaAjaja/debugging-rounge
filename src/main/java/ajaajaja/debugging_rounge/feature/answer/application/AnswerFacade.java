@@ -5,13 +5,17 @@ import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerCreateDto;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerUpdateDto;
 import ajaajaja.debugging_rounge.feature.answer.application.port.in.CreateAnswerUseCase;
+import ajaajaja.debugging_rounge.feature.answer.application.port.in.DeleteAnswerUseCase;
 import ajaajaja.debugging_rounge.feature.answer.application.port.in.GetAnswersQuery;
 import ajaajaja.debugging_rounge.feature.answer.application.port.in.UpdateAnswerUseCase;
+import ajaajaja.debugging_rounge.feature.answer.application.port.out.DeleteAnswerPort;
 import ajaajaja.debugging_rounge.feature.answer.application.port.out.LoadAnswerPort;
 import ajaajaja.debugging_rounge.feature.answer.application.port.out.SaveAnswerPort;
 import ajaajaja.debugging_rounge.feature.answer.domain.Answer;
 import ajaajaja.debugging_rounge.feature.answer.domain.exception.AnswerNotFoundException;
 import ajaajaja.debugging_rounge.feature.answer.domain.exception.AnswerUpdateForbiddenException;
+import ajaajaja.debugging_rounge.feature.answer.domain.exception.AnswerNotFoundForDeleteException;
+import ajaajaja.debugging_rounge.feature.answer.domain.exception.QuestionDeleteForbiddenException;
 import ajaajaja.debugging_rounge.feature.question.application.port.out.LoadQuestionPort;
 import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +29,12 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery, UpdateAnswerUseCase {
+public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery, UpdateAnswerUseCase, DeleteAnswerUseCase {
 
     private final SaveAnswerPort saveAnswerPort;
     private final LoadQuestionPort loadQuestionPort;
     private final LoadAnswerPort loadAnswerPort;
+    private final DeleteAnswerPort deleteAnswerPort;
     private final OwnerShipValidator ownerShipValidator;
 
     @Override
@@ -65,6 +70,16 @@ public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery, Updat
         if (hasChanges(answer, answerUpdateDto)) {
             answer.update(answerUpdateDto.content());
         }
+    }
+
+    @Override
+    @Transactional
+    public void deleteAnswer(Long id, Long loginUserId) {
+        Answer answer = loadAnswerPort.findById(id).orElseThrow(AnswerNotFoundForDeleteException::new);
+
+        ownerShipValidator.validateAuthor(answer.getAuthorId(), loginUserId, QuestionDeleteForbiddenException::new);
+
+        deleteAnswerPort.deleteById(id);
     }
 
     private boolean hasChanges(Answer answer, AnswerUpdateDto answerUpdateDto) {

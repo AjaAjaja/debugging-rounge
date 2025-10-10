@@ -1,6 +1,7 @@
 package ajaajaja.debugging_rounge.feature.answer.infrastructure.persistence.adapter;
 
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
+import ajaajaja.debugging_rounge.feature.answer.application.port.out.DeleteAnswerPort;
 import ajaajaja.debugging_rounge.feature.answer.application.port.out.LoadAnswerPort;
 import ajaajaja.debugging_rounge.feature.answer.application.port.out.SaveAnswerPort;
 import ajaajaja.debugging_rounge.feature.answer.domain.Answer;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class AnswerRepositoryAdapter implements SaveAnswerPort, LoadAnswerPort {
+public class AnswerRepositoryAdapter implements SaveAnswerPort, LoadAnswerPort, DeleteAnswerPort {
 
     private final AnswerJpaRepository answerJpaRepository;
     @Override
@@ -33,6 +34,11 @@ public class AnswerRepositoryAdapter implements SaveAnswerPort, LoadAnswerPort {
         return answerJpaRepository.findById(id);
     }
 
+    @Override
+    public void deleteById(Long id) {
+        answerJpaRepository.deleteById(id);
+    }
+
     private AnswerDetailDto toDto(AnswerDetailView answerDetailView) {
         return new AnswerDetailDto(
                 answerDetailView.getId(),
@@ -41,4 +47,5 @@ public class AnswerRepositoryAdapter implements SaveAnswerPort, LoadAnswerPort {
                 answerDetailView.getAuthorEmail()
         );
     }
+
 }
