@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.feature.answer.application;
 
-import ajaajaja.debugging_rounge.common.jwt.exception.CustomAuthorizationException;
+import ajaajaja.debugging_rounge.common.security.validator.OwnerShipValidator;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerCreateDto;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerUpdateDto;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +30,7 @@ public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery, Updat
     private final SaveAnswerPort saveAnswerPort;
     private final LoadQuestionPort loadQuestionPort;
     private final LoadAnswerPort loadAnswerPort;
+    private final OwnerShipValidator ownerShipValidator;
 
     @Override
     @Transactional
@@ -60,16 +60,10 @@ public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery, Updat
     public void updateAnswer(AnswerUpdateDto answerUpdateDto) {
         Answer answer = loadAnswerPort.findById(answerUpdateDto.id()).orElseThrow(AnswerNotFoundException::new);
 
-        validateAuthor(answer.getAuthorId(), answerUpdateDto.authorId(), AnswerUpdateForbiddenException::new);
+        ownerShipValidator.validateAuthor(answer.getAuthorId(), answerUpdateDto.authorId(), AnswerUpdateForbiddenException::new);
 
         if (hasChanges(answer, answerUpdateDto)) {
             answer.update(answerUpdateDto.content());
-        }
-    }
-
-    private void validateAuthor(Long authorId, Long loginUserId, Supplier<? extends CustomAuthorizationException> ex) {
-        if (!Objects.equals(authorId, loginUserId)) {
-            throw ex.get();
         }
     }
 

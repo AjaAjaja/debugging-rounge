@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.feature.question.application;
 
-import ajaajaja.debugging_rounge.common.jwt.exception.CustomAuthorizationException;
+import ajaajaja.debugging_rounge.common.security.validator.OwnerShipValidator;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
 import ajaajaja.debugging_rounge.feature.answer.application.port.out.LoadAnswerPort;
 import ajaajaja.debugging_rounge.feature.question.application.dto.*;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +36,7 @@ public class QuestionFacade implements
     private final LoadQuestionPort loadQuestionPort;
     private final LoadAnswerPort loadAnswerPort;
     private final DeleteQuestionPort deleteQuestionPort;
+    private final OwnerShipValidator ownerShipValidator;
 
     @Override
     @Transactional
@@ -73,7 +73,7 @@ public class QuestionFacade implements
         Question question = loadQuestionPort.findById(questionUpdateDto.id())
                 .orElseThrow(QuestionNotFoundException::new);
 
-        validateAuthor(question.getAuthorId(), questionUpdateDto.loginUserId(), QuestionUpdateForbiddenException::new);
+        ownerShipValidator.validateAuthor(question.getAuthorId(), questionUpdateDto.loginUserId(), QuestionUpdateForbiddenException::new);
 
         if (hasChanges(question, questionUpdateDto)) {
             question.update(questionUpdateDto.title(), questionUpdateDto.content());
@@ -86,15 +86,9 @@ public class QuestionFacade implements
         Question question = loadQuestionPort.findById(questionId)
                 .orElseThrow(QuestionNotFoundForDeleteException::new);
 
-        validateAuthor(question.getAuthorId(), loginUserId, QuestionDeleteForbiddenException::new);
+        ownerShipValidator.validateAuthor(question.getAuthorId(), loginUserId, QuestionDeleteForbiddenException::new);
 
         deleteQuestionPort.deleteById(question.getId());
-    }
-
-    private void validateAuthor(Long authorId, Long loginUserId, Supplier<? extends CustomAuthorizationException> ex) {
-        if (!Objects.equals(authorId, loginUserId)) {
-            throw ex.get();
-        }
     }
 
     private boolean hasChanges(Question question, QuestionUpdateDto questionUpdateDto) {
