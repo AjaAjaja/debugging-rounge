@@ -41,4 +41,8 @@ public class Answer extends BaseEntity {
                 .build();
     }
 
+    public void update(String content) {
+        this.content = content;
+    }
+
 }

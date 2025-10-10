@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class AnswerRepositoryAdapter implements SaveAnswerPort, LoadAnswerPort {
@@ -24,6 +26,11 @@ public class AnswerRepositoryAdapter implements SaveAnswerPort, LoadAnswerPort {
     @Override
     public Page<AnswerDetailDto> findAllByQuestionId(Long questionId, Pageable pageable) {
         return answerJpaRepository.findAllByQuestionId(questionId, pageable).map(this::toDto);
+    }
+
+    @Override
+    public Optional<Answer> findById(Long id) {
+        return answerJpaRepository.findById(id);
     }
 
     private AnswerDetailDto toDto(AnswerDetailView answerDetailView) {
