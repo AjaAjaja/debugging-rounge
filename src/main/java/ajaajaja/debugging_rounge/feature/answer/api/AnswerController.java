@@ -8,6 +8,7 @@ import ajaajaja.debugging_rounge.feature.answer.api.dto.AnswerUpdateRequest;
 import ajaajaja.debugging_rounge.feature.answer.api.mapper.AnswerMapper;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
 import ajaajaja.debugging_rounge.feature.answer.application.port.in.CreateAnswerUseCase;
+import ajaajaja.debugging_rounge.feature.answer.application.port.in.DeleteAnswerUseCase;
 import ajaajaja.debugging_rounge.feature.answer.application.port.in.GetAnswersQuery;
 import ajaajaja.debugging_rounge.feature.answer.application.port.in.UpdateAnswerUseCase;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ public class AnswerController {
     private final CreateAnswerUseCase createAnswerUseCase;
     private final GetAnswersQuery getAnswersQuery;
     private final UpdateAnswerUseCase updateAnswerUseCase;
+    private final DeleteAnswerUseCase deleteAnswerUseCase;
     private final AnswerMapper answerMapper;
 
     @PostMapping("/questions/{questionId}/answers")
@@ -60,6 +62,16 @@ public class AnswerController {
             @LoginUserId Long loginUserId
     ){
         updateAnswerUseCase.updateAnswer(answerMapper.toDto(answerUpdateRequest, answerId, loginUserId));
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/answers/{answerId}")
+    public ResponseEntity<Void> deleteAnswer(
+            @PathVariable("answerId")Long answerId,
+            @LoginUserId Long loginUserId
+    ){
+        deleteAnswerUseCase.deleteAnswer(answerId, loginUserId);
+
         return ResponseEntity.noContent().build();
     }
 }
