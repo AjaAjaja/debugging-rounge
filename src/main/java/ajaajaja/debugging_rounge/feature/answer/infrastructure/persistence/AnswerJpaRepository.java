@@ -27,4 +27,6 @@ public interface AnswerJpaRepository extends JpaRepository<Answer, Long> {
             """
     )
     Page<AnswerDetailView> findAllByQuestionId(@Param("questionId") Long questionId, Pageable pageable);
+
+
 }

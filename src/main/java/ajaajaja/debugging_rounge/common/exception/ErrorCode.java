@@ -26,7 +26,9 @@ public enum ErrorCode {
     AUTHENTICATION_PRINCIPAL_INVALID("error.authentication.principal_invalid", HttpStatus.UNAUTHORIZED),
     USER_IDENTIFIER_INVALID("error.user.identifier_invalid", HttpStatus.UNAUTHORIZED),
     QUESTION_UPDATE_FORBIDDEN("error.question.update_forbidden", HttpStatus.FORBIDDEN),
-    QUESTION_DELETE_FORBIDDEN("error.question.delete_forbidden", HttpStatus.FORBIDDEN);
+    QUESTION_DELETE_FORBIDDEN("error.question.delete_forbidden", HttpStatus.FORBIDDEN),
+    ANSWER_NOT_FOUND("error.answer.not_found", HttpStatus.NOT_FOUND),
+    ANSWER_UPDATE_FORBIDDEN("error.answer.update_forbidden", HttpStatus.FORBIDDEN);
 
     private final String messageKey;
 

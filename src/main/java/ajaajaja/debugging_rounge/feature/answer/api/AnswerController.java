@@ -4,10 +4,12 @@ import ajaajaja.debugging_rounge.common.security.annotation.LoginUserId;
 import ajaajaja.debugging_rounge.common.util.UriHelper;
 import ajaajaja.debugging_rounge.feature.answer.api.dto.AnswerCreateRequest;
 import ajaajaja.debugging_rounge.feature.answer.api.dto.AnswerDetailResponse;
+import ajaajaja.debugging_rounge.feature.answer.api.dto.AnswerUpdateRequest;
 import ajaajaja.debugging_rounge.feature.answer.api.mapper.AnswerMapper;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
 import ajaajaja.debugging_rounge.feature.answer.application.port.in.CreateAnswerUseCase;
 import ajaajaja.debugging_rounge.feature.answer.application.port.in.GetAnswersQuery;
+import ajaajaja.debugging_rounge.feature.answer.application.port.in.UpdateAnswerUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ public class AnswerController {
 
     private final CreateAnswerUseCase createAnswerUseCase;
     private final GetAnswersQuery getAnswersQuery;
+    private final UpdateAnswerUseCase updateAnswerUseCase;
     private final AnswerMapper answerMapper;
 
     @PostMapping("/questions/{questionId}/answers")
@@ -48,5 +51,15 @@ public class AnswerController {
                 answersPage.map(dto -> answerMapper.toResponse(dto, currentUserId));
 
         return ResponseEntity.ok(answersResponsePage);
+    }
+
+    @PutMapping("/answers/{answerId}")
+    public ResponseEntity<Void> updateAnswer(
+            @PathVariable("answerId")Long answerId,
+            @RequestBody @Valid AnswerUpdateRequest answerUpdateRequest,
+            @LoginUserId Long loginUserId
+    ){
+        updateAnswerUseCase.updateAnswer(answerMapper.toDto(answerUpdateRequest, answerId, loginUserId));
+        return ResponseEntity.noContent().build();
     }
 }
