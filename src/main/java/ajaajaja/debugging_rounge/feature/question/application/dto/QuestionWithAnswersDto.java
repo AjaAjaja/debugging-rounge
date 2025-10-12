@@ -9,15 +9,6 @@ public record QuestionWithAnswersDto(
         String content,
         Long authorId,
         String authorEmail,
+        Integer recommendScore,
         Page<AnswerDetailDto> answers
-) {
-    public static QuestionWithAnswersDto of(QuestionDetailDto questionDetailDto, Page<AnswerDetailDto> answerDetailDtoPage) {
-        return new QuestionWithAnswersDto(
-                questionDetailDto.questionId(),
-                questionDetailDto.title(),
-                questionDetailDto.content(),
-                questionDetailDto.authorId(),
-                questionDetailDto.authorEmail(),
-                answerDetailDtoPage);
-    }
-}
+) {}

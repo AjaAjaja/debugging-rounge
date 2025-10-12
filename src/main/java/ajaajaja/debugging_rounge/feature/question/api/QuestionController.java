@@ -4,7 +4,7 @@ import ajaajaja.debugging_rounge.common.security.annotation.LoginUserId;
 import ajaajaja.debugging_rounge.common.util.UriHelper;
 import ajaajaja.debugging_rounge.feature.answer.api.mapper.AnswerMapper;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionCreateRequest;
-import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionDetailResponse;
+import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionWithAnswerResponse;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionListResponse;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionUpdateRequest;
 import ajaajaja.debugging_rounge.feature.question.api.mapper.QuestionResponseMapper;
@@ -45,7 +45,7 @@ public class QuestionController {
     }
 
     @GetMapping("/{questionId}")
-    public ResponseEntity<QuestionDetailResponse> findQuestionWithAnswers(
+    public ResponseEntity<QuestionWithAnswerResponse> findQuestionWithAnswers(
             @PathVariable("questionId") Long questionId,
             @LoginUserId(required = false) Long loginUserId,
             Pageable answerPageable) {
@@ -53,10 +53,10 @@ public class QuestionController {
         QuestionWithAnswersDto questionWithAnswersDto =
                 getQuestionWithAnswersQuery.getQuestionWithAnswers(questionId, loginUserId, answerPageable);
 
-        QuestionDetailResponse questionDetailResponse =
-                questionResponseMapper.toQuestionDetailResponse(questionWithAnswersDto, loginUserId);
+        QuestionWithAnswerResponse questionWithAnswerResponse =
+                questionResponseMapper.toQuestionWithAnswersResponse(questionWithAnswersDto, loginUserId);
 
-        return ResponseEntity.ok(questionDetailResponse);
+        return ResponseEntity.ok(questionWithAnswerResponse);
     }
 
     @GetMapping

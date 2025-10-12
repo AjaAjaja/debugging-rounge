@@ -15,11 +15,19 @@ import java.util.Optional;
 public interface QuestionJpaRepository extends JpaRepository<Question, Long> {
 
     @Query("""
-            SELECT q.id AS id, q.title AS title, q.content AS content, u.email AS email, u.id AS authorId
+            SELECT q.id AS id, q.title AS title, q.content AS content, u.email AS email, u.id AS authorId,
+            SUM(
+            CASE
+            WHEN qr.type = ajaajaja.debugging_rounge.feature.question.recommend.domain.RecommendType.UP THEN 1
+            WHEN qr.type = ajaajaja.debugging_rounge.feature.question.recommend.domain.RecommendType.DOWN THEN -1
+            ELSE 0  END) AS recommendScore
             FROM Question q
             JOIN User u
             ON q.authorId = u.id
+            LEFT JOIN QuestionRecommend qr
+            ON q.id = qr.questionId
             WHERE q.id = :questionId
+            GROUP BY q.id, q.title, q.content, u.email, u.id
             """)
     Optional<QuestionDetailView> findQuestionDetailById(@Param("questionId") Long questionId);
 

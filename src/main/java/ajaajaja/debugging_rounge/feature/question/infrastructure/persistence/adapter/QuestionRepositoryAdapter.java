@@ -8,8 +8,6 @@ import ajaajaja.debugging_rounge.feature.question.application.port.out.SaveQuest
 import ajaajaja.debugging_rounge.feature.question.domain.Question;
 import ajaajaja.debugging_rounge.feature.question.infrastructure.persistence.QuestionJpaRepository;
 import ajaajaja.debugging_rounge.feature.question.infrastructure.persistence.adapter.mapper.QuestionDtoMapper;
-import ajaajaja.debugging_rounge.feature.question.infrastructure.persistence.projection.QuestionDetailView;
-import ajaajaja.debugging_rounge.feature.question.infrastructure.persistence.projection.QuestionListView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +39,7 @@ public class QuestionRepositoryAdapter implements SaveQuestionPort, LoadQuestion
 
     @Override
     public Page<QuestionListDto> findQuestionsWithPreview(Pageable pageable) {
-        return questionJpaRepository.findQuestionsWithPreview(pageable).map(this::toDto);
+        return questionJpaRepository.findQuestionsWithPreview(pageable).map(questionDtoMapper::toDto);
     }
 
     @Override
@@ -54,20 +52,4 @@ public class QuestionRepositoryAdapter implements SaveQuestionPort, LoadQuestion
         questionJpaRepository.deleteById(id);
     }
 
-    private QuestionDetailDto toDto(QuestionDetailView questionDetailView) {
-        return new QuestionDetailDto(
-                questionDetailView.getId(),
-                questionDetailView.getTitle(),
-                questionDetailView.getContent(),
-                questionDetailView.getAuthorId(),
-                questionDetailView.getEmail());
-    }
-
-    private QuestionListDto toDto(QuestionListView questionListView) {
-        return new QuestionListDto(
-                questionListView.getId(),
-                questionListView.getTitle(),
-                questionListView.getPreviewContent(),
-                questionListView.getEmail());
-    }
 }

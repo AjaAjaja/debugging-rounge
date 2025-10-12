@@ -4,6 +4,7 @@ import ajaajaja.debugging_rounge.common.security.validator.OwnerShipValidator;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
 import ajaajaja.debugging_rounge.feature.answer.application.port.out.LoadAnswerPort;
 import ajaajaja.debugging_rounge.feature.question.application.dto.*;
+import ajaajaja.debugging_rounge.feature.question.application.mapper.QuestionWithAnswersMapper;
 import ajaajaja.debugging_rounge.feature.question.application.port.in.*;
 import ajaajaja.debugging_rounge.feature.question.application.port.out.DeleteQuestionPort;
 import ajaajaja.debugging_rounge.feature.question.application.port.out.LoadQuestionPort;
@@ -37,6 +38,7 @@ public class QuestionFacade implements
     private final LoadAnswerPort loadAnswerPort;
     private final DeleteQuestionPort deleteQuestionPort;
     private final OwnerShipValidator ownerShipValidator;
+    private final QuestionWithAnswersMapper mapper;
 
     @Override
     @Transactional
@@ -64,7 +66,7 @@ public class QuestionFacade implements
                 loadQuestionPort.findQuestionDetailById(questionId).orElseThrow(QuestionNotFoundException::new);
         Page<AnswerDetailDto> answerDetailDtoPage = loadAnswerPort.findAllByQuestionId(questionId, answerPageable);
 
-        return QuestionWithAnswersDto.of(questionDetailDto, answerDetailDtoPage);
+        return mapper.toDto(questionDetailDto, answerDetailDtoPage);
     }
 
     @Override

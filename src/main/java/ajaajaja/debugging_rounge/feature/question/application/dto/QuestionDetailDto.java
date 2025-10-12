@@ -5,6 +5,7 @@ public record QuestionDetailDto(
         String title,
         String content,
         Long authorId,
-        String authorEmail
+        String authorEmail,
+        Integer recommendScore
 ) {
 }
