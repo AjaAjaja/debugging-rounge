@@ -1,0 +1,8 @@
+package ajaajaja.debugging_rounge.feature.question.recommend.application.port.in;
+
+import ajaajaja.debugging_rounge.feature.question.recommend.application.dto.QuestionRecommendScoreAndMyRecommendTypeDto;
+import ajaajaja.debugging_rounge.feature.question.recommend.application.dto.QuestionRecommendUpdateDto;
+
+public interface UpdateQuestionRecommendUseCase {
+    QuestionRecommendScoreAndMyRecommendTypeDto UpdateQuestionRecommend(QuestionRecommendUpdateDto questionRecommendUpdateDto);
+}
