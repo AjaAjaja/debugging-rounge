@@ -1,10 +1,8 @@
 package ajaajaja.debugging_rounge.feature.question.recommend.infrastructure.persistence.adapter;
 
-import ajaajaja.debugging_rounge.feature.question.recommend.application.port.out.DeleteQuestionRecommendPort;
-import ajaajaja.debugging_rounge.feature.question.recommend.application.port.out.LoadQuestionRecommendPort;
-import ajaajaja.debugging_rounge.feature.question.recommend.application.port.out.LoadQuestionRecommendScorePort;
-import ajaajaja.debugging_rounge.feature.question.recommend.application.port.out.SaveQuestionRecommendPort;
+import ajaajaja.debugging_rounge.feature.question.recommend.application.port.out.*;
 import ajaajaja.debugging_rounge.feature.question.recommend.domain.QuestionRecommend;
+import ajaajaja.debugging_rounge.feature.question.recommend.domain.RecommendType;
 import ajaajaja.debugging_rounge.feature.question.recommend.infrastructure.persistence.QuestionRecommendRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class QuestionRecommendRepositoryAdapter
         implements LoadQuestionRecommendPort, SaveQuestionRecommendPort, LoadQuestionRecommendScorePort,
-        DeleteQuestionRecommendPort {
+        DeleteQuestionRecommendPort, UpsertQuestionRecommendPort {
 
     private final QuestionRecommendRepository questionRecommendRepository;
     @Override
@@ -38,5 +36,10 @@ public class QuestionRecommendRepositoryAdapter
     @Override
     public void deleteQuestionRecommendByQuestionIdAndUserId(Long questionId, Long userId) {
         questionRecommendRepository.deleteByQuestionIdAndUserId(questionId, userId);
+    }
+
+    @Override
+    public void insertOrUpdateQuestionRecommend(Long questionId, Long userId, RecommendType type) {
+        questionRecommendRepository.insertOrUpdate(questionId, userId, type);
     }
 }
