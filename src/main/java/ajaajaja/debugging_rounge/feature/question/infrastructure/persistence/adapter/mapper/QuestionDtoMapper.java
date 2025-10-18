@@ -1,7 +1,9 @@
 package ajaajaja.debugging_rounge.feature.question.infrastructure.persistence.adapter.mapper;
 
 import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionDetailDto;
+import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionListDto;
 import ajaajaja.debugging_rounge.feature.question.infrastructure.persistence.projection.QuestionDetailView;
+import ajaajaja.debugging_rounge.feature.question.infrastructure.persistence.projection.QuestionListView;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -11,4 +13,8 @@ public interface QuestionDtoMapper {
     @Mapping(target = "questionId", source = "id")
     @Mapping(target = "authorEmail", source = "email")
     QuestionDetailDto toDto(QuestionDetailView questionDetailView);
+
+    @Mapping(target = "questionId", source = "id")
+    @Mapping(target = "authorEmail", source = "email")
+    QuestionListDto toDto(QuestionListView questionListView);
 }

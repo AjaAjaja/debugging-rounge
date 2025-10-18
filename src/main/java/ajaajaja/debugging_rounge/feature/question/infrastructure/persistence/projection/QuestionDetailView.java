@@ -10,4 +10,6 @@ public interface QuestionDetailView {
     String getEmail();
 
     Long getAuthorId();
+
+    Integer getRecommendScore();
 }

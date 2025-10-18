@@ -2,7 +2,7 @@ package ajaajaja.debugging_rounge.feature.question.api.mapper;
 
 import ajaajaja.debugging_rounge.feature.answer.api.dto.AnswerDetailResponse;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
-import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionDetailResponse;
+import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionWithAnswerResponse;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionListResponse;
 import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionListDto;
 import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionWithAnswersDto;
@@ -19,7 +19,7 @@ public interface QuestionResponseMapper {
     QuestionListResponse toQuestionListResponse(QuestionListDto dto);
     @Mapping(target = "mine",
             expression = "java( loginUserId != null && java.util.Objects.equals(questionWithAnswersDto.authorId(), loginUserId))")
-    QuestionDetailResponse toQuestionDetailResponse(QuestionWithAnswersDto questionWithAnswersDto, @Context Long loginUserId);
+    QuestionWithAnswerResponse toQuestionWithAnswersResponse(QuestionWithAnswersDto questionWithAnswersDto, @Context Long loginUserId);
 
     @Mapping(target = "mine",
             expression = "java( loginUserId != null && java.util.Objects.equals(answerDetailDto.authorId(), loginUserId))")
