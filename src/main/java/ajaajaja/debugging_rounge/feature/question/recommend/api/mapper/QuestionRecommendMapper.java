@@ -5,10 +5,12 @@ import ajaajaja.debugging_rounge.feature.question.recommend.api.dto.QuestionReco
 import ajaajaja.debugging_rounge.feature.question.recommend.application.dto.QuestionRecommendScoreAndMyRecommendTypeDto;
 import ajaajaja.debugging_rounge.feature.question.recommend.application.dto.QuestionRecommendUpdateDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface QuestionRecommendMapper {
 
+    @Mapping(target = "userId", source = "loginUserId")
     QuestionRecommendUpdateDto toDto(
             QuestionRecommendUpdateRequest questionRecommendUpdateRequest,
             Long questionId,

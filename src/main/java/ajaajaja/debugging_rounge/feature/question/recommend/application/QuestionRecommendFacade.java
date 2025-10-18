@@ -28,7 +28,7 @@ public class QuestionRecommendFacade implements UpdateQuestionRecommendUseCase {
         if (requestedRecommendType == RecommendType.NONE) {
             deleteQuestionRecommendPort.deleteQuestionRecommendByQuestionIdAndUserId(questionId, userId);
         } else {
-            upsertQuestionRecommendPort.insertOrUpdateQuestionRecommend(questionId, userId, requestedRecommendType);
+            upsertQuestionRecommendPort.insertOrUpdateQuestionRecommend(questionId, userId, requestedRecommendType.name());
         }
 
         Integer recommendScore = loadQuestionRecommendScorePort.getQuestionRecommendScoreByQuestionId(questionId);

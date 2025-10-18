@@ -2,7 +2,6 @@ package ajaajaja.debugging_rounge.feature.question.recommend.infrastructure.pers
 
 import ajaajaja.debugging_rounge.feature.question.recommend.application.port.out.*;
 import ajaajaja.debugging_rounge.feature.question.recommend.domain.QuestionRecommend;
-import ajaajaja.debugging_rounge.feature.question.recommend.domain.RecommendType;
 import ajaajaja.debugging_rounge.feature.question.recommend.infrastructure.persistence.QuestionRecommendRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -39,7 +38,7 @@ public class QuestionRecommendRepositoryAdapter
     }
 
     @Override
-    public void insertOrUpdateQuestionRecommend(Long questionId, Long userId, RecommendType type) {
+    public void insertOrUpdateQuestionRecommend(Long questionId, Long userId, String type) {
         questionRecommendRepository.insertOrUpdate(questionId, userId, type);
     }
 }

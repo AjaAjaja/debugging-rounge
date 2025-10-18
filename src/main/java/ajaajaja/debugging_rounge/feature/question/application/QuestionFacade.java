@@ -14,6 +14,9 @@ import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionDelet
 import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionNotFoundException;
 import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionNotFoundForDeleteException;
 import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionUpdateForbiddenException;
+import ajaajaja.debugging_rounge.feature.question.recommend.application.port.out.LoadQuestionRecommendPort;
+import ajaajaja.debugging_rounge.feature.question.recommend.domain.QuestionRecommend;
+import ajaajaja.debugging_rounge.feature.question.recommend.domain.RecommendType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +39,7 @@ public class QuestionFacade implements
     private final SaveQuestionPort saveQuestionPort;
     private final LoadQuestionPort loadQuestionPort;
     private final LoadAnswerPort loadAnswerPort;
+    private final LoadQuestionRecommendPort loadQuestionRecommendPort;
     private final DeleteQuestionPort deleteQuestionPort;
     private final OwnerShipValidator ownerShipValidator;
     private final QuestionWithAnswersMapper mapper;
@@ -65,8 +69,12 @@ public class QuestionFacade implements
         QuestionDetailDto questionDetailDto =
                 loadQuestionPort.findQuestionDetailById(questionId).orElseThrow(QuestionNotFoundException::new);
         Page<AnswerDetailDto> answerDetailDtoPage = loadAnswerPort.findAllByQuestionId(questionId, answerPageable);
+        RecommendType myRecommendType =
+                loadQuestionRecommendPort.findByQuestionIdAndUserId(questionId, loginUserId)
+                        .map(QuestionRecommend::getType)
+                        .orElse(RecommendType.NONE);
 
-        return mapper.toDto(questionDetailDto, answerDetailDtoPage);
+        return mapper.toDto(questionDetailDto, answerDetailDtoPage, myRecommendType);
     }
 
     @Override
