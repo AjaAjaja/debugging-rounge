@@ -1,9 +1,9 @@
 package ajaajaja.debugging_rounge.feature.question.api.mapper;
 
 import ajaajaja.debugging_rounge.feature.answer.api.dto.AnswerDetailResponse;
-import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
-import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionWithAnswerResponse;
+import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailWithRecommendDto;
 import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionListResponse;
+import ajaajaja.debugging_rounge.feature.question.api.dto.QuestionWithAnswerResponse;
 import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionListDto;
 import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionWithAnswersDto;
 import org.mapstruct.Context;
@@ -22,8 +22,8 @@ public interface QuestionResponseMapper {
     QuestionWithAnswerResponse toQuestionWithAnswersResponse(QuestionWithAnswersDto questionWithAnswersDto, @Context Long loginUserId);
 
     @Mapping(target = "mine",
-            expression = "java( loginUserId != null && java.util.Objects.equals(answerDetailDto.authorId(), loginUserId))")
-    AnswerDetailResponse toAnswerDetailResponse(AnswerDetailDto answerDetailDto, @Context Long loginUserId);
+            expression = "java( loginUserId != null && java.util.Objects.equals(answerDetailWithRecommendDto.authorId(), loginUserId))")
+    AnswerDetailResponse toAnswerDetailResponse(AnswerDetailWithRecommendDto answerDetailWithRecommendDto, @Context Long loginUserId);
 
     @Named("clean")
     default String clean(String rawContent) {
@@ -35,7 +35,7 @@ public interface QuestionResponseMapper {
         return cleaned.length() > 50 ? cleaned.substring(0, 50) + "..." : cleaned;
     }
 
-    default Page<AnswerDetailResponse> toAnswerDetailPage(Page<AnswerDetailDto> answerDtoPage, @Context Long loginUserId) {
+    default Page<AnswerDetailResponse> toAnswerDetailPage(Page<AnswerDetailWithRecommendDto> answerDtoPage, @Context Long loginUserId) {
         if (answerDtoPage == null) {
             return Page.empty();
         }

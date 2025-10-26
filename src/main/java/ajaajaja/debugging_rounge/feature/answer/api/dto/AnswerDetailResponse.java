@@ -1,10 +1,14 @@
 package ajaajaja.debugging_rounge.feature.answer.api.dto;
 
+import ajaajaja.debugging_rounge.feature.answer.recommend.domain.RecommendType;
+
 public record AnswerDetailResponse(
         Long id,
         String content,
         Long authorId,
         String authorEmail,
-        Boolean mine
+        Boolean mine,
+        RecommendType myRecommendType,
+        Integer recommendScore
 ) {
 }

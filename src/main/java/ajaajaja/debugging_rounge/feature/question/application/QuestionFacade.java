@@ -2,7 +2,10 @@ package ajaajaja.debugging_rounge.feature.question.application;
 
 import ajaajaja.debugging_rounge.common.security.validator.OwnerShipValidator;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
+import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailWithRecommendDto;
 import ajaajaja.debugging_rounge.feature.answer.application.port.out.LoadAnswerPort;
+import ajaajaja.debugging_rounge.feature.answer.recommend.application.dto.AnswerRecommendScoreAndMyRecommendTypeDto;
+import ajaajaja.debugging_rounge.feature.answer.recommend.application.port.out.LoadAnswerRecommendPort;
 import ajaajaja.debugging_rounge.feature.question.application.dto.*;
 import ajaajaja.debugging_rounge.feature.question.application.mapper.QuestionWithAnswersMapper;
 import ajaajaja.debugging_rounge.feature.question.application.port.in.*;
@@ -19,11 +22,12 @@ import ajaajaja.debugging_rounge.feature.question.recommend.domain.QuestionRecom
 import ajaajaja.debugging_rounge.feature.question.recommend.domain.RecommendType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,11 +42,13 @@ public class QuestionFacade implements
 
     private final SaveQuestionPort saveQuestionPort;
     private final LoadQuestionPort loadQuestionPort;
-    private final LoadAnswerPort loadAnswerPort;
     private final LoadQuestionRecommendPort loadQuestionRecommendPort;
     private final DeleteQuestionPort deleteQuestionPort;
     private final OwnerShipValidator ownerShipValidator;
     private final QuestionWithAnswersMapper mapper;
+
+    private final LoadAnswerPort loadAnswerPort;
+    private final LoadAnswerRecommendPort loadAnswerRecommendPort;
 
     @Override
     @Transactional
@@ -66,15 +72,18 @@ public class QuestionFacade implements
 
     @Override
     public QuestionWithAnswersDto getQuestionWithAnswers(Long questionId, Long loginUserId, Pageable answerPageable) {
+
         QuestionDetailDto questionDetailDto =
                 loadQuestionPort.findQuestionDetailById(questionId).orElseThrow(QuestionNotFoundException::new);
-        Page<AnswerDetailDto> answerDetailDtoPage = loadAnswerPort.findAllByQuestionId(questionId, answerPageable);
-        RecommendType myRecommendType =
+        RecommendType myRecommendTypeForQuestion =
                 loadQuestionRecommendPort.findByQuestionIdAndUserId(questionId, loginUserId)
                         .map(QuestionRecommend::getType)
                         .orElse(RecommendType.NONE);
 
-        return mapper.toDto(questionDetailDto, answerDetailDtoPage, myRecommendType);
+        Page<AnswerDetailWithRecommendDto> answerDetailWithRecommend = getAnswerDetailWithRecommend(questionId, loginUserId, answerPageable);
+
+
+        return mapper.toQuestionWithAnswerDto(questionDetailDto, answerDetailWithRecommend, myRecommendTypeForQuestion);
     }
 
     @Override
@@ -104,6 +113,32 @@ public class QuestionFacade implements
     private boolean hasChanges(Question question, QuestionUpdateDto questionUpdateDto) {
         return !Objects.equals(question.getTitle(), questionUpdateDto.title())
                 || !Objects.equals(question.getContent(), questionUpdateDto.content());
+    }
+
+    private Page<AnswerDetailWithRecommendDto> getAnswerDetailWithRecommend(Long questionId, Long loginUserId, Pageable answerPageable) {
+
+        Page<AnswerDetailDto> answerDetailDtoPage = loadAnswerPort.findAllByQuestionId(questionId, answerPageable);
+        if (answerDetailDtoPage.isEmpty()) {
+            return new PageImpl<>(List.of(), answerPageable, 0);
+        }
+
+        List<Long> answerIds = answerDetailDtoPage.getContent().stream().map(AnswerDetailDto::id).toList();
+
+        List<AnswerRecommendScoreAndMyRecommendTypeDto> answerRecommendScoreAndMyType =
+                loadAnswerRecommendPort.getAnswerRecommendScoreAndMyType(answerIds, loginUserId);
+
+        Map<Long, AnswerRecommendScoreAndMyRecommendTypeDto> dtoMap =
+                answerRecommendScoreAndMyType.stream()
+                        .collect(HashMap::new,
+                                (m, d) -> m.put(d.answerId(), d),
+                                Map::putAll);
+
+        List<AnswerDetailWithRecommendDto> dtoList =
+                answerDetailDtoPage.getContent().stream()
+                        .map(a -> AnswerDetailWithRecommendDto.of(a, dtoMap.get(a.id())))
+                        .toList();
+
+        return new PageImpl<>(dtoList, answerDetailDtoPage.getPageable(), answerDetailDtoPage.getTotalElements());
     }
 
 }
