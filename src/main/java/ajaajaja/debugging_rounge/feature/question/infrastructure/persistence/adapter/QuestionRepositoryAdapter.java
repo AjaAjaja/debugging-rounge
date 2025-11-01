@@ -38,8 +38,13 @@ public class QuestionRepositoryAdapter implements SaveQuestionPort, LoadQuestion
     }
 
     @Override
-    public Page<QuestionListDto> findQuestionsWithPreview(Pageable pageable) {
-        return questionJpaRepository.findQuestionsWithPreview(pageable).map(questionDtoMapper::toDto);
+    public Page<QuestionListDto> findQuestionsWithPreviewForLatest(Pageable pageable) {
+        return questionJpaRepository.findQuestionsWithPreviewForLatest(pageable).map(questionDtoMapper::toDto);
+    }
+
+    @Override
+    public Page<QuestionListDto> findQuestionsWithPreviewForRecommend(Pageable pageable) {
+        return questionJpaRepository.findQuestionsWithPreviewForRecommend(pageable).map(questionDtoMapper::toDto);
     }
 
     @Override
