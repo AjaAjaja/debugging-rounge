@@ -8,4 +8,6 @@ public interface QuestionListView {
     String getPreviewContent();
 
     String getEmail();
+
+    Integer getRecommendScore();
 }

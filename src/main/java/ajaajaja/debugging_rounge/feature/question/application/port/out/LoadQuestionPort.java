@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface LoadQuestionPort {
     Optional<Question> findById(Long id);
     Optional<QuestionDetailDto> findQuestionDetailById(Long id);
-    Page<QuestionListDto> findQuestionsWithPreview(Pageable pageable);
+    Page<QuestionListDto> findQuestionsWithPreviewForLatest(Pageable pageable);
+    Page<QuestionListDto> findQuestionsWithPreviewForRecommend(Pageable pageable);
     Boolean existsQuestionById(Long id);
 }

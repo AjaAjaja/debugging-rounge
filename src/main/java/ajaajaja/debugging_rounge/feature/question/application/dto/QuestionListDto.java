@@ -4,6 +4,7 @@ public record QuestionListDto(
         Long questionId,
         String title,
         String previewContent,
-        String authorEmail
+        String authorEmail,
+        Integer recommendScore
 ) {
 }

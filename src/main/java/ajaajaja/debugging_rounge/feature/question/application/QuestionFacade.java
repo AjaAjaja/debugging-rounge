@@ -6,6 +6,7 @@ import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailWith
 import ajaajaja.debugging_rounge.feature.answer.application.port.out.LoadAnswerPort;
 import ajaajaja.debugging_rounge.feature.answer.recommend.application.dto.AnswerRecommendScoreAndMyRecommendTypeDto;
 import ajaajaja.debugging_rounge.feature.answer.recommend.application.port.out.LoadAnswerRecommendPort;
+import ajaajaja.debugging_rounge.feature.question.api.sort.QuestionOrder;
 import ajaajaja.debugging_rounge.feature.question.application.dto.*;
 import ajaajaja.debugging_rounge.feature.question.application.mapper.QuestionWithAnswersMapper;
 import ajaajaja.debugging_rounge.feature.question.application.port.in.*;
@@ -34,7 +35,7 @@ import java.util.*;
 @Transactional(readOnly = true)
 public class QuestionFacade implements
         CreateQuestionUseCase,
-        GetQuestionDetailQuery, GetQuestionWithAnswersQuery,
+        GetQuestionWithAnswersQuery,
         GetQuestionListWithPreviewQuery,
         UpdateQuestionUseCase,
         DeleteQuestionUseCase {
@@ -60,14 +61,14 @@ public class QuestionFacade implements
         return savedQuestion.getId();
     }
 
-    @Override
-    public QuestionDetailDto findQuestionById(Long questionId) {
-        return null;
-    }
 
     @Override
-    public Page<QuestionListDto> findQuestionsWithPreview(Pageable pageable) {
-        return loadQuestionPort.findQuestionsWithPreview(pageable);
+    public Page<QuestionListDto> findQuestionsWithPreview(Pageable pageable, QuestionOrder order) {
+
+        if (order == QuestionOrder.RECOMMEND) {
+            return loadQuestionPort.findQuestionsWithPreviewForRecommend(pageable);
+        }
+        return loadQuestionPort.findQuestionsWithPreviewForLatest(pageable);
     }
 
     @Override

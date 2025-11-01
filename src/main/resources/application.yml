@@ -41,6 +41,13 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
             user-name-attribute: email
+  data:
+    web:
+      pageable:
+        default-page-size: 20
+        max-page-size: 100
+        page-parameter: page
+        size-parameter: size
 
 jwt:
   token:

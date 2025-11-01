@@ -31,14 +31,38 @@ public interface QuestionJpaRepository extends JpaRepository<Question, Long> {
             """)
     Optional<QuestionDetailView> findQuestionDetailById(@Param("questionId") Long questionId);
 
-    @Query("""
+    @Query(value = """
             SELECT q.id AS id, q.title AS title,
-            SUBSTRING(q.content, 1, 100) AS previewContent, u.email AS email
+            SUBSTRING(q.content, 1, 100) AS previewContent, u.email AS email,
+            SUM(
+            CASE
+            WHEN qr.type = ajaajaja.debugging_rounge.feature.question.recommend.domain.RecommendType.UP THEN 1
+            WHEN qr.type = ajaajaja.debugging_rounge.feature.question.recommend.domain.RecommendType.DOWN THEN -1
+            ELSE 0  END) AS recommendScore
             FROM Question q
-            JOIN User u
-            ON q.authorId = u.id
-            """)
-    Page<QuestionListView> findQuestionsWithPreview(Pageable pageable);
+            JOIN User u ON q.authorId = u.id
+            LEFT JOIN QuestionRecommend qr ON q.id = qr.questionId
+            GROUP BY q.id
+            """,
+            countQuery = "SELECT COUNT(q) FROM Question q")
+    Page<QuestionListView> findQuestionsWithPreviewForLatest(Pageable pageable);
+
+    @Query(value = """
+            SELECT q.id AS id, q.title AS title,
+            SUBSTRING(q.content, 1, 100) AS previewContent, u.email AS email,
+            SUM(
+            CASE
+            WHEN qr.type = ajaajaja.debugging_rounge.feature.question.recommend.domain.RecommendType.UP THEN 1
+            WHEN qr.type = ajaajaja.debugging_rounge.feature.question.recommend.domain.RecommendType.DOWN THEN -1
+            ELSE 0  END) AS recommendScore
+            FROM Question q
+            JOIN User u ON q.authorId = u.id
+            LEFT JOIN QuestionRecommend qr ON q.id = qr.questionId
+            GROUP BY q.id
+            ORDER BY recommendScore DESC , q.createdDate DESC, q.id DESC
+            """,
+            countQuery = "SELECT COUNT(q) FROM Question q")
+    Page<QuestionListView> findQuestionsWithPreviewForRecommend(Pageable pageable);
 
     Boolean existsQuestionById(Long id);
 }
