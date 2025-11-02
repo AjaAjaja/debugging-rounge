@@ -1,6 +1,5 @@
-![스크린샷 2025-11-02 오전 4.12.45.png](attachment:57204259-722b-4c52-bebe-b8d60238a40d:스크린샷_2025-11-02_오전_4.12.45.png)
 # Debugging Rounge (Backend)
-개발 관련 질문을 묻고 답할 수 있는 Q&A 게시판 백엔드 프로젝트
+<img width="1013" height="502" alt="스크린샷 2025-11-02 오전 4 12 45" src="https://github.com/user-attachments/assets/c75dbecb-c6da-4a18-ada2-388242127272" />
 
 ### 개발 관련 지식을 묻고 답할 수 있는 Q&A 게시판 프로젝트
 
