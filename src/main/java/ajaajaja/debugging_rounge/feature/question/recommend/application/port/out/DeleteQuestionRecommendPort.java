@@ -2,6 +2,4 @@ package ajaajaja.debugging_rounge.feature.question.recommend.application.port.ou
 
 public interface DeleteQuestionRecommendPort {
     void deleteQuestionRecommendByQuestionIdAndUserId(Long questionId, Long userId);
-
-    void deleteQuestionRecommendByQuestionId(Long questionId);
 }
