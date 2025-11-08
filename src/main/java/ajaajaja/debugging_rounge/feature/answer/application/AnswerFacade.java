@@ -1,6 +1,6 @@
 package ajaajaja.debugging_rounge.feature.answer.application;
 
-import ajaajaja.debugging_rounge.common.security.validator.OwnerShipValidator;
+import ajaajaja.debugging_rounge.common.security.validator.OwnershipValidator;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerCreateDto;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerUpdateDto;
@@ -35,7 +35,7 @@ public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery, Updat
     private final LoadQuestionPort loadQuestionPort;
     private final LoadAnswerPort loadAnswerPort;
     private final DeleteAnswerPort deleteAnswerPort;
-    private final OwnerShipValidator ownerShipValidator;
+    private final OwnershipValidator ownerShipValidator;
 
     @Override
     @Transactional

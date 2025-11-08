@@ -26,6 +26,8 @@ public interface QuestionRecommendRepository extends JpaRepository<QuestionRecom
     void deleteByQuestionIdAndUserId(@Param("questionId") Long questionId,
                                      @Param("userId") Long userId);
 
+    void deleteAllByQuestionId(@Param("questionId") Long questionId);
+
     @Modifying(clearAutomatically = true)
     @Query(value = """
     INSERT INTO question_recommend(question_id, user_id, type, created_date, last_modified_date)
