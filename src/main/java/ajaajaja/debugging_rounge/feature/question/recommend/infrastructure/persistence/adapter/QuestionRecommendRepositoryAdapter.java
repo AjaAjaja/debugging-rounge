@@ -38,6 +38,11 @@ public class QuestionRecommendRepositoryAdapter
     }
 
     @Override
+    public void deleteQuestionRecommendByQuestionId(Long questionId) {
+        questionRecommendRepository.deleteAllByQuestionId(questionId);
+    }
+
+    @Override
     public void insertOrUpdateQuestionRecommend(Long questionId, Long userId, String type) {
         questionRecommendRepository.insertOrUpdate(questionId, userId, type);
     }

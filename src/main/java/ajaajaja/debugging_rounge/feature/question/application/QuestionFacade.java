@@ -1,10 +1,12 @@
 package ajaajaja.debugging_rounge.feature.question.application;
 
-import ajaajaja.debugging_rounge.common.security.validator.OwnerShipValidator;
+import ajaajaja.debugging_rounge.common.security.validator.OwnershipValidator;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailWithRecommendDto;
+import ajaajaja.debugging_rounge.feature.answer.application.port.out.DeleteAnswerPort;
 import ajaajaja.debugging_rounge.feature.answer.application.port.out.LoadAnswerPort;
 import ajaajaja.debugging_rounge.feature.answer.recommend.application.dto.AnswerRecommendScoreAndMyRecommendTypeDto;
+import ajaajaja.debugging_rounge.feature.answer.recommend.application.port.out.DeleteAnswerRecommendPort;
 import ajaajaja.debugging_rounge.feature.answer.recommend.application.port.out.LoadAnswerRecommendPort;
 import ajaajaja.debugging_rounge.feature.question.api.sort.QuestionOrder;
 import ajaajaja.debugging_rounge.feature.question.application.dto.*;
@@ -18,6 +20,7 @@ import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionDelet
 import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionNotFoundException;
 import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionNotFoundForDeleteException;
 import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionUpdateForbiddenException;
+import ajaajaja.debugging_rounge.feature.question.recommend.application.port.out.DeleteQuestionRecommendPort;
 import ajaajaja.debugging_rounge.feature.question.recommend.application.port.out.LoadQuestionRecommendPort;
 import ajaajaja.debugging_rounge.feature.question.recommend.domain.QuestionRecommend;
 import ajaajaja.debugging_rounge.feature.question.recommend.domain.RecommendType;
@@ -45,11 +48,14 @@ public class QuestionFacade implements
     private final LoadQuestionPort loadQuestionPort;
     private final LoadQuestionRecommendPort loadQuestionRecommendPort;
     private final DeleteQuestionPort deleteQuestionPort;
-    private final OwnerShipValidator ownerShipValidator;
+    private final DeleteQuestionRecommendPort deleteQuestionRecommendPort;
+    private final OwnershipValidator ownershipValidator;
     private final QuestionWithAnswersMapper mapper;
 
     private final LoadAnswerPort loadAnswerPort;
     private final LoadAnswerRecommendPort loadAnswerRecommendPort;
+    private final DeleteAnswerPort deleteAnswerPort;
+    private final DeleteAnswerRecommendPort deleteAnswerRecommendPort;
 
     @Override
     @Transactional
@@ -93,7 +99,7 @@ public class QuestionFacade implements
         Question question = loadQuestionPort.findById(questionUpdateDto.id())
                 .orElseThrow(QuestionNotFoundException::new);
 
-        ownerShipValidator.validateAuthor(question.getAuthorId(), questionUpdateDto.loginUserId(), QuestionUpdateForbiddenException::new);
+        ownershipValidator.validateAuthor(question.getAuthorId(), questionUpdateDto.loginUserId(), QuestionUpdateForbiddenException::new);
 
         if (hasChanges(question, questionUpdateDto)) {
             question.update(questionUpdateDto.title(), questionUpdateDto.content());
@@ -106,7 +112,7 @@ public class QuestionFacade implements
         Question question = loadQuestionPort.findById(questionId)
                 .orElseThrow(QuestionNotFoundForDeleteException::new);
 
-        ownerShipValidator.validateAuthor(question.getAuthorId(), loginUserId, QuestionDeleteForbiddenException::new);
+        ownershipValidator.validateAuthor(question.getAuthorId(), loginUserId, QuestionDeleteForbiddenException::new);
 
         deleteQuestionPort.deleteById(question.getId());
     }

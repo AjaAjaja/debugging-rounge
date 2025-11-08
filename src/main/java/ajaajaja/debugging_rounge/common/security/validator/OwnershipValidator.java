@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 @Component
-public class OwnerShipValidator {
+public class OwnershipValidator {
 
     public void validateAuthor(Long authorId, Long loginUserId, Supplier<? extends CustomAuthorizationException> ex) {
         if (!Objects.equals(authorId, loginUserId)) {
