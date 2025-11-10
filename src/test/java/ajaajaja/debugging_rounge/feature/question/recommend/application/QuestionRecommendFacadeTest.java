@@ -50,18 +50,18 @@ class QuestionRecommendFacadeTest {
                 userId
         );
 
-        when(loadQuestionRecommendScorePort.getQuestionRecommendScoreByQuestionId(questionId)).thenReturn(0);
+        when(loadQuestionRecommendScorePort.findRecommendScoreByQuestionId(questionId)).thenReturn(0);
 
         // when
         QuestionRecommendScoreAndMyRecommendTypeDto result =
-                questionRecommendFacade.UpdateQuestionRecommend(requestDto);
+                questionRecommendFacade.update(requestDto);
 
         // then
         // 삭제 포트가 호출이 잘 되었나?
-        verify(deleteQuestionRecommendPort).deleteQuestionRecommendByQuestionIdAndUserId(questionId, userId);
+        verify(deleteQuestionRecommendPort).deleteByQuestionIdAndUserId(questionId, userId);
 
         // 혹시 업서트 포트가 호출되지 않았나?
-        verify(upsertQuestionRecommendPort, never()).insertOrUpdateQuestionRecommend(anyLong(), anyLong(), anyString());
+        verify(upsertQuestionRecommendPort, never()).upsert(anyLong(), anyLong(), anyString());
 
         // then
         assertThat(result.recommendScore()).isEqualTo(0);
@@ -81,19 +81,19 @@ class QuestionRecommendFacadeTest {
                 userId
         );
 
-        when(loadQuestionRecommendScorePort.getQuestionRecommendScoreByQuestionId(questionId)).thenReturn(2);
+        when(loadQuestionRecommendScorePort.findRecommendScoreByQuestionId(questionId)).thenReturn(2);
 
         // when
         QuestionRecommendScoreAndMyRecommendTypeDto result =
-                questionRecommendFacade.UpdateQuestionRecommend(requestDto);
+                questionRecommendFacade.update(requestDto);
 
         // 업서트 포트가 호출이 잘 되었나?
         verify(upsertQuestionRecommendPort)
-                .insertOrUpdateQuestionRecommend(questionId, userId, RecommendType.UP.name());
+                .upsert(questionId, userId, RecommendType.UP.name());
 
         // 혹시 삭제 포트가 호출되지 않았나?
         verify(deleteQuestionRecommendPort, never())
-                .deleteQuestionRecommendByQuestionIdAndUserId(anyLong(), anyLong());
+                .deleteByQuestionIdAndUserId(anyLong(), anyLong());
 
         // then
         assertThat(result.recommendScore()).isEqualTo(2);
@@ -113,19 +113,19 @@ class QuestionRecommendFacadeTest {
                 userId
         );
 
-        when(loadQuestionRecommendScorePort.getQuestionRecommendScoreByQuestionId(questionId)).thenReturn(5);
+        when(loadQuestionRecommendScorePort.findRecommendScoreByQuestionId(questionId)).thenReturn(5);
 
         // when
         QuestionRecommendScoreAndMyRecommendTypeDto result =
-                questionRecommendFacade.UpdateQuestionRecommend(requestDto);
+                questionRecommendFacade.update(requestDto);
 
         // 업서트 포트가 호출이 잘 되었나?
         verify(upsertQuestionRecommendPort)
-                .insertOrUpdateQuestionRecommend(questionId, userId, RecommendType.DOWN.name());
+                .upsert(questionId, userId, RecommendType.DOWN.name());
 
         // 혹시 삭제 포트가 호출되지 않았나?
         verify(deleteQuestionRecommendPort, never())
-                .deleteQuestionRecommendByQuestionIdAndUserId(anyLong(), anyLong());
+                .deleteByQuestionIdAndUserId(anyLong(), anyLong());
 
         // then
         assertThat(result.recommendScore()).isEqualTo(5);

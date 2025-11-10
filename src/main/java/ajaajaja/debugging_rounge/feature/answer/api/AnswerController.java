@@ -47,7 +47,7 @@ public class AnswerController {
             @LoginUserId Long currentUserId,
             Pageable pageable
     ) {
-        Page<AnswerDetailDto> answersPage = getAnswersQuery.getAllByQuestionId(questionId, pageable);
+        Page<AnswerDetailDto> answersPage = getAnswersQuery.getAllAnswerByQuestionId(questionId, pageable);
 
         Page<AnswerDetailResponse> answersResponsePage =
                 answersPage.map(dto -> answerMapper.toResponse(dto, currentUserId));

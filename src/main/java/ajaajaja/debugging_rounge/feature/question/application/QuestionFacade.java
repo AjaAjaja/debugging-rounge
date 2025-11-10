@@ -132,7 +132,7 @@ public class QuestionFacade implements
         List<Long> answerIds = answerDetailDtoPage.getContent().stream().map(AnswerDetailDto::id).toList();
 
         List<AnswerRecommendScoreAndMyRecommendTypeDto> answerRecommendScoreAndMyType =
-                loadAnswerRecommendPort.getAnswerRecommendScoreAndMyType(answerIds, loginUserId);
+                loadAnswerRecommendPort.findRecommendScoreAndMyType(answerIds, loginUserId);
 
         Map<Long, AnswerRecommendScoreAndMyRecommendTypeDto> dtoMap =
                 answerRecommendScoreAndMyType.stream()

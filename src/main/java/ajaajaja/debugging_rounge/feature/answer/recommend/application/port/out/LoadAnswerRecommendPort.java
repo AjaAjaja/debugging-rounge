@@ -5,7 +5,7 @@ import ajaajaja.debugging_rounge.feature.answer.recommend.application.dto.Answer
 import java.util.List;
 
 public interface LoadAnswerRecommendPort {
-    List<AnswerRecommendScoreAndMyRecommendTypeDto> getAnswerRecommendScoreAndMyType(List<Long> answerIds, Long userId);
+    List<AnswerRecommendScoreAndMyRecommendTypeDto> findRecommendScoreAndMyType(List<Long> answerIds, Long userId);
 
-    Integer getAnswerRecommendScoreByAnswerId(Long answerId);
+    Integer findRecommendScoreByAnswerId(Long answerId);
 }

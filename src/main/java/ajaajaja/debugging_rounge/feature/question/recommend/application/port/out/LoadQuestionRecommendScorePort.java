@@ -1,5 +1,5 @@
 package ajaajaja.debugging_rounge.feature.question.recommend.application.port.out;
 
 public interface LoadQuestionRecommendScorePort {
-    Integer getQuestionRecommendScoreByQuestionId(Long questionId);
+    Integer findRecommendScoreByQuestionId(Long questionId);
 }
