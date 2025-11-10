@@ -69,7 +69,7 @@ public class QuestionFacade implements
 
 
     @Override
-    public Page<QuestionListDto> findQuestionsWithPreview(Pageable pageable, QuestionOrder order) {
+    public Page<QuestionListDto> getQuestionsWithPreview(Pageable pageable, QuestionOrder order) {
 
         if (order == QuestionOrder.RECOMMEND) {
             return loadQuestionPort.findQuestionsWithPreviewForRecommend(pageable);

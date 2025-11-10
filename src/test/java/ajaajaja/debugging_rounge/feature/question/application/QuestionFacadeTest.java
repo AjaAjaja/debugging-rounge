@@ -66,7 +66,7 @@ class QuestionFacadeTest {
         when(loadQuestionPort.findQuestionsWithPreviewForLatest(pageable)).thenReturn(expected);
 
         // when
-        Page<QuestionListDto> result = questionFacade.findQuestionsWithPreview(pageable, QuestionOrder.LATEST);
+        Page<QuestionListDto> result = questionFacade.getQuestionsWithPreview(pageable, QuestionOrder.LATEST);
 
         // then
         verify(loadQuestionPort).findQuestionsWithPreviewForLatest(pageable);
@@ -84,7 +84,7 @@ class QuestionFacadeTest {
         when(loadQuestionPort.findQuestionsWithPreviewForRecommend(pageable)).thenReturn(expected);
 
         // when
-        Page<QuestionListDto> result = questionFacade.findQuestionsWithPreview(pageable, QuestionOrder.RECOMMEND);
+        Page<QuestionListDto> result = questionFacade.getQuestionsWithPreview(pageable, QuestionOrder.RECOMMEND);
 
         // then
         verify(loadQuestionPort).findQuestionsWithPreviewForRecommend(pageable);

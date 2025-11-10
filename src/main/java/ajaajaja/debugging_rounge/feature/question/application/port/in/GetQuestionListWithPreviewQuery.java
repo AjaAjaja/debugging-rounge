@@ -6,5 +6,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface GetQuestionListWithPreviewQuery {
-    Page<QuestionListDto> findQuestionsWithPreview(Pageable pageable, QuestionOrder sort);
+    Page<QuestionListDto> getQuestionsWithPreview(Pageable pageable, QuestionOrder sort);
 }

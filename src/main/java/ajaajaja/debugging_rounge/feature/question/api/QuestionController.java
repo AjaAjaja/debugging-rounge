@@ -71,7 +71,7 @@ public class QuestionController {
             @RequestParam(name = "order", defaultValue = "LATEST") QuestionOrder order,
             @PageableDefault(sort = {"createdDate", "id"}, direction = Sort.Direction.DESC)
             Pageable pageable, HttpServletRequest request) {
-        Page<QuestionListDto> questionListDtos = getQuestionListWithPreviewQuery.findQuestionsWithPreview(pageable, order);
+        Page<QuestionListDto> questionListDtos = getQuestionListWithPreviewQuery.getQuestionsWithPreview(pageable, order);
         return ResponseEntity.ok(questionListDtos.map(questionResponseMapper::toQuestionListResponse));
     }
 
