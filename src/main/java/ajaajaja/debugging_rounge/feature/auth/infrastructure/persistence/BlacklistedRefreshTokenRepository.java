@@ -1,4 +1,4 @@
-package ajaajaja.debugging_rounge.feature.auth.domain.repository;
+package ajaajaja.debugging_rounge.feature.auth.infrastructure.persistence;
 
 import ajaajaja.debugging_rounge.feature.auth.domain.BlacklistedRefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;

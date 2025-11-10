@@ -28,17 +28,17 @@ public class QuestionRecommendRepositoryAdapter
     }
 
     @Override
-    public Integer getQuestionRecommendScoreByQuestionId(Long questionId) {
+    public Integer findRecommendScoreByQuestionId(Long questionId) {
         return questionRecommendRepository.getQuestionRecommendScoreByQuestionId(questionId);
     }
 
     @Override
-    public void deleteQuestionRecommendByQuestionIdAndUserId(Long questionId, Long userId) {
+    public void deleteByQuestionIdAndUserId(Long questionId, Long userId) {
         questionRecommendRepository.deleteByQuestionIdAndUserId(questionId, userId);
     }
 
     @Override
-    public void insertOrUpdateQuestionRecommend(Long questionId, Long userId, String type) {
+    public void upsert(Long questionId, Long userId, String type) {
         questionRecommendRepository.insertOrUpdate(questionId, userId, type);
     }
 }

@@ -4,5 +4,5 @@ import ajaajaja.debugging_rounge.feature.question.recommend.application.dto.Ques
 import ajaajaja.debugging_rounge.feature.question.recommend.application.dto.QuestionRecommendUpdateDto;
 
 public interface UpdateQuestionRecommendUseCase {
-    QuestionRecommendScoreAndMyRecommendTypeDto UpdateQuestionRecommend(QuestionRecommendUpdateDto questionRecommendUpdateDto);
+    QuestionRecommendScoreAndMyRecommendTypeDto update(QuestionRecommendUpdateDto questionRecommendUpdateDto);
 }

@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface GetAnswersQuery {
-    Page<AnswerDetailDto> findAllByQuestionId(Long questionId, Pageable pageable);
+    Page<AnswerDetailDto> getAllAnswerByQuestionId(Long questionId, Pageable pageable);
 }

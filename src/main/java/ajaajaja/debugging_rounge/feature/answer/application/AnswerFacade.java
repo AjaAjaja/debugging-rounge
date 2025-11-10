@@ -50,7 +50,7 @@ public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery, Updat
     }
 
     @Override
-    public Page<AnswerDetailDto> findAllByQuestionId(Long questionId, Pageable pageable) {
+    public Page<AnswerDetailDto> getAllAnswerByQuestionId(Long questionId, Pageable pageable) {
 
         Page<AnswerDetailDto> answersPage = loadAnswerPort.findAllByQuestionId(questionId, pageable);
 

@@ -69,7 +69,7 @@ public class QuestionFacade implements
 
 
     @Override
-    public Page<QuestionListDto> findQuestionsWithPreview(Pageable pageable, QuestionOrder order) {
+    public Page<QuestionListDto> getQuestionsWithPreview(Pageable pageable, QuestionOrder order) {
 
         if (order == QuestionOrder.RECOMMEND) {
             return loadQuestionPort.findQuestionsWithPreviewForRecommend(pageable);
@@ -132,7 +132,7 @@ public class QuestionFacade implements
         List<Long> answerIds = answerDetailDtoPage.getContent().stream().map(AnswerDetailDto::id).toList();
 
         List<AnswerRecommendScoreAndMyRecommendTypeDto> answerRecommendScoreAndMyType =
-                loadAnswerRecommendPort.getAnswerRecommendScoreAndMyType(answerIds, loginUserId);
+                loadAnswerRecommendPort.findRecommendScoreAndMyType(answerIds, loginUserId);
 
         Map<Long, AnswerRecommendScoreAndMyRecommendTypeDto> dtoMap =
                 answerRecommendScoreAndMyType.stream()

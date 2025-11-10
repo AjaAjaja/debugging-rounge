@@ -28,24 +28,24 @@ public class AnswerRecommendRepositoryAdapter
     }
 
     @Override
-    public void deleteAnswerRecommendByAnswerIdAndUserId(Long answerId, Long userId) {
+    public void deleteByAnswerIdAndUserId(Long answerId, Long userId) {
         answerRecommendRepository.deleteByAnswerIdAndUserId(answerId, userId);
     }
 
     @Override
-    public List<AnswerRecommendScoreAndMyRecommendTypeDto> getAnswerRecommendScoreAndMyType(List<Long> answerIds, Long userId) {
+    public List<AnswerRecommendScoreAndMyRecommendTypeDto> findRecommendScoreAndMyType(List<Long> answerIds, Long userId) {
         List<AnswerRecommendScoreAndMyTypeView> answerRecommendScoreAndMyType =
                 answerRecommendRepository.getAnswerRecommendScoreAndMyType(answerIds, userId);
         return mapper.toDto(answerRecommendScoreAndMyType);
     }
 
     @Override
-    public Integer getAnswerRecommendScoreByAnswerId(Long answerId) {
+    public Integer findRecommendScoreByAnswerId(Long answerId) {
         return answerRecommendRepository.getAnswerRecommendScoreByAnswerId(answerId);
     }
 
     @Override
-    public void insertOrUpdateAnswerRecommend(Long answerId, Long userId, String recommendType) {
+    public void upsert(Long answerId, Long userId, String recommendType) {
         answerRecommendRepository.insertOrUpdate(answerId, userId, recommendType);
     }
 }

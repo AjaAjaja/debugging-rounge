@@ -19,19 +19,19 @@ public class QuestionRecommendFacade implements UpdateQuestionRecommendUseCase {
 
     @Override
     @Transactional
-    public QuestionRecommendScoreAndMyRecommendTypeDto UpdateQuestionRecommend(QuestionRecommendUpdateDto questionRecommendUpdateDto) {
+    public QuestionRecommendScoreAndMyRecommendTypeDto update(QuestionRecommendUpdateDto questionRecommendUpdateDto) {
 
         Long questionId = questionRecommendUpdateDto.questionId();
         Long userId = questionRecommendUpdateDto.userId();
         RecommendType requestedRecommendType = questionRecommendUpdateDto.recommendType();
 
         if (requestedRecommendType == RecommendType.NONE) {
-            deleteQuestionRecommendPort.deleteQuestionRecommendByQuestionIdAndUserId(questionId, userId);
+            deleteQuestionRecommendPort.deleteByQuestionIdAndUserId(questionId, userId);
         } else {
-            upsertQuestionRecommendPort.insertOrUpdateQuestionRecommend(questionId, userId, requestedRecommendType.name());
+            upsertQuestionRecommendPort.upsert(questionId, userId, requestedRecommendType.name());
         }
 
-        Integer recommendScore = loadQuestionRecommendScorePort.getQuestionRecommendScoreByQuestionId(questionId);
+        Integer recommendScore = loadQuestionRecommendScorePort.findRecommendScoreByQuestionId(questionId);
 
         return QuestionRecommendScoreAndMyRecommendTypeDto.of(recommendScore, requestedRecommendType);
     }

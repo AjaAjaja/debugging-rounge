@@ -25,7 +25,7 @@ public class QuestionRecommendController {
             @PathVariable("questionId") Long questionId,
             @RequestBody QuestionRecommendUpdateRequest questionRecommendUpdateRequest,
             @LoginUserId Long loginUserId) {
-        QuestionRecommendScoreAndMyRecommendTypeDto dto = updateQuestionRecommendUseCase.UpdateQuestionRecommend(
+        QuestionRecommendScoreAndMyRecommendTypeDto dto = updateQuestionRecommendUseCase.update(
                 questionRecommendMapper.toDto(questionRecommendUpdateRequest, questionId, loginUserId));
 
         return ResponseEntity.ok(questionRecommendMapper.toResponse(dto));

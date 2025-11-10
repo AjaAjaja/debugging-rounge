@@ -26,7 +26,7 @@ public class AnswerRecommendController {
             @RequestBody AnswerRecommendUpdateRequest answerRecommendUpdateRequest,
             @LoginUserId Long loginUserId
             ) {
-        AnswerRecommendScoreAndMyRecommendTypeDto answerRecommendScoreAndMyRecommendTypeDto = updateAnswerRecommendUseCase.updateAnswerRecommend(
+        AnswerRecommendScoreAndMyRecommendTypeDto answerRecommendScoreAndMyRecommendTypeDto = updateAnswerRecommendUseCase.update(
                 answerRecommendMapper.toDto(answerRecommendUpdateRequest, answerId, loginUserId));
 
         return ResponseEntity.ok(answerRecommendMapper.toResponse(answerRecommendScoreAndMyRecommendTypeDto));
