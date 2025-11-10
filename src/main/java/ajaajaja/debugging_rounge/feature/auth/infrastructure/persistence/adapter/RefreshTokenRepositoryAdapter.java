@@ -3,8 +3,8 @@ package ajaajaja.debugging_rounge.feature.auth.infrastructure.persistence.adapte
 import ajaajaja.debugging_rounge.feature.auth.application.port.out.RefreshTokenPort;
 import ajaajaja.debugging_rounge.feature.auth.domain.BlacklistedRefreshToken;
 import ajaajaja.debugging_rounge.feature.auth.domain.RefreshToken;
-import ajaajaja.debugging_rounge.feature.auth.domain.repository.BlacklistedRefreshTokenRepository;
-import ajaajaja.debugging_rounge.feature.auth.domain.repository.RefreshTokenRepository;
+import ajaajaja.debugging_rounge.feature.auth.infrastructure.persistence.BlacklistedRefreshTokenRepository;
+import ajaajaja.debugging_rounge.feature.auth.infrastructure.persistence.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
