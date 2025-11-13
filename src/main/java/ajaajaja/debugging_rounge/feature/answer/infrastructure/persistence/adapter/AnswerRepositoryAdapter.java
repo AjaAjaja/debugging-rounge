@@ -39,11 +39,6 @@ public class AnswerRepositoryAdapter implements SaveAnswerPort, LoadAnswerPort, 
         answerJpaRepository.deleteById(id);
     }
 
-    @Override
-    public void deleteAllByQuestionId(Long questionId) {
-        answerJpaRepository.deleteAllByQuestionId(questionId);
-    }
-
     private AnswerDetailDto toDto(AnswerDetailView answerDetailView) {
         return new AnswerDetailDto(
                 answerDetailView.getId(),
