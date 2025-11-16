@@ -89,7 +89,7 @@ public class AuthFacade implements IssueTokensUseCase, ReissueTokensUseCase, Log
     }
 
     private void revokeToken(byte[] tokenHash) {
-        var optionalRefreshToken = refreshTokenPort.findByTokenHash(tokenHash);
+        Optional<RefreshToken> optionalRefreshToken = refreshTokenPort.findByTokenHash(tokenHash);
         if (optionalRefreshToken.isEmpty()) {
             blacklistedRefreshTokenPort.insertIfNotExists(tokenHash, null);
             return;
