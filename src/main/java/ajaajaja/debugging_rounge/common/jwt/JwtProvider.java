@@ -67,6 +67,17 @@ public class JwtProvider {
     }
 
     public Date extractExpiration(String token) {
+        return parseClaims(token).getExpirationTime();
+    }
+
+    public String extractSubject(String token, TokenType expectedType) {
+        JWTClaimsSet claims = parseClaims(token);
+        validateType(claims, expectedType);
+        validateExpiration(claims);
+        return claims.getSubject();
+    }
+
+    private SignedJWT parseSignedJwt(String token) {
         try {
             SignedJWT signedJWT = SignedJWT.parse(token);
 
@@ -75,13 +86,45 @@ public class JwtProvider {
                 throw new JwtValidationException();
             }
 
-            return signedJWT.getJWTClaimsSet().getExpirationTime();
+            return signedJWT;
         } catch (ParseException e) {
             throw new JwtParsingException();
         } catch (JOSEException e) {
             throw new JwtValidationException();
         }
+    }
 
+    private JWTClaimsSet parseClaims(String token) {
+        SignedJWT signedJWT = parseSignedJwt(token);
+        try {
+            return signedJWT.getJWTClaimsSet();
+        } catch (ParseException e) {
+            throw new JwtParsingException();
+        }
+    }
+    private void validateType(JWTClaimsSet claims, TokenType expectedType) {
+        Object typeClaim = claims.getClaim("type");
+        if (typeClaim == null) {
+            throw new JwtValidationException();
+        }
+
+        TokenType actualType;
+        try {
+            actualType = TokenType.valueOf(String.valueOf(typeClaim));
+        } catch (IllegalArgumentException e) {
+            throw new JwtValidationException();
+        }
+
+        if (actualType != expectedType) {
+            throw new JwtValidationException();
+        }
+    }
+
+    private void validateExpiration(JWTClaimsSet claims) {
+        Date expirationTime = claims.getExpirationTime();
+        if (expirationTime == null || expirationTime.before(new Date())) {
+            throw new JwtValidationException();
+        }
     }
 
 }
