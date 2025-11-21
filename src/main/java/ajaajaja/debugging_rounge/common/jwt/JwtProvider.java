@@ -67,7 +67,9 @@ public class JwtProvider {
     }
 
     public Date extractExpiration(String token) {
-        return parseClaims(token).getExpirationTime();
+        JWTClaimsSet claimsSet = parseClaims(token);
+        validateExpiration(claimsSet);
+        return claimsSet.getExpirationTime();
     }
 
     public String extractSubject(String token, TokenType expectedType) {
