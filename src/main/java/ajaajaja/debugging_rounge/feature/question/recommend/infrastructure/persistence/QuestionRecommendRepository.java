@@ -21,7 +21,7 @@ public interface QuestionRecommendRepository extends JpaRepository<QuestionRecom
     FROM QuestionRecommend qr
     WHERE qr.questionId =:questionId
     """)
-    Integer getQuestionRecommendScoreByQuestionId(@Param("questionId") Long questionId);
+    Integer findQuestionRecommendScoreByQuestionId(@Param("questionId") Long questionId);
 
     void deleteByQuestionIdAndUserId(@Param("questionId") Long questionId,
                                      @Param("userId") Long userId);

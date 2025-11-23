@@ -1,5 +1,9 @@
 package ajaajaja.debugging_rounge.support;
 
+import ajaajaja.debugging_rounge.feature.answer.domain.Answer;
+import ajaajaja.debugging_rounge.feature.answer.infrastructure.persistence.AnswerJpaRepository;
+import ajaajaja.debugging_rounge.feature.answer.recommend.domain.AnswerRecommend;
+import ajaajaja.debugging_rounge.feature.answer.recommend.infrasturture.persistence.AnswerRecommendRepository;
 import ajaajaja.debugging_rounge.feature.auth.domain.SocialType;
 import ajaajaja.debugging_rounge.feature.question.domain.Question;
 import ajaajaja.debugging_rounge.feature.question.infrastructure.persistence.QuestionJpaRepository;
@@ -40,6 +44,12 @@ public abstract class MysqlJpaTestSupport {
     @Autowired
     QuestionRecommendRepository questionRecommendRepository;
 
+    @Autowired
+    AnswerJpaRepository answerJpaRepository;
+
+    @Autowired
+    AnswerRecommendRepository answerRecommendRepository;
+
     protected User saveUser(String email, SocialType socialType) {
         User user = User.of(email, socialType);
         return userJpaRepository.save(user);
@@ -53,5 +63,17 @@ public abstract class MysqlJpaTestSupport {
     protected QuestionRecommend saveQuestionRecommend(RecommendType recommendType, Long questionId, Long userId) {
         QuestionRecommend questionRecommend = QuestionRecommend.of(recommendType, questionId, userId);
         return questionRecommendRepository.save(questionRecommend);
+    }
+
+    protected Answer saveAnswer(String content, Long questionId, Long authorId) {
+        Answer answer = Answer.of(content, questionId, authorId);
+        return answerJpaRepository.save(answer);
+    }
+
+    protected AnswerRecommend saveAnswerRecommend(
+            ajaajaja.debugging_rounge.feature.answer.recommend.domain.RecommendType recommendType,
+            Long answerId, Long userId) {
+        AnswerRecommend answerRecommend = AnswerRecommend.of(recommendType, answerId, userId);
+        return answerRecommendRepository.save(answerRecommend);
     }
 }

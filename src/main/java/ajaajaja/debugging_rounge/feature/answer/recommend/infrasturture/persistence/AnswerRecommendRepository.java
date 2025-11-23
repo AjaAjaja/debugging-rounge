@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AnswerRecommendRepository extends JpaRepository<AnswerRecommend, Long> {
 
@@ -31,8 +32,8 @@ public interface AnswerRecommendRepository extends JpaRepository<AnswerRecommend
             WHERE ar.answerId IN :answerIds
             GROUP BY ar.answerId
             """)
-    List<AnswerRecommendScoreAndMyTypeView> getAnswerRecommendScoreAndMyType(@Param("answerIds") List<Long> answerIds,
-                                                                             @Param("userId") Long userId);
+    List<AnswerRecommendScoreAndMyTypeView> findAnswerRecommendScoreAndMyType(@Param("answerIds") List<Long> answerIds,
+                                                                              @Param("userId") Long userId);
 
     void deleteByAnswerIdAndUserId(@Param("answerId") Long answerId, @Param("userId") Long userId);
 
@@ -58,6 +59,10 @@ public interface AnswerRecommendRepository extends JpaRepository<AnswerRecommend
             FROM AnswerRecommend ar
             WHERE ar.answerId =:answerId
             """)
-    Integer getAnswerRecommendScoreByAnswerId(@Param("answerId") Long answerId);
+    Integer findAnswerRecommendScoreByAnswerId(@Param("answerId") Long answerId);
+
+    Optional<AnswerRecommend> findAnswerRecommendByAnswerIdAndUserId(
+            @Param("answerId") Long answerId,
+            @Param("userId") Long userId);
 
 }
