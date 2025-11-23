@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -35,13 +36,18 @@ public class AnswerRecommendRepositoryAdapter
     @Override
     public List<AnswerRecommendScoreAndMyRecommendTypeDto> findRecommendScoreAndMyType(List<Long> answerIds, Long userId) {
         List<AnswerRecommendScoreAndMyTypeView> answerRecommendScoreAndMyType =
-                answerRecommendRepository.getAnswerRecommendScoreAndMyType(answerIds, userId);
+                answerRecommendRepository.findAnswerRecommendScoreAndMyType(answerIds, userId);
         return mapper.toDto(answerRecommendScoreAndMyType);
     }
 
     @Override
     public Integer findRecommendScoreByAnswerId(Long answerId) {
-        return answerRecommendRepository.getAnswerRecommendScoreByAnswerId(answerId);
+        return answerRecommendRepository.findAnswerRecommendScoreByAnswerId(answerId);
+    }
+
+    @Override
+    public Optional<AnswerRecommend> findByAnswerIdAndUserID(Long answerId, Long userId) {
+        return answerRecommendRepository.findAnswerRecommendByAnswerIdAndUserId(answerId, userId);
     }
 
     @Override

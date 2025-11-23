@@ -29,7 +29,7 @@ public class QuestionRecommendRepositoryAdapter
 
     @Override
     public Integer findRecommendScoreByQuestionId(Long questionId) {
-        return questionRecommendRepository.getQuestionRecommendScoreByQuestionId(questionId);
+        return questionRecommendRepository.findQuestionRecommendScoreByQuestionId(questionId);
     }
 
     @Override

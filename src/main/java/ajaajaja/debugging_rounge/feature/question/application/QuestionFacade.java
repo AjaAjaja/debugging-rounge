@@ -136,9 +136,7 @@ public class QuestionFacade implements
 
         Map<Long, AnswerRecommendScoreAndMyRecommendTypeDto> dtoMap =
                 answerRecommendScoreAndMyType.stream()
-                        .collect(HashMap::new,
-                                (m, d) -> m.put(d.answerId(), d),
-                                Map::putAll);
+                        .collect(HashMap::new, (m, d) -> m.put(d.answerId(), d), Map::putAll);
 
         List<AnswerDetailWithRecommendDto> dtoList =
                 answerDetailDtoPage.getContent().stream()
