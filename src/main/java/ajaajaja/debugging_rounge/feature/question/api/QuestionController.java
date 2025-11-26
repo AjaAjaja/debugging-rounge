@@ -35,7 +35,6 @@ public class QuestionController {
     private final UpdateQuestionUseCase updateQuestionUseCase;
     private final DeleteQuestionUseCase deleteQuestionUseCase;
     private final QuestionResponseMapper questionResponseMapper;
-    private final AnswerMapper answerMapper;
 
     @PostMapping
     public ResponseEntity<Long> createQuestion(
