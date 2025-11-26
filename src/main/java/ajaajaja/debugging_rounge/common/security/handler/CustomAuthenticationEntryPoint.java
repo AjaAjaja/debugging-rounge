@@ -2,6 +2,7 @@ package ajaajaja.debugging_rounge.common.security.handler;
 
 import ajaajaja.debugging_rounge.common.exception.ErrorCode;
 import ajaajaja.debugging_rounge.common.exception.ErrorResponse;
+import ajaajaja.debugging_rounge.common.jwt.exception.CustomAuthenticationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,18 +26,26 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        sendError(response, request.getLocale());
+
+        ErrorCode errorCode = ErrorCode.AUTHENTICATION_FAILED; // 기본값
+
+        if (authException instanceof CustomAuthenticationException custom) {
+            errorCode = custom.getErrorCode();
+        }
+
+        sendError(response, request.getLocale(), errorCode);
     }
 
     private void sendError(
             HttpServletResponse response,
-            Locale locale) throws IOException {
-        response.setStatus(ErrorCode.AUTHENTICATION_FAILED.getHttpStatus().value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            Locale locale,
+            ErrorCode errorCode) throws IOException {
+
+        response.setStatus(errorCode.getHttpStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8");
 
-        String message = messageSource.getMessage(ErrorCode.AUTHENTICATION_FAILED.getMessageKey(), null, locale);
-        ErrorResponse error = ErrorResponse.of(ErrorCode.AUTHENTICATION_FAILED, List.of(message));
+        String message = messageSource.getMessage(errorCode.getMessageKey(), null, locale);
+        ErrorResponse error = ErrorResponse.of(errorCode, List.of(message));
         objectMapper.writeValue(response.getWriter(), error);
     }
 }
