@@ -2,20 +2,8 @@ spring:
   application:
     name: debugging-rounge
 
-  config:
-    import: "vault://"
-  cloud:
-    compatibility-verifier:
-      enabled: false
-    vault:
-      uri: ${VAULT_ADDR:http://localhost:8200}
-      authentication: TOKEN
-      token: ${VAULT_TOKEN}
-      kv:
-        enabled: true
-        backend: secret
-        default-context: debugging-rounge
-
+  profiles:
+    default: local
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -65,6 +53,3 @@ jwt:
     same-site: None
     secure: true
     http-only: true
-
-frontend:
-  base-url: http://localhost:3000
