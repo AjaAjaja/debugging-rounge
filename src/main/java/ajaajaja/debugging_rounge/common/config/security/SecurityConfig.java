@@ -1,5 +1,6 @@
 package ajaajaja.debugging_rounge.common.config.security;
 
+import ajaajaja.debugging_rounge.common.security.filter.BearerTokenExceptionFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -33,7 +35,8 @@ public class SecurityConfig {
             @Qualifier("accessAuthenticationManager") AuthenticationManager accessManager,
             @Qualifier("refreshAuthenticationManager") AuthenticationManager refreshManager,
             AuthenticationEntryPoint authenticationEntryPoint,
-            AccessDeniedHandler accessDeniedHandler)
+            AccessDeniedHandler accessDeniedHandler,
+            BearerTokenExceptionFilter bearerTokenExceptionFilter)
             throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable)
@@ -45,7 +48,6 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/oauth2/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/logout").permitAll()
                         .requestMatchers(HttpMethod.GET, "/questions", "/questions/**").permitAll()
                         .anyRequest().authenticated())
 
@@ -61,6 +63,8 @@ public class SecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler)
                 )
+
+                .addFilterBefore(bearerTokenExceptionFilter, BearerTokenAuthenticationFilter.class)
 
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(authenticationEntryPoint)

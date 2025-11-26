@@ -9,4 +9,8 @@ public class CustomAuthenticationException extends InsufficientAuthenticationExc
         super(errorCode.name());
         this.errorCode = errorCode;
     }
+
+    public ErrorCode getErrorCode() {
+        return errorCode;
+    }
 }
