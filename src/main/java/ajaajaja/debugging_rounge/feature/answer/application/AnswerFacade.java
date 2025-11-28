@@ -52,12 +52,10 @@ public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery, Updat
     @Override
     public Page<AnswerDetailDto> getAllAnswerByQuestionId(Long questionId, Pageable pageable) {
 
-        Page<AnswerDetailDto> answersPage = loadAnswerPort.findAllByQuestionId(questionId, pageable);
-
-        if (answersPage.isEmpty() && !loadQuestionPort.existsQuestionById(questionId)) {
+        if (!loadQuestionPort.existsQuestionById(questionId)) {
             throw new QuestionNotFoundException();
         }
-        return answersPage;
+        return loadAnswerPort.findAllByQuestionId(questionId, pageable);
     }
 
     @Override
