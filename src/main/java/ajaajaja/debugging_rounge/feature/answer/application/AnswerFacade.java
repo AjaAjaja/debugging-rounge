@@ -55,7 +55,7 @@ public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery, Updat
         if (!loadQuestionPort.existsQuestionById(questionId)) {
             throw new QuestionNotFoundException();
         }
-        return loadAnswerPort.findAllByQuestionId(questionId, pageable);;
+        return loadAnswerPort.findAllByQuestionId(questionId, pageable);
     }
 
     @Override
