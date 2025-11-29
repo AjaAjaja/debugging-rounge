@@ -7,6 +7,7 @@ import ajaajaja.debugging_rounge.feature.question.recommend.application.port.out
 import ajaajaja.debugging_rounge.feature.question.recommend.application.port.out.UpsertQuestionRecommendPort;
 import ajaajaja.debugging_rounge.feature.question.recommend.domain.RecommendType;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -38,6 +39,7 @@ class QuestionRecommendFacadeTest {
     }
 
     @Test
+    @DisplayName("NONE 요청이면 기존 기록을 삭제하고 점수를 조회한다")
     void NONE요청이면_기존기록을삭제하고_점수를조회한다() {
 
         // given
@@ -63,12 +65,12 @@ class QuestionRecommendFacadeTest {
         // 혹시 업서트 포트가 호출되지 않았나?
         verify(upsertQuestionRecommendPort, never()).upsert(anyLong(), anyLong(), anyString());
 
-        // then
         assertThat(result.recommendScore()).isEqualTo(0);
         assertThat(result.myRecommendType()).isEqualTo(RecommendType.NONE);
     }
 
     @Test
+    @DisplayName("UP 요청이면 업서트하고 점수를 조회한다")
     void UP요청이면_업서트하고_점수를조회한다() {
 
         // given
@@ -87,6 +89,7 @@ class QuestionRecommendFacadeTest {
         QuestionRecommendScoreAndMyRecommendTypeDto result =
                 questionRecommendFacade.update(requestDto);
 
+        // then
         // 업서트 포트가 호출이 잘 되었나?
         verify(upsertQuestionRecommendPort)
                 .upsert(questionId, userId, RecommendType.UP.name());
@@ -95,12 +98,12 @@ class QuestionRecommendFacadeTest {
         verify(deleteQuestionRecommendPort, never())
                 .deleteByQuestionIdAndUserId(anyLong(), anyLong());
 
-        // then
         assertThat(result.recommendScore()).isEqualTo(2);
         assertThat(result.myRecommendType()).isEqualTo(RecommendType.UP);
     }
 
     @Test
+    @DisplayName("DOWN 요청이면 업서트하고 점수를 조회한다")
     void DOWN요청이면_업서트하고_점수를조회한다() {
 
         // given
@@ -113,12 +116,13 @@ class QuestionRecommendFacadeTest {
                 userId
         );
 
-        when(loadQuestionRecommendScorePort.findRecommendScoreByQuestionId(questionId)).thenReturn(5);
+        when(loadQuestionRecommendScorePort.findRecommendScoreByQuestionId(questionId)).thenReturn(-10);
 
         // when
         QuestionRecommendScoreAndMyRecommendTypeDto result =
                 questionRecommendFacade.update(requestDto);
 
+        // then
         // 업서트 포트가 호출이 잘 되었나?
         verify(upsertQuestionRecommendPort)
                 .upsert(questionId, userId, RecommendType.DOWN.name());
@@ -127,8 +131,7 @@ class QuestionRecommendFacadeTest {
         verify(deleteQuestionRecommendPort, never())
                 .deleteByQuestionIdAndUserId(anyLong(), anyLong());
 
-        // then
-        assertThat(result.recommendScore()).isEqualTo(5);
+        assertThat(result.recommendScore()).isEqualTo(-10);
         assertThat(result.myRecommendType()).isEqualTo(RecommendType.DOWN);
     }
 
