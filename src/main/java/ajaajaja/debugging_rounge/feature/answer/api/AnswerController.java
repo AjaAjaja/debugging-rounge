@@ -44,7 +44,7 @@ public class AnswerController {
     @GetMapping("/questions/{questionId}/answers")
     public ResponseEntity<Page<AnswerDetailResponse>> getAnswersByQuestionId(
             @PathVariable("questionId") Long questionId,
-            @LoginUserId Long currentUserId,
+            @LoginUserId(required = false) Long currentUserId,
             Pageable pageable
     ) {
         Page<AnswerDetailDto> answersPage = getAnswersQuery.getAllAnswerByQuestionId(questionId, pageable);
