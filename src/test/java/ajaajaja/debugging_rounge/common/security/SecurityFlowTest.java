@@ -1,10 +1,5 @@
 package ajaajaja.debugging_rounge.common.security;
 
-import ajaajaja.debugging_rounge.common.config.security.SecurityConfig;
-import ajaajaja.debugging_rounge.common.jwt.JwtConfig;
-import ajaajaja.debugging_rounge.common.security.handler.CustomAccessDeniedHandler;
-import ajaajaja.debugging_rounge.common.security.handler.CustomAuthenticationEntryPoint;
-import ajaajaja.debugging_rounge.common.security.token.CustomBearerTokenResolver;
 import ajaajaja.debugging_rounge.feature.auth.api.AuthController;
 import ajaajaja.debugging_rounge.feature.auth.api.RefreshCookieFactory;
 import ajaajaja.debugging_rounge.feature.auth.application.port.in.LogoutUseCase;
@@ -14,22 +9,16 @@ import ajaajaja.debugging_rounge.feature.question.api.mapper.QuestionResponseMap
 import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionListDto;
 import ajaajaja.debugging_rounge.feature.question.application.dto.QuestionWithAnswersDto;
 import ajaajaja.debugging_rounge.feature.question.application.port.in.*;
+import ajaajaja.debugging_rounge.support.WebMvcSecurityTest;
+import ajaajaja.debugging_rounge.support.WebMvcSecurityTestSupport;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -41,35 +30,14 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = {
+@WebMvcSecurityTest({
         AuthController.class,
         QuestionController.class
 })
-@Import({
-        JwtConfig.class,
-        SecurityConfig.class,
-        CustomBearerTokenResolver.class,
-        CustomAuthenticationEntryPoint.class,
-        CustomAccessDeniedHandler.class
-})
-@ActiveProfiles("test")
-public class SecurityFlowTest {
+public class SecurityFlowTest extends WebMvcSecurityTestSupport {
 
     @Autowired
     MockMvc mockMvc;
-
-    // SecurityConfig 의존성
-    @MockitoBean
-    OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService;
-
-    @MockitoBean
-    AuthenticationSuccessHandler authenticationSuccessHandler;
-
-    @MockitoBean(name = "accessAuthenticationManager")
-    AuthenticationManager accessAuthenticationManager;
-
-    @MockitoBean(name = "refreshAuthenticationManager")
-    AuthenticationManager refreshAuthenticationManager;
 
     // AuthController 의존성
     @MockitoBean
