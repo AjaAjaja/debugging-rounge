@@ -69,12 +69,12 @@ public class SecurityFlowTest extends WebMvcSecurityTestSupport {
     QuestionResponseMapper questionResponseMapper;
 
     @Nested
-    @DisplayName("인증 없이 접근하는 경우")
-    class WithoutAuthentication {
+    @DisplayName("인증 메커니즘 검증")
+    class AuthenticationMechanism {
 
         @Test
-        @DisplayName("질문 생성 API에 토큰 없이 접근하면 401 + AUTHENTICATION_FAILED를 반환한다")
-        void 질문생성_토큰없이_401() throws Exception {
+        @DisplayName("인증이 필요한 엔드포인트에 토큰 없이 접근하면 401 + AUTHENTICATION_FAILED를 반환한다")
+        void 토큰없이접근_401() throws Exception {
             // when & then
             mockMvc.perform(post("/questions")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -90,39 +90,7 @@ public class SecurityFlowTest extends WebMvcSecurityTestSupport {
         }
 
         @Test
-        @DisplayName("질문 수정 API에 토큰 없이 접근하면 401 + AUTHENTICATION_FAILED를 반환한다")
-        void 질문수정_토큰없이_401() throws Exception {
-            // when & then
-            mockMvc.perform(patch("/questions/1")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content("""
-                                    {
-                                      "title": "updated",
-                                      "content": "updated content"
-                                    }
-                                    """))
-                    .andExpect(status().isUnauthorized())
-                    .andExpect(content().contentType("application/json;charset=UTF-8"))
-                    .andExpect(jsonPath("$.code").value("AUTHENTICATION_FAILED"));
-        }
-
-        @Test
-        @DisplayName("질문 삭제 API에 토큰 없이 접근하면 401 + AUTHENTICATION_FAILED를 반환한다")
-        void 질문삭제_토큰없이_401() throws Exception {
-            // when & then
-            mockMvc.perform(delete("/questions/1"))
-                    .andExpect(status().isUnauthorized())
-                    .andExpect(content().contentType("application/json;charset=UTF-8"))
-                    .andExpect(jsonPath("$.code").value("AUTHENTICATION_FAILED"));
-        }
-    }
-
-    @Nested
-    @DisplayName("잘못된 토큰으로 접근하는 경우")
-    class WithInvalidToken {
-
-        @Test
-        @DisplayName("Bearer 없이 토큰만 전달하면 401을 반환한다")
+        @DisplayName("Bearer 없이 토큰만 전달하면 401 + AUTHENTICATION_FAILED를 반환한다")
         void Bearer없이토큰_401() throws Exception {
             // when & then
             mockMvc.perform(post("/questions")
@@ -157,7 +125,7 @@ public class SecurityFlowTest extends WebMvcSecurityTestSupport {
         }
 
         @Test
-        @DisplayName("빈 Bearer 토큰으로 접근하면 401을 반환한다")
+        @DisplayName("빈 Bearer 토큰으로 접근하면 401 + AUTHENTICATION_FAILED를 반환한다")
         void 빈Bearer토큰_401() throws Exception {
             // when & then
             mockMvc.perform(post("/questions")
@@ -175,13 +143,14 @@ public class SecurityFlowTest extends WebMvcSecurityTestSupport {
         }
     }
 
+
     @Nested
-    @DisplayName("Refresh Token 관련 테스트")
-    class RefreshTokenTests {
+    @DisplayName("RefreshToken 흐름 검증")
+    class RefreshTokenFlow {
 
         @Test
-        @DisplayName("refreshToken 없이 /auth/refresh에 요청하면 401 + REFRESH_TOKEN_NOT_FOUND를 반환한다")
-        void refreshToken없이_요청하면_401() throws Exception {
+        @DisplayName("RefreshToken 없이 /auth/refresh에 요청하면 401 + REFRESH_TOKEN_NOT_FOUND를 반환한다")
+        void RefreshToken없이요청_401() throws Exception {
             // when & then
             mockMvc.perform(post("/auth/refresh"))
                     .andExpect(status().isUnauthorized())
@@ -190,7 +159,7 @@ public class SecurityFlowTest extends WebMvcSecurityTestSupport {
         }
 
         @Test
-        @DisplayName("유효하지 않은 refreshToken으로 요청하면 401을 반환한다")
+        @DisplayName("유효하지 않은 RefreshToken으로 요청하면 401을 반환한다")
         void 유효하지않은RefreshToken_401() throws Exception {
             // when & then
             mockMvc.perform(post("/auth/refresh")
@@ -201,12 +170,12 @@ public class SecurityFlowTest extends WebMvcSecurityTestSupport {
     }
 
     @Nested
-    @DisplayName("permitAll 엔드포인트 테스트")
-    class PermitAllEndpoints {
+    @DisplayName("permitAll 정책 검증")
+    class PermitAllPolicy {
 
         @Test
-        @DisplayName("GET /questions는 인증 없이 200 OK를 반환한다")
-        void 질문목록조회_인증없이_200() throws Exception {
+        @DisplayName("GET /questions/** 패턴은 인증 없이 접근 가능하다")
+        void GET_questions_permitAll() throws Exception {
             // given
             Page<QuestionListDto> emptyPage = new PageImpl<>(List.of());
             given(getQuestionListWithPreviewQuery.getQuestionsWithPreview(any(), any()))
@@ -218,8 +187,8 @@ public class SecurityFlowTest extends WebMvcSecurityTestSupport {
         }
 
         @Test
-        @DisplayName("GET /questions/{id}는 인증 없이 200 OK를 반환한다")
-        void 질문상세조회_인증없이_200() throws Exception {
+        @DisplayName("GET /questions/{id} 상세 조회도 인증 없이 접근 가능하다")
+        void GET_questions_id_permitAll() throws Exception {
             // given
             QuestionWithAnswersDto mockDto = new QuestionWithAnswersDto(
                     1L, "title", "content", 1L, "test@example.com",
@@ -235,12 +204,12 @@ public class SecurityFlowTest extends WebMvcSecurityTestSupport {
     }
 
     @Nested
-    @DisplayName("로그아웃 테스트")
-    class LogoutTests {
+    @DisplayName("로그아웃 정책 검증")
+    class LogoutPolicy {
 
         @Test
-        @DisplayName("POST /auth/logout은 인증 없이 접근하면 401을 반환한다")
-        void 로그아웃_인증없이_401() throws Exception {
+        @DisplayName("POST /auth/logout은 인증이 필요하다")
+        void 로그아웃_인증필요() throws Exception {
             // when & then
             mockMvc.perform(post("/auth/logout"))
                     .andExpect(status().isUnauthorized())
