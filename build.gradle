@@ -68,9 +68,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mysql'
-
-    // (옵션) H2 메모리 DB도 같이 쓰고 싶으면 이거 추가
-    // testRuntimeOnly 'com.h2database:h2'
 }
 
 
