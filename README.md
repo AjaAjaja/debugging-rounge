@@ -1,5 +1,6 @@
 
 <img width="1013" height="502" alt="스크린샷 2025-11-02 오전 4 12 45" src="https://github.com/user-attachments/assets/e990e69f-8232-4255-b1e2-838ad9d7b314" />
+
 ### 개발 관련 지식을 묻고 답할 수 있는 Q&A 게시판 프로젝트
 
 ## 1. 기술 스택
