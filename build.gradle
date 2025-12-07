@@ -59,6 +59,9 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
+    // Swagger / OpenAPI (springdoc)
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14"
+
     // 기본 Spring Boot 테스트
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'

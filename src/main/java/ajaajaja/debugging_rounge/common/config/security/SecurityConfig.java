@@ -60,6 +60,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/oauth2/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/questions", "/questions/**").permitAll()
+                        // Swagger UI 및 API 문서 경로 허용
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
 
                 .oauth2Login(login -> login.
