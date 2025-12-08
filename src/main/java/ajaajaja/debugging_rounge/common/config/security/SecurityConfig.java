@@ -22,9 +22,20 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import java.util.Set;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    /**
+     * REFRESH 토큰이 필요한 경로 목록
+     * 새로운 경로가 추가되면 이 Set에 추가하면 됨
+     */
+    public static final Set<String> REFRESH_TOKEN_REQUIRED_PATHS = Set.of(
+            "/auth/refresh",
+            "/auth/logout"
+    );
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -49,6 +60,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/oauth2/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/questions", "/questions/**").permitAll()
+                        // Swagger UI 및 API 문서 경로 허용
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
 
                 .oauth2Login(login -> login.
@@ -78,7 +91,9 @@ public class SecurityConfig {
             AuthenticationManager accessManager,
             AuthenticationManager refreshManager
     ) {
-        return "/auth/refresh".equals(request.getRequestURI())
+        String requestURI = request.getRequestURI();
+        // REFRESH 토큰이 필요한 경로인지 확인
+        return REFRESH_TOKEN_REQUIRED_PATHS.contains(requestURI)
                 ? refreshManager
                 : accessManager;
     }

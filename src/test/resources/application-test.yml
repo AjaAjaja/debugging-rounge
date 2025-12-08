@@ -1,22 +1,36 @@
 spring:
+  flyway:
+    enabled: false
+  
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
+        format_sql: false
+        show_sql: false
+
   security:
     oauth2:
       client:
         registration:
           google:
             client-id: test-client-id
-            client-secret: client-secret
-
-  cloud:
-    vault:
-      enabled: false
+            client-secret: test-client-secret
+      resourceserver:
+        jwt:
+          secret-key: dGVzdC1zZWNyZXQta2V5LWZvci1qd3QtdG9rZW4tZ2VuZXJhdGlvbi1taW5pbXVtLTI1Ni1iaXRzLWxvbmctZW5vdWdoLWZvci1IUzI1Ni1hbGdvcml0aG0=
 
   messages:
     basename: messages/errors
+
+# JWT 설정은 application.yml의 기본값을 사용합니다.
+# 테스트 환경에서만 다른 값이 필요한 경우에만 여기서 오버라이드하세요.
+jwt:
+  cookie:
+    secure: false  # 테스트 환경에서는 HTTP 허용
+
+logging:
+  level:
+    org.springframework: ERROR
+    org.hibernate: ERROR
