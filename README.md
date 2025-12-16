@@ -9,7 +9,10 @@
 - **Back-End**: `Spring Boot`, `Spring Data JPA`, `Spring Security`
 - **Database**: `MySQL`
 
-## 2. API 개요
+## 2. ERD
+<img width="968" height="632" alt="스크린샷 2025-12-16 오후 6 02 24" src="https://github.com/user-attachments/assets/edb311d4-c843-4dc8-9b25-0b4f3e4a46b3" />
+
+## 3. API 개요
 
 ### 기술 스택 / 스타일
 
@@ -46,9 +49,9 @@
         - `POST /auth/refresh` : Access Token 재발급 (+ 필요 시 Refresh Token 회전)
         - `POST /auth/logout` : Refresh Token 블랙리스트 처리 + 쿠키 만료
 
-## 3. 헥사고날(Ports & Adapters) 아키텍처 적용
+## 4. 헥사고날(Ports & Adapters) 아키텍처 적용
 
-### 3-1. 헥사고날 아키텍처 적용 배경
+### 4-1. 헥사고날 아키텍처 적용 배경
 
 현재는 구글 OAuth 기반 로그인 + JWT만 사용하고 있지만,
 
@@ -62,14 +65,14 @@ Application 로직을 건드리지 않고, **알림 어댑터만 교체/추가�
 
 **인증/토큰/알림 등 외부 인프라 의존성을 Port/Adapter로 분리하는 헥사고날 아키텍처를 적용했습니다.**
 
-### 3-2. 헥사고날 아키텍처 적용
+### 4-2. 헥사고날 아키텍처 적용
 
 ```java
 [ Web(API) ] ──> (IN Port) ──> [ Application + Domain ] ──> (OUT Port) ──> [ OAuth / DB ]
      ↑  입력 어댑터                          코어                                 출력 어댑터
 ```
 
-### 3-3. 전체 구조 개요
+### 4-3. 전체 구조 개요
 
 - **Application 계층 (Facade + Port)**
     - **`feature.question.application.QuestionFacade`**
@@ -94,7 +97,7 @@ Application 로직을 건드리지 않고, **알림 어댑터만 교체/추가�
     - 질문 목록을 조회한 뒤, **`LoadQuestionRecommendPort`**로 추천 점수 + 내 추천 상태를 조회
     - 최종 **`Page<QuestionListDto>`** 조립
 
-### 3-3. 헥사고날 아키텍처를 적용함으로써 얻은 장점
+### 4-4. 헥사고날 아키텍처를 적용함으로써 얻은 장점
 
 **장점 1 – 코어 로직이 인프라에서 분리되어 유지보수가 용이**
 
@@ -122,7 +125,7 @@ Application 로직을 건드리지 않고, **알림 어댑터만 교체/추가�
 - 새로운 개발자가 들어와도 “이 기능 로직은 Facade 쪽을 먼저 보면 된다”라고 설명하기 쉽고,
 - 기능 변경/추가 시 어느 클래스를 수정해야 하는지가 명확
 
-## 4. 리프레쉬 토큰 전략
+## 5. 리프레쉬 토큰 전략
 
 이번 프로젝트에서는 JWT의 한계와 단점을 보완하는데 관심을 집중
 
@@ -138,24 +141,24 @@ Refresh Token 원문을 저장하지 않고, 단방향 해시 값으로 저장
 
 이 전략은 **`RefreshTokenPort`**, **`BlacklistedRefreshTokenPort`**, **`TokenHasherPort`**와 같은 Port를 통해 구현하여, 향후 저장소를 MySQL에서 Redis로 옮기거나 관리 정책을 변경할 때에도 Application 로직 변경을 최소화할 수 있도록 했습니다.
 
-## **5. 테스트**
+## **6. 테스트**
 
 이 프로젝트에서는 `AuthFacade`같이 토큰 정책과 흐름 분기가 복잡한 클래스를 중심으로 단위 테스트를 구성했습니다.
 
 또한, Mocking이 아니라 실제 DB가 필요한 복잡한 DB 쿼리(집계, 정렬)같은 경우에는 JPA 슬라이스 테스트로 테스트를 구성하였다.
 
-### **5-1. 단위 테스트**
+### **6-1. 단위 테스트**
 
 - AuthFacade, QuestionFacade, JwtProvider 등 헥사고날 아키텍처의 Application(Facade) 계층을 기준으로 검증
 - JWT 발급/검증, 토큰 해시 처리, 리프레시 토큰 회전/블랙리스트 처리
 
-### **5-2. 통합 테스트**
+### **6-2. 통합 테스트**
 
 - Testcontainers로 MySQL 컨테이너를 띄워 실제 DB 환경과 유사한 조건에서 JPA 쿼리와 Native Query 동작을 검증
 - 질문/답변 목록 정렬(최신순/추천순), 추천 점수 집계와 같이 SQL·인덱스 전략에 영향을 받는 부분을 집중적으로 테스트
 - 
 
-### **5-3 주요 테스트**
+### **6-3 주요 테스트**
 
 - **인증 / 토큰 흐름**
     - Access/Refresh Token 발급·만료, 단일 Refresh Token 원칙, 회전(rotate) 및 재사용 감지
