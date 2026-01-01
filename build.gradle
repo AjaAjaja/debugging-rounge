@@ -59,6 +59,10 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
+    // AWS SDK V2 (S3)
+    implementation platform('software.amazon.awssdk:bom:2.29.0')
+    implementation 'software.amazon.awssdk:s3'
+
     // Swagger / OpenAPI (springdoc)
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14"
 
