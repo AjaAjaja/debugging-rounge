@@ -1,4 +1,4 @@
-package ajaajaja.debugging_rounge.feature.common.image.infrastructure.config;
+package ajaajaja.debugging_rounge.common.image.infrastructure.config;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,5 +34,6 @@ public class S3Config {
                 .build();
     }
 }
+
 
 

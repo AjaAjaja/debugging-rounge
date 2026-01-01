@@ -1,6 +1,6 @@
-package ajaajaja.debugging_rounge.feature.common.image.infrastructure.s3;
+package ajaajaja.debugging_rounge.common.image.infrastructure.s3;
 
-import ajaajaja.debugging_rounge.feature.common.image.application.port.out.GeneratePresignedUrlPort;
+import ajaajaja.debugging_rounge.common.image.application.port.out.GeneratePresignedUrlPort;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -96,5 +96,6 @@ public class S3PresignedUrlAdapter implements GeneratePresignedUrlPort {
         };
     }
 }
+
 
 

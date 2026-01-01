@@ -2,6 +2,8 @@ package ajaajaja.debugging_rounge.feature.answer.api.dto;
 
 import ajaajaja.debugging_rounge.feature.answer.recommend.domain.RecommendType;
 
+import java.util.List;
+
 public record AnswerDetailResponse(
         Long id,
         String content,
@@ -9,6 +11,7 @@ public record AnswerDetailResponse(
         String authorEmail,
         Boolean mine,
         RecommendType myRecommendType,
-        Integer recommendScore
+        Integer recommendScore,
+        List<String> imageUrls
 ) {
 }

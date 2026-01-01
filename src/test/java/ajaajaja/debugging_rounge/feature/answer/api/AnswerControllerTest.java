@@ -210,7 +210,7 @@ class AnswerControllerTest extends WebMvcSecurityTestSupport {
             Page<AnswerDetailDto> mockPage = new PageImpl<>(List.of());
             given(getAnswersQuery.getAllAnswerByQuestionId(eq(questionId), any()))
                     .willReturn(mockPage);
-            given(answerMapper.toResponse(any(), isNull()))
+            given(answerMapper.toResponse(any(AnswerDetailDto.class), isNull()))
                     .willReturn(mock(AnswerDetailResponse.class));
 
             // when & then
@@ -229,7 +229,7 @@ class AnswerControllerTest extends WebMvcSecurityTestSupport {
             Page<AnswerDetailDto> mockPage = new PageImpl<>(List.of());
             given(getAnswersQuery.getAllAnswerByQuestionId(eq(questionId), any()))
                     .willReturn(mockPage);
-            given(answerMapper.toResponse(any(), eq(loginUserId)))
+            given(answerMapper.toResponse(any(AnswerDetailDto.class), eq(loginUserId)))
                     .willReturn(mock(AnswerDetailResponse.class));
 
             // when & then

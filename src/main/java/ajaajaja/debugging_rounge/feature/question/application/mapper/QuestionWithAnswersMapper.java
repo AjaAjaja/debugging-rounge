@@ -19,6 +19,7 @@ public interface QuestionWithAnswersMapper {
     @Mapping(target = "answers",     source = "answerDetailWithRecommendDtoPage")
     @Mapping(target = "recommendScore", source = "questionDetailDto.recommendScore")
     @Mapping(target = "myRecommendType", source = "myRecommendType")
+    @Mapping(target = "imageUrls",   source = "questionDetailDto.imageUrls")
     QuestionWithAnswersDto toQuestionWithAnswerDto(
             QuestionDetailDto questionDetailDto,
             Page<AnswerDetailWithRecommendDto> answerDetailWithRecommendDtoPage,

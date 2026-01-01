@@ -21,6 +21,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +52,13 @@ public class AnswerController {
             @RequestBody @Valid AnswerCreateRequest answerCreateRequest,
             @Parameter(hidden = true) @LoginUserId Long userId
     ) {
-        Long answerId = createAnswerUseCase.createAnswer(answerCreateRequest.toDto(questionId, userId));
+        Long answerId = createAnswerUseCase.createAnswer(
+                answerCreateRequest.toDto(
+                        questionId,
+                        userId,
+                        answerCreateRequest.imageUrls() != null ? answerCreateRequest.imageUrls() : List.of()
+                )
+        );
         return ResponseEntity
                 .created(UriHelper.buildCreatedUri(answerId))
                 .body(answerId);

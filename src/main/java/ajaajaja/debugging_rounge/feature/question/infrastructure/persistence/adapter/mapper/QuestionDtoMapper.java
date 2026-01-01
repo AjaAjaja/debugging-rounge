@@ -12,6 +12,7 @@ public interface QuestionDtoMapper {
 
     @Mapping(target = "questionId", source = "id")
     @Mapping(target = "authorEmail", source = "email")
+    @Mapping(target = "imageUrls", ignore = true) // imageUrls는 별도로 조회하여 설정됨
     QuestionDetailDto toDto(QuestionDetailView questionDetailView);
 
     @Mapping(target = "questionId", source = "id")

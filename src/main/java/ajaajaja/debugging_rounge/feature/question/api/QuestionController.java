@@ -26,6 +26,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -57,7 +59,12 @@ public class QuestionController {
             @RequestBody @Valid QuestionCreateRequest questionCreateRequest) {
 
         QuestionCreateDto questionCreateDto =
-                QuestionCreateDto.of(questionCreateRequest.title(), questionCreateRequest.content(), userId);
+                QuestionCreateDto.of(
+                        questionCreateRequest.title(),
+                        questionCreateRequest.content(),
+                        userId,
+                        questionCreateRequest.imageUrls() != null ? questionCreateRequest.imageUrls() : List.of()
+                );
         Long questionId = createQuestionUseCase.createQuestion(questionCreateDto);
 
         return ResponseEntity

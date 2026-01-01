@@ -4,6 +4,8 @@ import ajaajaja.debugging_rounge.common.security.validator.OwnershipValidator;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerCreateDto;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerDetailDto;
 import ajaajaja.debugging_rounge.feature.answer.application.dto.AnswerUpdateDto;
+import ajaajaja.debugging_rounge.feature.answer.image.application.AnswerImageService;
+import ajaajaja.debugging_rounge.feature.answer.image.application.port.out.LoadAnswerImagePort;
 import ajaajaja.debugging_rounge.feature.answer.application.port.in.CreateAnswerUseCase;
 import ajaajaja.debugging_rounge.feature.answer.application.port.in.DeleteAnswerUseCase;
 import ajaajaja.debugging_rounge.feature.answer.application.port.in.GetAnswersQuery;
@@ -36,6 +38,8 @@ public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery, Updat
     private final LoadAnswerPort loadAnswerPort;
     private final DeleteAnswerPort deleteAnswerPort;
     private final OwnershipValidator ownerShipValidator;
+    private final AnswerImageService answerImageService;
+    private final LoadAnswerImagePort loadAnswerImagePort;
 
     @Override
     @Transactional
@@ -46,6 +50,10 @@ public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery, Updat
         }
 
         Answer savedAnswer = saveAnswerPort.save(answerCreateDto.toEntity());
+        
+        // 이미지 저장
+        answerImageService.saveAnswerImages(savedAnswer.getId(), answerCreateDto.imageUrls());
+        
         return savedAnswer.getId();
     }
 
