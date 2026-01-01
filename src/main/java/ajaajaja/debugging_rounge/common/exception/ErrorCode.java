@@ -30,7 +30,13 @@ public enum ErrorCode {
     ANSWER_NOT_FOUND("error.answer.not_found", HttpStatus.NOT_FOUND),
     ANSWER_UPDATE_FORBIDDEN("error.answer.update_forbidden", HttpStatus.FORBIDDEN),
     ANSWER_NOT_FOUND_FOR_DELETE("error.answer.not_found_for_delete", HttpStatus.NOT_FOUND),
-    ANSWER_DELETE_FORBIDDEN("error.answer.delete_forbidden", HttpStatus.FORBIDDEN);
+    ANSWER_DELETE_FORBIDDEN("error.answer.delete_forbidden", HttpStatus.FORBIDDEN),
+    IMAGE_URL_EMPTY("error.image.url.empty", HttpStatus.BAD_REQUEST),
+    IMAGE_URL_TOO_LONG("error.image.url.too_long", HttpStatus.BAD_REQUEST),
+    IMAGE_URL_INVALID_FORMAT("error.image.url.invalid_format", HttpStatus.BAD_REQUEST),
+    IMAGE_URL_UNSUPPORTED_PROTOCOL("error.image.url.unsupported_protocol", HttpStatus.BAD_REQUEST),
+    IMAGE_URL_DOMAIN_NOT_ALLOWED("error.image.url.domain_not_allowed", HttpStatus.BAD_REQUEST),
+    IMAGE_URL_COUNT_EXCEEDED("error.image.url.count_exceeded", HttpStatus.BAD_REQUEST);
 
 
 

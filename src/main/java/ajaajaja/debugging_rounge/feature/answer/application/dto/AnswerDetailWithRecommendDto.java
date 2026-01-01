@@ -3,13 +3,16 @@ package ajaajaja.debugging_rounge.feature.answer.application.dto;
 import ajaajaja.debugging_rounge.feature.answer.recommend.application.dto.AnswerRecommendScoreAndMyRecommendTypeDto;
 import ajaajaja.debugging_rounge.feature.answer.recommend.domain.RecommendType;
 
+import java.util.List;
+
 public record AnswerDetailWithRecommendDto(
         Long id,
         String content,
         Long authorId,
         String authorEmail,
         RecommendType myRecommendType,
-        Integer recommendScore
+        Integer recommendScore,
+        List<String> imageUrls
 ) {
     public static AnswerDetailWithRecommendDto of(
             AnswerDetailDto detailDto, AnswerRecommendScoreAndMyRecommendTypeDto scoreAndMyRecommendTypeDto) {
@@ -25,7 +28,8 @@ public record AnswerDetailWithRecommendDto(
                 detailDto.authorId(),
                 detailDto.authorEmail(),
                 myAnswerRecommendType,
-                answerRecommendScore
+                answerRecommendScore,
+                detailDto.imageUrls()
         );
     }
 }

@@ -188,7 +188,7 @@ class QuestionControllerTest extends WebMvcSecurityTestSupport {
             Long questionId = 1L;
             QuestionWithAnswersDto mockDto = new QuestionWithAnswersDto(
                     questionId, "제목", "내용", 1L, "author@example.com",
-                    null, 0, Page.empty()
+                    null, 0, List.of(), Page.empty()
             );
             QuestionWithAnswerResponse mockResponse = mock(QuestionWithAnswerResponse.class);
 
@@ -212,7 +212,7 @@ class QuestionControllerTest extends WebMvcSecurityTestSupport {
             Long loginUserId = 5L;
             QuestionWithAnswersDto mockDto = new QuestionWithAnswersDto(
                     questionId, "제목", "내용", 1L, "author@example.com",
-                    null, 0, Page.empty()
+                    null, 0, List.of(), Page.empty()
             );
             QuestionWithAnswerResponse mockResponse = mock(QuestionWithAnswerResponse.class);
 

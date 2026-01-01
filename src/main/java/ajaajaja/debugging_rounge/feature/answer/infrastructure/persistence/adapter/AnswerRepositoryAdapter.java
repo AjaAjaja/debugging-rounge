@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -44,7 +45,8 @@ public class AnswerRepositoryAdapter implements SaveAnswerPort, LoadAnswerPort, 
                 answerDetailView.getId(),
                 answerDetailView.getContent(),
                 answerDetailView.getAuthorId(),
-                answerDetailView.getAuthorEmail()
+                answerDetailView.getAuthorEmail(),
+                List.of() // imageUrls는 별도로 조회하여 설정됨
         );
     }
 

@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 @Schema(description = "답변 생성 요청")
 public record AnswerCreateRequest(
         @Schema(
@@ -16,9 +18,14 @@ public record AnswerCreateRequest(
         )
         @NotBlank(message = "error.answer.content.required")
         @Size(min = 5, max = 10000, message = "error.answer.content.size")
-        String content
+        String content,
+        @Schema(
+                description = "이미지 URL 목록 (선택)",
+                example = "[\"https://example.com/images/uuid1.jpg\", \"https://example.com/images/uuid2.jpg\"]"
+        )
+        List<String> imageUrls
 ) {
-    public AnswerCreateDto toDto(Long questionId, Long userId) {
-        return AnswerCreateDto.of(content, questionId, userId);
+    public AnswerCreateDto toDto(Long questionId, Long userId, List<String> imageUrls) {
+        return AnswerCreateDto.of(content, questionId, userId, imageUrls);
     }
 }

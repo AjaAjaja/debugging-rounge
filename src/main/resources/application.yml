@@ -53,3 +53,13 @@ jwt:
     same-site: None
     secure: true
     http-only: true
+
+aws:
+  s3:
+    bucket-name: debugging-rounge-bucket
+    region: ap-northeast-2
+    base-url: https://debugging-rounge-bucket.s3.ap-northeast-2.amazonaws.com
+    access-key-id: ${AWS_ACCESS_KEY_ID}
+    secret-key: ${AWS_SECRET_ACCESS_KEY}
+  image:
+    allowed-domains: debugging-rounge-bucket.s3.ap-northeast-2.amazonaws.com

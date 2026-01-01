@@ -67,7 +67,7 @@ class AnswerFacadeTest {
             Long questionId = 1L;
             Long authorId = 100L;
             String content = "test content";
-            AnswerCreateDto createDto = AnswerCreateDto.of(content, questionId, authorId);
+            AnswerCreateDto createDto = AnswerCreateDto.of(content, questionId, authorId, List.of());
 
             Answer savedAnswer = mock(Answer.class);
             when(savedAnswer.getId()).thenReturn(1L);
@@ -98,7 +98,7 @@ class AnswerFacadeTest {
             String content = "test content";
             Long questionId = 999L;
             Long authorId = 100L;
-            AnswerCreateDto createDto = AnswerCreateDto.of(content, questionId, authorId);
+            AnswerCreateDto createDto = AnswerCreateDto.of(content, questionId, authorId, List.of());
 
             when(loadQuestionPort.existsQuestionById(questionId)).thenReturn(false);
 
@@ -126,7 +126,7 @@ class AnswerFacadeTest {
             Long authorId = 100L;
             String content = "test content";
             String authorEmail = "user@example.com";
-            AnswerDetailDto answerDto = new AnswerDetailDto(answerId, content, authorId, authorEmail);
+            AnswerDetailDto answerDto = new AnswerDetailDto(answerId, content, authorId, authorEmail, List.of());
             Page<AnswerDetailDto> answerPage = new PageImpl<>(List.of(answerDto));
 
             when(loadQuestionPort.existsQuestionById(questionId)).thenReturn(true);
