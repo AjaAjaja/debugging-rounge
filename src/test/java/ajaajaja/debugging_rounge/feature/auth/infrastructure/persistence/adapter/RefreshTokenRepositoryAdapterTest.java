@@ -1,8 +1,6 @@
 package ajaajaja.debugging_rounge.feature.auth.infrastructure.persistence.adapter;
 
-import ajaajaja.debugging_rounge.feature.auth.domain.BlacklistedRefreshToken;
 import ajaajaja.debugging_rounge.feature.auth.domain.RefreshToken;
-import ajaajaja.debugging_rounge.feature.auth.infrastructure.persistence.BlacklistedRefreshTokenRepository;
 import ajaajaja.debugging_rounge.feature.auth.infrastructure.persistence.RefreshTokenRepository;
 import ajaajaja.debugging_rounge.support.MysqlJpaTestSupport;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({RefreshTokenRepositoryAdapter.class, BlacklistedRefreshTokenRepositoryAdapter.class})
+@Import({RefreshTokenRepositoryAdapter.class})
 class RefreshTokenRepositoryAdapterTest extends MysqlJpaTestSupport {
 
     @Autowired
@@ -24,9 +22,6 @@ class RefreshTokenRepositoryAdapterTest extends MysqlJpaTestSupport {
 
     @Autowired
     RefreshTokenRepository refreshTokenRepository;
-
-    @Autowired
-    BlacklistedRefreshTokenRepository blacklistedRefreshTokenRepository;
 
     // BINARY(32)를 위한 32바이트 해시 생성 헬퍼
     private byte[] createHash(String seed) {
@@ -181,8 +176,8 @@ class RefreshTokenRepositoryAdapterTest extends MysqlJpaTestSupport {
     }
 
     @Test
-    @DisplayName("토큰 삭제 시 블랙리스트에 추가된다")
-    void deleteByTokenHashAndUserId_삭제후_블랙리스트추가() {
+    @DisplayName("토큰을 삭제한다")
+    void deleteByTokenHashAndUserId_삭제() {
         // given
         Long userId = 1L;
         byte[] tokenHash = createHash("test-hash-7");
@@ -194,34 +189,23 @@ class RefreshTokenRepositoryAdapterTest extends MysqlJpaTestSupport {
         // then
         // 토큰이 삭제됨
         assertThat(refreshTokenRepository.findByTokenHash(tokenHash)).isEmpty();
-
-        // 블랙리스트에 추가됨
-        assertThat(blacklistedRefreshTokenRepository.existsByTokenHash(tokenHash)).isTrue();
     }
 
     @Test
-    @DisplayName("사용자의 모든 세션을 만료시킨다")
-    void killAllSessions_모든세션만료() {
+    @DisplayName("사용자의 모든 토큰을 삭제한다")
+    void deleteAllByUserId_모든토큰삭제() {
         // given
         Long userId = 1L;
         byte[] tokenHash1 = createHash("test-hash-8");
 
         refreshTokenRepository.save(RefreshToken.of(tokenHash1, userId));
 
-        List<RefreshToken> tokens = refreshTokenRepository.findAllByUserId(userId);
-        List<BlacklistedRefreshToken> blacklisted = tokens.stream()
-                .map(rt -> BlacklistedRefreshToken.of(rt.getTokenHash(), rt.getUserId()))
-                .toList();
-
         // when
-        adapter.killAllSessions(blacklisted, userId);
+        adapter.deleteAllByUserId(userId);
 
         // then
         // 모든 토큰이 삭제됨
         assertThat(refreshTokenRepository.findAllByUserId(userId)).isEmpty();
-
-        // 블랙리스트에 추가됨
-        assertThat(blacklistedRefreshTokenRepository.existsByTokenHash(tokenHash1)).isTrue();
     }
 }
 

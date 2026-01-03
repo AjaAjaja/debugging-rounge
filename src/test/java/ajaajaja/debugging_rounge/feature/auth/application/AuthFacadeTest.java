@@ -6,7 +6,6 @@ import ajaajaja.debugging_rounge.feature.auth.application.port.out.BlacklistedRe
 import ajaajaja.debugging_rounge.feature.auth.application.port.out.JwtPort;
 import ajaajaja.debugging_rounge.feature.auth.application.port.out.RefreshTokenPort;
 import ajaajaja.debugging_rounge.feature.auth.application.port.out.TokenHasherPort;
-import ajaajaja.debugging_rounge.feature.auth.domain.BlacklistedRefreshToken;
 import ajaajaja.debugging_rounge.feature.auth.domain.RefreshToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -86,7 +85,7 @@ class AuthFacadeTest {
             assertThat(refreshToken.getUserId()).isEqualTo(USER_ID);
 
             verify(refreshTokenPort, never()).rotate(any(), any(), any());
-            verify(blacklistedRefreshTokenPort, never()).revoke(any());
+            verify(blacklistedRefreshTokenPort, never()).addToBlacklist(any(), any());
         }
 
         @Test
@@ -110,11 +109,7 @@ class AuthFacadeTest {
             assertThat(tokenPair.refreshToken()).isEqualTo(NEW_REFRESH_RAW);
 
             verify(refreshTokenPort).rotate(OLD_HASH, NEW_HASH, USER_ID);
-            ArgumentCaptor<BlacklistedRefreshToken> captor = ArgumentCaptor.forClass(BlacklistedRefreshToken.class);
-            verify(blacklistedRefreshTokenPort).revoke(captor.capture());
-            BlacklistedRefreshToken blacklistedRefreshToken = captor.getValue();
-            assertThat(blacklistedRefreshToken.getTokenHash()).isEqualTo(OLD_HASH);
-            assertThat(blacklistedRefreshToken.getUserId()).isEqualTo(USER_ID);
+            verify(blacklistedRefreshTokenPort).addToBlacklist(OLD_HASH, USER_ID);
 
             verify(refreshTokenPort, never()).save(any());
         }
@@ -166,11 +161,7 @@ class AuthFacadeTest {
             assertThat(tokenPair.refreshToken()).isEqualTo(NEW_REFRESH_RAW);
 
             verify(refreshTokenPort).rotate(OLD_HASH, NEW_HASH, USER_ID);
-            ArgumentCaptor<BlacklistedRefreshToken> captor = ArgumentCaptor.forClass(BlacklistedRefreshToken.class);
-            verify(blacklistedRefreshTokenPort).revoke(captor.capture());
-            BlacklistedRefreshToken blacklistedRefreshToken = captor.getValue();
-            assertThat(blacklistedRefreshToken.getTokenHash()).isEqualTo(OLD_HASH);
-            assertThat(blacklistedRefreshToken.getUserId()).isEqualTo(USER_ID);
+            verify(blacklistedRefreshTokenPort).addToBlacklist(OLD_HASH, USER_ID);
         }
 
         @Test
@@ -202,7 +193,8 @@ class AuthFacadeTest {
                     .isInstanceOf(RefreshTokenInvalidException.class);
 
             verify(refreshTokenPort).findAllByUserId(USER_ID);
-            verify(refreshTokenPort).killAllSessions(anyList(), any());
+            verify(blacklistedRefreshTokenPort).addAllToBlacklist(anyList(), eq(USER_ID));
+            verify(refreshTokenPort).deleteAllByUserId(USER_ID);
         }
 
         @Test
@@ -219,7 +211,8 @@ class AuthFacadeTest {
                     .isInstanceOf(RefreshTokenInvalidException.class);
 
             verify(refreshTokenPort).findAllByUserId(USER_ID);
-            verify(refreshTokenPort).killAllSessions(anyList(), any());
+            verify(blacklistedRefreshTokenPort).addAllToBlacklist(anyList(), eq(USER_ID));
+            verify(refreshTokenPort).deleteAllByUserId(USER_ID);
 
         }
     }
@@ -243,7 +236,7 @@ class AuthFacadeTest {
             authFacade.logout(OLD_REFRESH_RAW);
 
             // then
-            verify(blacklistedRefreshTokenPort).insertIfNotExists(OLD_HASH, USER_ID);
+            verify(blacklistedRefreshTokenPort).addToBlacklist(OLD_HASH, USER_ID);
             verify(refreshTokenPort).deleteByTokenHashAndUserId(OLD_HASH, USER_ID);
         }
 
@@ -259,7 +252,7 @@ class AuthFacadeTest {
             authFacade.logout(OLD_REFRESH_RAW);
 
             // then
-            verify(blacklistedRefreshTokenPort).insertIfNotExists(OLD_HASH, null);
+            verify(blacklistedRefreshTokenPort).addToBlacklist(OLD_HASH, null);
             verify(refreshTokenPort, never()).deleteByTokenHashAndUserId(any(), any());
         }
 
@@ -292,10 +285,7 @@ class AuthFacadeTest {
             RefreshToken rt2 = mock(RefreshToken.class);
 
             when(rt1.getTokenHash()).thenReturn(OLD_HASH);
-            when(rt1.getUserId()).thenReturn(USER_ID);
-
             when(rt2.getTokenHash()).thenReturn(ANOTHER_HASH);
-            when(rt2.getUserId()).thenReturn(USER_ID);
 
             when(refreshTokenPort.findAllByUserId(USER_ID)).thenReturn(List.of(rt1, rt2));
 
@@ -305,16 +295,14 @@ class AuthFacadeTest {
             // then
             verify(refreshTokenPort).findAllByUserId(USER_ID);
 
-            ArgumentCaptor<List<BlacklistedRefreshToken>> captor =
-                    ArgumentCaptor.forClass(List.class);
-            verify(refreshTokenPort).killAllSessions(captor.capture(), eq(USER_ID));
-            List<BlacklistedRefreshToken> blackList = captor.getValue();
+            ArgumentCaptor<List<byte[]>> captor = ArgumentCaptor.forClass(List.class);
+            verify(blacklistedRefreshTokenPort).addAllToBlacklist(captor.capture(), eq(USER_ID));
+            List<byte[]> tokenHashes = captor.getValue();
 
-            assertThat(blackList).hasSize(2);
-            assertThat(blackList).extracting(BlacklistedRefreshToken::getTokenHash)
-                    .containsExactlyInAnyOrder(OLD_HASH, ANOTHER_HASH);
-            assertThat(blackList).extracting(BlacklistedRefreshToken::getUserId)
-                    .containsOnly(USER_ID);
+            assertThat(tokenHashes).hasSize(2);
+            assertThat(tokenHashes).containsExactlyInAnyOrder(OLD_HASH, ANOTHER_HASH);
+            
+            verify(refreshTokenPort).deleteAllByUserId(USER_ID);
         }
 
         @Test
@@ -324,18 +312,18 @@ class AuthFacadeTest {
             when(refreshTokenPort.findAllByUserId(USER_ID))
                     .thenReturn(List.of());
 
-            ArgumentCaptor<List<BlacklistedRefreshToken>> captor =
-                    ArgumentCaptor.forClass(List.class);
-
             // when
             authFacade.killAllSessions(USER_ID);
 
             // then
             verify(refreshTokenPort).findAllByUserId(USER_ID);
-            verify(refreshTokenPort).killAllSessions(captor.capture(), eq(USER_ID));
+            ArgumentCaptor<List<byte[]>> captor = ArgumentCaptor.forClass(List.class);
+            verify(blacklistedRefreshTokenPort).addAllToBlacklist(captor.capture(), eq(USER_ID));
 
-            List<BlacklistedRefreshToken> passed = captor.getValue();
+            List<byte[]> passed = captor.getValue();
             assertThat(passed).isEmpty();
+            
+            verify(refreshTokenPort).deleteAllByUserId(USER_ID);
         }
 
 
