@@ -7,7 +7,6 @@ import ajaajaja.debugging_rounge.feature.auth.application.port.out.BlacklistedRe
 import ajaajaja.debugging_rounge.feature.auth.application.port.out.JwtPort;
 import ajaajaja.debugging_rounge.feature.auth.application.port.out.RefreshTokenPort;
 import ajaajaja.debugging_rounge.feature.auth.application.port.out.TokenHasherPort;
-import ajaajaja.debugging_rounge.feature.auth.domain.BlacklistedRefreshToken;
 import ajaajaja.debugging_rounge.feature.auth.domain.RefreshToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -83,20 +82,23 @@ public class AuthFacade implements IssueTokensUseCase, ReissueTokensUseCase, Log
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void killAllSessions(Long userId) {
         List<RefreshToken> refreshTokens = refreshTokenPort.findAllByUserId(userId);
-        List<BlacklistedRefreshToken> blacklisted = refreshTokens.stream()
-                .map(rt -> BlacklistedRefreshToken.of(rt.getTokenHash(), rt.getUserId())).toList();
-        refreshTokenPort.killAllSessions(blacklisted, userId);
+        List<byte[]> tokenHashes = refreshTokens.stream()
+                .map(RefreshToken::getTokenHash)
+                .toList();
+        
+        blacklistedRefreshTokenPort.addAllToBlacklist(tokenHashes, userId);
+        refreshTokenPort.deleteAllByUserId(userId);
     }
 
     private void revokeToken(byte[] tokenHash) {
         Optional<RefreshToken> optionalRefreshToken = refreshTokenPort.findByTokenHash(tokenHash);
         if (optionalRefreshToken.isEmpty()) {
-            blacklistedRefreshTokenPort.insertIfNotExists(tokenHash, null);
+            blacklistedRefreshTokenPort.addToBlacklist(tokenHash, null);
             return;
         }
 
         Long userId = optionalRefreshToken.get().getUserId();
-        blacklistedRefreshTokenPort.insertIfNotExists(tokenHash, userId);
+        blacklistedRefreshTokenPort.addToBlacklist(tokenHash, userId);
 
         refreshTokenPort.deleteByTokenHashAndUserId(tokenHash, userId);
     }
@@ -106,7 +108,7 @@ public class AuthFacade implements IssueTokensUseCase, ReissueTokensUseCase, Log
         if (changed != 1) {
             throw new RefreshTokenInvalidException();
         }
-        blacklistedRefreshTokenPort.revoke(BlacklistedRefreshToken.of(oldTokenHash, userId));
+        blacklistedRefreshTokenPort.addToBlacklist(oldTokenHash, userId);
     }
 
 }

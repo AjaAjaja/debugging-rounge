@@ -1,9 +1,7 @@
 package ajaajaja.debugging_rounge.feature.auth.infrastructure.persistence.adapter;
 
 import ajaajaja.debugging_rounge.feature.auth.application.port.out.RefreshTokenPort;
-import ajaajaja.debugging_rounge.feature.auth.domain.BlacklistedRefreshToken;
 import ajaajaja.debugging_rounge.feature.auth.domain.RefreshToken;
-import ajaajaja.debugging_rounge.feature.auth.infrastructure.persistence.BlacklistedRefreshTokenRepository;
 import ajaajaja.debugging_rounge.feature.auth.infrastructure.persistence.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,7 +14,6 @@ import java.util.Optional;
 public class RefreshTokenRepositoryAdapter implements RefreshTokenPort {
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final BlacklistedRefreshTokenRepository blacklistedRefreshTokenRepository;
 
     @Override
     public Optional<RefreshToken> findByUserId(Long userId) {
@@ -31,14 +28,11 @@ public class RefreshTokenRepositoryAdapter implements RefreshTokenPort {
     @Override
     public void deleteByTokenHashAndUserId(byte[] tokenHash, Long userId) {
         refreshTokenRepository.deleteByTokenHashAndUserId(tokenHash, userId);
-        blacklistedRefreshTokenRepository.save(BlacklistedRefreshToken.of(tokenHash, userId));
     }
 
     @Override
-    public void killAllSessions(List<BlacklistedRefreshToken> blacklisted, Long userId) {
-        blacklistedRefreshTokenRepository.saveAll(blacklisted);
+    public void deleteAllByUserId(Long userId) {
         refreshTokenRepository.deleteAllByUserId(userId);
-
     }
 
     @Override
