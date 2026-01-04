@@ -24,10 +24,9 @@ spring:
   messages:
     basename: messages/errors
 
-# JWT 설정은 application.yml의 기본값을 사용합니다.
-# 테스트 환경에서만 다른 값이 필요한 경우에만 여기서 오버라이드하세요.
 jwt:
   cookie:
+    path: /api/auth
     secure: false  # 테스트 환경에서는 HTTP 허용
 
 logging:

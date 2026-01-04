@@ -130,9 +130,10 @@ class AuthControllerTest {
             doNothing().when(logoutUseCase).logout(refreshToken);
 
             // when & then
-            // Authorization 헤더에 실제 REFRESH 토큰을 넣어 refreshManager가 작동하는지 확인
+            Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+            
             mockMvc.perform(post("/auth/logout")
-                            .header("Authorization", "Bearer " + refreshToken))
+                            .cookie(refreshTokenCookie))
                     .andExpect(status().isNoContent())
                     .andExpect(header().exists(HttpHeaders.SET_COOKIE))
                     .andExpect(header().string(HttpHeaders.SET_COOKIE,
@@ -160,7 +161,7 @@ class AuthControllerTest {
         void 유효하지않은JWT_401() throws Exception {
             // when & then
             mockMvc.perform(post("/auth/logout")
-                            .header("Authorization", "Bearer invalid.jwt.token"))
+                            .cookie(new Cookie("refreshToken", "invalid.jwt.token")))
                     .andExpect(status().isUnauthorized())
                     .andExpect(jsonPath("$.code").value("AUTHENTICATION_FAILED"));
 

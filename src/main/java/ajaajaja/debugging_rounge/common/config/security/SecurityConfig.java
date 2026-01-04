@@ -28,13 +28,11 @@ import java.util.Set;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    /**
-     * REFRESH 토큰이 필요한 경로 목록
-     * 새로운 경로가 추가되면 이 Set에 추가하면 됨
-     */
     public static final Set<String> REFRESH_TOKEN_REQUIRED_PATHS = Set.of(
-            "/auth/refresh",
-            "/auth/logout"
+            "/api/auth/refresh",
+            "/api/auth/logout",
+            "/auth/refresh",  // 테스트 환경용 (context-path 없음)
+            "/auth/logout"    // 테스트 환경용 (context-path 없음)
     );
 
     @Bean
@@ -58,16 +56,19 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/oauth2/**").permitAll()
+                        // OAuth2 로그인 관련 경로 허용
+                        .requestMatchers("oauth2/**", "login/oauth2/**").permitAll()
+                        // 공개 API
                         .requestMatchers(HttpMethod.GET, "/questions", "/questions/**").permitAll()
                         // Swagger UI 및 API 문서 경로 허용
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
 
-                .oauth2Login(login -> login.
-                        userInfoEndpoint(userInfo -> userInfo.
-                                userService(customOAuth2UserService)).
-                        successHandler(authenticationSuccessHandler))
+                .oauth2Login(login -> login
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)
+                                .oidcUserService(req -> (org.springframework.security.oauth2.core.oidc.user.OidcUser) customOAuth2UserService.loadUser(req)))
+                        .successHandler(authenticationSuccessHandler))
 
                 .oauth2ResourceServer(rs -> rs
                         .bearerTokenResolver(bearerTokenResolver)

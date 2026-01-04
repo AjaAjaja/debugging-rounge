@@ -8,6 +8,10 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+server:
+  servlet:
+    context-path: /api
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -48,7 +52,7 @@ jwt:
 
   cookie:
     name: refreshToken
-    path: /auth
+    path: /api/auth
     max-age: 14d
     same-site: None
     secure: true
