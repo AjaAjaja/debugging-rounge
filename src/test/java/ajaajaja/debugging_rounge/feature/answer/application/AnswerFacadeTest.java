@@ -12,6 +12,8 @@ import ajaajaja.debugging_rounge.feature.answer.domain.exception.AnswerNotFoundE
 import ajaajaja.debugging_rounge.feature.answer.domain.exception.AnswerNotFoundForDeleteException;
 import ajaajaja.debugging_rounge.feature.answer.domain.exception.AnswerUpdateForbiddenException;
 import ajaajaja.debugging_rounge.feature.answer.domain.exception.QuestionDeleteForbiddenException;
+import ajaajaja.debugging_rounge.feature.answer.image.application.AnswerImageService;
+import ajaajaja.debugging_rounge.feature.answer.image.application.port.out.LoadAnswerImagePort;
 import ajaajaja.debugging_rounge.feature.question.application.port.out.LoadQuestionPort;
 import ajaajaja.debugging_rounge.feature.question.domain.exception.QuestionNotFoundException;
 import org.junit.jupiter.api.DisplayName;
@@ -52,6 +54,12 @@ class AnswerFacadeTest {
 
     @Mock
     OwnershipValidator ownershipValidator;
+
+    @Mock
+    AnswerImageService answerImageService;
+
+    @Mock
+    LoadAnswerImagePort loadAnswerImagePort;
 
     @InjectMocks
     AnswerFacade answerFacade;

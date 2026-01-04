@@ -47,7 +47,8 @@ public class OpenApiConfig {
                                 "토큰 재발급 및 로그아웃 시 Refresh Token이 필요합니다:\n" +
                                 "- **쿠키 형식:** `refreshToken={refreshToken}` (경로: `/auth`)\n" +
                                 "- **Swagger UI에서:** 상단 'Authorize' 버튼 → `refresh-token-cookie`에 Refresh Token 입력\n" +
-                                "- **참고:** 브라우저 개발자 도구에서 쿠키를 확인할 때 경로가 `/auth`인 쿠키만 표시됩니다\n\n" +
+                                "- **참고:** 브라우저 개발자 도구에서 쿠키를 확인할 때 경로가 `/auth`인 쿠키만 표시됩니다\n" +
+                                "  - 실제 API 요청 시에는 context-path가 적용되어 `/api/auth`로 요청됩니다\n\n" +
                                 "### 4. 자동 인증 (브라우저 쿠키 활용)\n" +
                                 "**중요:** 브라우저에서 이미 로그인한 상태라면, Swagger UI에서 별도로 토큰을 입력하지 않아도 됩니다:\n" +
                                 "- 브라우저에 저장된 쿠키(`refreshToken`)가 자동으로 전달됩니다\n" +

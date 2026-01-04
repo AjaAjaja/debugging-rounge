@@ -37,7 +37,7 @@ public class AuthController {
             description = "Refresh Token을 사용하여 새로운 Access Token과 Refresh Token을 발급받습니다.\n\n" +
                     "**테스트 방법:**\n" +
                     "1. 구글 로그인을 통해 Refresh Token을 획득\n" +
-                    "2. 브라우저 개발자 도구를 통해 refreshToken 쿠키 값을 확인(경로가 '/auth' 이어야지만 쿠키 보임)\n" +
+                    "2. 브라우저 개발자 도구를 통해 refreshToken 쿠키 값을 확인(경로가 '/auth' 이어야지만 쿠키 보임, 실제 요청은 context-path가 적용되어 '/api/auth')\n" +
                     "3. Swagger UI에서 상단 'Authorize' 버튼 클릭\n" +
                     "4. 'refresh-token-cookie'에 Refresh Token 값 입력\n" +
                     "5. 'Authorize' 클릭",
@@ -71,7 +71,7 @@ public class AuthController {
             description = "사용자를 로그아웃하고 Refresh Token을 무효화합니다.\n\n" +
                     "**테스트 방법:**\n" +
                     "1. 구글 로그인을 통해 Refresh Token을 획득\n" +
-                    "2. 브라우저 개발자 도구를 통해 refreshToken 쿠키 값을 확인(경로가 '/auth' 이어야지만 쿠키 보임)\n" +
+                    "2. 브라우저 개발자 도구를 통해 refreshToken 쿠키 값을 확인(경로가 '/auth' 이어야지만 쿠키 보임, 실제 요청은 context-path가 적용되어 '/api/auth')\n" +
                     "3. Swagger UI에서 상단 'Authorize' 버튼 클릭\n" +
                     "4. 'refresh-token-cookie'에 Refresh Token 값 입력\n" +
                     "5. 'Authorize' 클릭",

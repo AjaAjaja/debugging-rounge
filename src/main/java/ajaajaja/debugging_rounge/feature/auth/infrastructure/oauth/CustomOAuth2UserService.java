@@ -4,6 +4,8 @@ import ajaajaja.debugging_rounge.feature.auth.domain.SocialType;
 import ajaajaja.debugging_rounge.feature.user.application.port.in.FindOrRegisterUserUseCase;
 import ajaajaja.debugging_rounge.feature.user.domain.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -15,19 +17,27 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
+    private final DefaultOAuth2UserService defaultOAuth2UserService = new DefaultOAuth2UserService();
+    private final OidcUserService oidcUserService = new OidcUserService();
     private final FindOrRegisterUserUseCase findOrRegisterUserUseCase;
+    
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         SocialType socialType = SocialType.from(registrationId);
 
-        OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
+        // OIDC와 일반 OAuth2 모두 처리
+        OAuth2User oAuth2User;
+        if (userRequest instanceof OidcUserRequest) {
+            oAuth2User = oidcUserService.loadUser((OidcUserRequest) userRequest);
+        } else {
+            oAuth2User = defaultOAuth2UserService.loadUser(userRequest);
+        }
+        
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.create(socialType, oAuth2User.getAttributes());
-
         User user = findOrRegisterUserUseCase.findOrRegister(oAuth2UserInfo.getEmail(), socialType);
 
-        return new CustomOAuth2User(user, oAuth2User.getAttributes());
+        return new CustomOAuth2User(user, oAuth2User.getAttributes(), oAuth2User);
     }
 }
