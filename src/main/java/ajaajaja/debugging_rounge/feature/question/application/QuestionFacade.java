@@ -136,6 +136,9 @@ public class QuestionFacade implements
 
         ownershipValidator.validateAuthor(question.getAuthorId(), loginUserId, QuestionDeleteForbiddenException::new);
 
+        questionImageService.publishDeleteEvent(questionId);
+
+        // DB 삭제 (CASCADE로 이미지 레코드도 자동 삭제)
         deleteQuestionPort.deleteById(question.getId());
     }
 

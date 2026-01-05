@@ -27,13 +27,13 @@ class AnswerRepositoryAdapterTest extends MysqlJpaTestSupport {
     @DisplayName("질문 ID로 답변 목록을 조회한다")
     void findAllByQuestionId_답변존재_목록조회() {
         // given
-        User author = saveUser("author@example.com", SocialType.GOOGLE);
-        Question question = saveQuestion("질문 제목", "질문 내용", author.getId());
+        User author = createUser("author@example.com", SocialType.GOOGLE);
+        Question question = createQuestion("질문 제목", "질문 내용", author.getId());
 
         String content1 = "첫 번째 답변입니다.";
         String content2 = "두 번째 답변입니다.";
-        saveAnswer(content1, question.getId(), author.getId());
-        saveAnswer(content2, question.getId(), author.getId());
+        createAnswer(content1, question.getId(), author.getId());
+        createAnswer(content2, question.getId(), author.getId());
 
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -58,8 +58,8 @@ class AnswerRepositoryAdapterTest extends MysqlJpaTestSupport {
     @DisplayName("답변이 없는 질문은 빈 페이지를 반환한다")
     void findAllByQuestionId_답변없음_빈페이지() {
         // given
-        User author = saveUser("author@example.com", SocialType.GOOGLE);
-        Question question = saveQuestion("답변 없는 질문", "내용", author.getId());
+        User author = createUser("author@example.com", SocialType.GOOGLE);
+        Question question = createQuestion("답변 없는 질문", "내용", author.getId());
 
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -75,12 +75,12 @@ class AnswerRepositoryAdapterTest extends MysqlJpaTestSupport {
     @DisplayName("다른 질문의 답변은 조회되지 않는다")
     void findAllByQuestionId_다른질문_답변제외() {
         // given
-        User author = saveUser("author@example.com", SocialType.GOOGLE);
-        Question question1 = saveQuestion("질문1", "내용1", author.getId());
-        Question question2 = saveQuestion("질문2", "내용2", author.getId());
+        User author = createUser("author@example.com", SocialType.GOOGLE);
+        Question question1 = createQuestion("질문1", "내용1", author.getId());
+        Question question2 = createQuestion("질문2", "내용2", author.getId());
 
-        saveAnswer("질문1의 답변", question1.getId(), author.getId());
-        saveAnswer("질문2의 답변", question2.getId(), author.getId());
+        createAnswer("질문1의 답변", question1.getId(), author.getId());
+        createAnswer("질문2의 답변", question2.getId(), author.getId());
 
         Pageable pageable = PageRequest.of(0, 10);
 

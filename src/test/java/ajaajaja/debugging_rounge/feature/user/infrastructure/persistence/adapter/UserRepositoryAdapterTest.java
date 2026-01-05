@@ -42,7 +42,7 @@ class UserRepositoryAdapterTest extends MysqlJpaTestSupport {
         // given
         String email = "test@example.com";
         SocialType socialType = SocialType.KAKAO;
-        User savedUser = saveUser(email, socialType);
+        User user = createUser(email, socialType);
 
         // when
         Optional<User> result = adapter.findByEmailAndSocialType(email, socialType);
@@ -50,7 +50,7 @@ class UserRepositoryAdapterTest extends MysqlJpaTestSupport {
         // then
         assertThat(result).isPresent();
         User foundUser = result.get();
-        assertThat(foundUser.getId()).isEqualTo(savedUser.getId());
+        assertThat(foundUser.getId()).isEqualTo(user.getId());
         assertThat(foundUser.getEmail()).isEqualTo(email);
         assertThat(foundUser.getSocialType()).isEqualTo(socialType);
     }
@@ -74,8 +74,8 @@ class UserRepositoryAdapterTest extends MysqlJpaTestSupport {
     void findByEmailAndSocialType_같은이메일_다른소셜타입() {
         // given
         String email = "test@example.com";
-        User googleUser = saveUser(email, SocialType.GOOGLE);
-        User kakaoUser = saveUser(email, SocialType.KAKAO);
+        User googleUser = createUser(email, SocialType.GOOGLE);
+        User kakaoUser = createUser(email, SocialType.KAKAO);
 
         // when
         Optional<User> foundGoogle = adapter.findByEmailAndSocialType(email, SocialType.GOOGLE);
@@ -95,7 +95,7 @@ class UserRepositoryAdapterTest extends MysqlJpaTestSupport {
         // given
         String email = "profile@example.com";
         SocialType socialType = SocialType.NAVER;
-        User savedUser = saveUser(email, socialType);
+        User savedUser = createUser(email, socialType);
 
         // when
         Optional<UserProfileDto> result = adapter.findUserProfileViewById(savedUser.getId());

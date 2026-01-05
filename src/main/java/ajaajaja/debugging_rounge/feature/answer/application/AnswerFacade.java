@@ -85,6 +85,10 @@ public class AnswerFacade implements CreateAnswerUseCase, GetAnswersQuery, Updat
 
         ownerShipValidator.validateAuthor(answer.getAuthorId(), loginUserId, QuestionDeleteForbiddenException::new);
 
+        // 이미지 삭제 이벤트 발행 (트랜잭션 커밋 후 S3 삭제 실행)
+        answerImageService.publishDeleteEvent(id);
+
+        // DB 삭제 (CASCADE로 이미지 레코드도 자동 삭제)
         deleteAnswerPort.deleteById(id);
     }
 

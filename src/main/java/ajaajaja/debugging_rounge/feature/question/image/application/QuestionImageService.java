@@ -1,9 +1,12 @@
 package ajaajaja.debugging_rounge.feature.question.image.application;
 
 import ajaajaja.debugging_rounge.common.image.application.port.in.ValidateImageUrlsUseCase;
+import ajaajaja.debugging_rounge.common.image.domain.event.ImageDeleteEvent;
+import ajaajaja.debugging_rounge.feature.question.image.application.port.out.LoadQuestionImagePort;
 import ajaajaja.debugging_rounge.feature.question.image.application.port.out.SaveQuestionImagePort;
 import ajaajaja.debugging_rounge.feature.question.image.domain.QuestionImage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +18,9 @@ import java.util.List;
 public class QuestionImageService {
 
     private final SaveQuestionImagePort saveQuestionImagePort;
+    private final LoadQuestionImagePort loadQuestionImagePort;
     private final ValidateImageUrlsUseCase validateImageUrlsUseCase;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public void saveQuestionImages(Long questionId, List<String> imageUrls) {
@@ -38,6 +43,13 @@ public class QuestionImageService {
         }
 
         saveQuestionImagePort.saveAll(questionImages);
+    }
+
+    public void publishDeleteEvent(Long questionId) {
+        List<String> imageUrls = loadQuestionImagePort.findImageUrlsByQuestionId(questionId);
+        if (!imageUrls.isEmpty()) {
+            eventPublisher.publishEvent(ImageDeleteEvent.of(imageUrls));
+        }
     }
 }
 

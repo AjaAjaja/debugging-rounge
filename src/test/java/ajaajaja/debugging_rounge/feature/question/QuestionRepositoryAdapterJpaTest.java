@@ -31,16 +31,16 @@ public class QuestionRepositoryAdapterJpaTest extends MysqlJpaTestSupport {
     void findQuestionDetailById_질문이_존재하면_DTO를_반환한다() {
 
         // given
-        User author = saveUser("test1@test.com", SocialType.GOOGLE);
-        User user2 = saveUser("test2@test.com", SocialType.GOOGLE);
-        User user3 = saveUser("test3@test.com", SocialType.GOOGLE);
+        User author = createUser("test1@test.com", SocialType.GOOGLE);
+        User user2 = createUser("test2@test.com", SocialType.GOOGLE);
+        User user3 = createUser("test3@test.com", SocialType.GOOGLE);
 
         String testTitle = "testTitle";
         String testContent = "abcdefghijklmnopqrstuvwxyz";
-        Question question = saveQuestion(testTitle, testContent, author.getId());
+        Question question = createQuestion(testTitle, testContent, author.getId());
         Long questionId = question.getId();
-        saveQuestionRecommend(RecommendType.DOWN, questionId, user2.getId());
-        saveQuestionRecommend(RecommendType.DOWN, questionId, user3.getId());
+        createQuestionRecommend(RecommendType.DOWN, questionId, user2.getId());
+        createQuestionRecommend(RecommendType.DOWN, questionId, user3.getId());
 
         // when
         Optional<QuestionDetailDto> result = adapter.findQuestionDetailById(questionId);
@@ -60,11 +60,11 @@ public class QuestionRepositoryAdapterJpaTest extends MysqlJpaTestSupport {
     void findQuestionsWithPreviewForLatest_질문_최신순_정렬() {
 
         // given
-        User author1 = saveUser("test1@test.com", SocialType.GOOGLE);
+        User author1 = createUser("test1@test.com", SocialType.GOOGLE);
 
-        saveQuestion("testTitle1", "a".repeat(30), author1.getId());
-        saveQuestion("testTitle2", "b".repeat(80), author1.getId());
-        saveQuestion("testTitle3", "c".repeat(150), author1.getId());
+        createQuestion("testTitle1", "a".repeat(30), author1.getId());
+        createQuestion("testTitle2", "b".repeat(80), author1.getId());
+        createQuestion("testTitle3", "c".repeat(150), author1.getId());
 
         PageRequest pageable = PageRequest.of(0, 10, Sort.by(
                 Sort.Order.desc("createdDate"),
@@ -92,26 +92,26 @@ public class QuestionRepositoryAdapterJpaTest extends MysqlJpaTestSupport {
     void findQuestionsWithPreviewForRecommend_질문_추천순_정렬() {
 
         // given
-        User author = saveUser("test1@test.com", SocialType.GOOGLE);
-        User user2 = saveUser("test2@test.com", SocialType.GOOGLE);
-        User user3 = saveUser("test3@test.com", SocialType.GOOGLE);
-        User user4 = saveUser("test4@test.com", SocialType.GOOGLE);
+        User author = createUser("test1@test.com", SocialType.GOOGLE);
+        User user2 = createUser("test2@test.com", SocialType.GOOGLE);
+        User user3 = createUser("test3@test.com", SocialType.GOOGLE);
+        User user4 = createUser("test4@test.com", SocialType.GOOGLE);
 
-        Question question1 = saveQuestion("second", "a".repeat(30), author.getId());
-        Question question2 = saveQuestion("first", "b".repeat(80), author.getId());
-        Question question3 = saveQuestion("third", "c".repeat(150), author.getId());
+        Question question1 = createQuestion("second", "a".repeat(30), author.getId());
+        Question question2 = createQuestion("first", "b".repeat(80), author.getId());
+        Question question3 = createQuestion("third", "c".repeat(150), author.getId());
 
         // question1 - 2점
-        saveQuestionRecommend(RecommendType.UP, question1.getId(), user2.getId());
-        saveQuestionRecommend(RecommendType.UP, question1.getId(), user3.getId());
+        createQuestionRecommend(RecommendType.UP, question1.getId(), user2.getId());
+        createQuestionRecommend(RecommendType.UP, question1.getId(), user3.getId());
 
         // question2 - 3점
-        saveQuestionRecommend(RecommendType.UP, question2.getId(), user2.getId());
-        saveQuestionRecommend(RecommendType.UP, question2.getId(), user3.getId());
-        saveQuestionRecommend(RecommendType.UP, question2.getId(), user4.getId());
+        createQuestionRecommend(RecommendType.UP, question2.getId(), user2.getId());
+        createQuestionRecommend(RecommendType.UP, question2.getId(), user3.getId());
+        createQuestionRecommend(RecommendType.UP, question2.getId(), user4.getId());
 
         // question3 - -1점
-        saveQuestionRecommend(RecommendType.DOWN, question3.getId(), user2.getId());
+        createQuestionRecommend(RecommendType.DOWN, question3.getId(), user2.getId());
 
         PageRequest pageable = PageRequest.of(0, 10);
 

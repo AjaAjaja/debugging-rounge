@@ -1,10 +1,15 @@
 spring:
+  cloud:
+    compatibility-verifier:
+      enabled: false  # 테스트 환경에서 Spring Cloud 호환성 체크 비활성화
+  
   flyway:
-    enabled: false
+    enabled: true  # Flyway를 활성화하여 ON DELETE CASCADE 포함된 실제 스키마 사용
+    clean-disabled: false  # 테스트 환경에서 clean 허용
   
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate  # Flyway가 스키마를 관리하므로 validate로 변경
     properties:
       hibernate:
         format_sql: false
@@ -25,9 +30,29 @@ spring:
     basename: messages/errors
 
 jwt:
+  token:
+    access-expiration: 30m
+    refresh-expiration: 14d
+    renew-threshold: 24h
+    pepper: dGVzdC1wZXBwZXItZm9yLWp3dC10b2tlbi1oYXNoaW5nLWluLXRlc3QtZW52aXJvbm1lbnQ=  # Base64: "test-pepper-for-jwt-token-hashing-in-test-environment"
+  
   cookie:
+    name: refreshToken
     path: /api/auth
+    max-age: 14d
+    same-site: None
     secure: false  # 테스트 환경에서는 HTTP 허용
+    http-only: true
+
+aws:
+  s3:
+    bucket-name: debugging-rounge-bucket
+    region: ap-northeast-2
+    base-url: https://debugging-rounge-bucket.s3.ap-northeast-2.amazonaws.com
+    access-key-id: AWS_ACCESS_KEY_ID
+    secret-key: AWS_SECRET_ACCESS_KEY
+  image:
+    allowed-domains: debugging-rounge-bucket.s3.ap-northeast-2.amazonaws.com
 
 logging:
   level:
