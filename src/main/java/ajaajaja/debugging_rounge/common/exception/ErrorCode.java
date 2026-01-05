@@ -36,7 +36,8 @@ public enum ErrorCode {
     IMAGE_URL_INVALID_FORMAT("error.image.url.invalid_format", HttpStatus.BAD_REQUEST),
     IMAGE_URL_UNSUPPORTED_PROTOCOL("error.image.url.unsupported_protocol", HttpStatus.BAD_REQUEST),
     IMAGE_URL_DOMAIN_NOT_ALLOWED("error.image.url.domain_not_allowed", HttpStatus.BAD_REQUEST),
-    IMAGE_URL_COUNT_EXCEEDED("error.image.url.count_exceeded", HttpStatus.BAD_REQUEST);
+    IMAGE_URL_COUNT_EXCEEDED("error.image.url.count_exceeded", HttpStatus.BAD_REQUEST),
+    IMAGE_DELETE_EVENT_EMPTY("error.image.delete_event.empty", HttpStatus.BAD_REQUEST);
 
 
 

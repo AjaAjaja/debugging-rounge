@@ -36,10 +36,10 @@ class AnswerRecommendRepositoryAdapterTest extends MysqlJpaTestSupport {
         Long userId2 = 102L;
         Long userId3 = 103L;
 
-        Question question = saveQuestion("testTitle", "abcdefghijklmn", authorId);
-        Answer answer1 = saveAnswer("testContent1", question.getId(), userId1);
-        Answer answer2 = saveAnswer("testContent2", question.getId(), userId2);
-        Answer answer3 = saveAnswer("testContent3", question.getId(), userId3);
+        Question question = createQuestion("testTitle", "abcdefghijklmn", authorId);
+        Answer answer1 = createAnswer("testContent1", question.getId(), userId1);
+        Answer answer2 = createAnswer("testContent2", question.getId(), userId2);
+        Answer answer3 = createAnswer("testContent3", question.getId(), userId3);
         Long answer1Id = answer1.getId();
         Long answer2Id = answer2.getId();
         Long answer3Id = answer3.getId();
@@ -47,17 +47,17 @@ class AnswerRecommendRepositoryAdapterTest extends MysqlJpaTestSupport {
         List<Long> answerIds = List.of(answer1Id, answer2Id, answer3Id);
 
         // answer1: +3점
-        saveAnswerRecommend(RecommendType.UP, answer1Id, userId1); // user1: Type.UP
-        saveAnswerRecommend(RecommendType.UP, answer1Id, userId2);
-        saveAnswerRecommend(RecommendType.UP, answer1Id, userId3);
+        createAnswerRecommend(RecommendType.UP, answer1Id, userId1); // user1: Type.UP
+        createAnswerRecommend(RecommendType.UP, answer1Id, userId2);
+        createAnswerRecommend(RecommendType.UP, answer1Id, userId3);
 
         // answer2: -2점
-        saveAnswerRecommend(RecommendType.DOWN, answer2Id, userId1); // user1: Type.DOWN
-        saveAnswerRecommend(RecommendType.DOWN, answer2Id, userId2);
+        createAnswerRecommend(RecommendType.DOWN, answer2Id, userId1); // user1: Type.DOWN
+        createAnswerRecommend(RecommendType.DOWN, answer2Id, userId2);
 
         // answer3: 0점
-        saveAnswerRecommend(RecommendType.UP, answer3Id, userId1); // user1: Type.NONE
-        saveAnswerRecommend(RecommendType.DOWN, answer3Id, userId2);
+        createAnswerRecommend(RecommendType.UP, answer3Id, userId1); // user1: Type.NONE
+        createAnswerRecommend(RecommendType.DOWN, answer3Id, userId2);
 
         // when
         List<AnswerRecommendScoreAndMyRecommendTypeDto> result = adapter.findRecommendScoreAndMyType(answerIds, userId1);
@@ -95,15 +95,15 @@ class AnswerRecommendRepositoryAdapterTest extends MysqlJpaTestSupport {
             Long userId3 = 103L;
             Long userId4 = 104L;
 
-            Question question = saveQuestion("testTitle", "abcdefghijklmn", authorId);
-            Answer answer = saveAnswer("testContent1", question.getId(), userId1);
+            Question question = createQuestion("testTitle", "abcdefghijklmn", authorId);
+            Answer answer = createAnswer("testContent1", question.getId(), userId1);
             Long answerId = answer.getId();
 
             // +2점
-            saveAnswerRecommend(RecommendType.UP, answerId, userId1); // +1
-            saveAnswerRecommend(RecommendType.UP, answerId, userId2); // +1
-            saveAnswerRecommend(RecommendType.DOWN, answerId, userId3); // -1
-            saveAnswerRecommend(RecommendType.UP, answerId, userId4); // +1
+            createAnswerRecommend(RecommendType.UP, answerId, userId1); // +1
+            createAnswerRecommend(RecommendType.UP, answerId, userId2); // +1
+            createAnswerRecommend(RecommendType.DOWN, answerId, userId3); // -1
+            createAnswerRecommend(RecommendType.UP, answerId, userId4); // +1
 
             // when
             Integer result = adapter.findRecommendScoreByAnswerId(answerId);
@@ -122,20 +122,20 @@ class AnswerRecommendRepositoryAdapterTest extends MysqlJpaTestSupport {
             Long userId3 = 103L;
             Long userId4 = 104L;
 
-            Question question = saveQuestion("testTitle", "abcdefghijklmn", authorId);
-            Answer answer = saveAnswer("testContent1", question.getId(), userId1);
-            Answer anotherAnswer = saveAnswer("testContent2", question.getId(), userId1);
+            Question question = createQuestion("testTitle", "abcdefghijklmn", authorId);
+            Answer answer = createAnswer("testContent1", question.getId(), userId1);
+            Answer anotherAnswer = createAnswer("testContent2", question.getId(), userId1);
             Long answerId = answer.getId();
             Long anotherAnswerId = anotherAnswer.getId();
 
             // +2점
-            saveAnswerRecommend(RecommendType.UP, answerId, userId1); // +1
-            saveAnswerRecommend(RecommendType.UP, answerId, userId2); // +1
-            saveAnswerRecommend(RecommendType.DOWN, answerId, userId3); // -1
-            saveAnswerRecommend(RecommendType.UP, answerId, userId4); // +1
+            createAnswerRecommend(RecommendType.UP, answerId, userId1); // +1
+            createAnswerRecommend(RecommendType.UP, answerId, userId2); // +1
+            createAnswerRecommend(RecommendType.DOWN, answerId, userId3); // -1
+            createAnswerRecommend(RecommendType.UP, answerId, userId4); // +1
 
             // 아래 점수는 포함하지 않는다.
-            saveAnswerRecommend(RecommendType.UP, anotherAnswerId, userId2); // +1
+            createAnswerRecommend(RecommendType.UP, anotherAnswerId, userId2); // +1
 
             // when
             Integer result = adapter.findRecommendScoreByAnswerId(answerId);
@@ -154,8 +154,8 @@ class AnswerRecommendRepositoryAdapterTest extends MysqlJpaTestSupport {
             Long userId3 = 103L;
             Long userId4 = 104L;
 
-            Question question = saveQuestion("testTitle", "abcdefghijklmn", authorId);
-            Answer answer = saveAnswer("testContent1", question.getId(), userId1);
+            Question question = createQuestion("testTitle", "abcdefghijklmn", authorId);
+            Answer answer = createAnswer("testContent1", question.getId(), userId1);
             Long answerId = answer.getId();
 
             // when
@@ -177,8 +177,8 @@ class AnswerRecommendRepositoryAdapterTest extends MysqlJpaTestSupport {
             Long authorId = 1L;
             Long userId = 101L;
 
-            Question question = saveQuestion("testTitle", "abcdefghijklmn", authorId);
-            Answer answer = saveAnswer("testContent1", question.getId(), userId);
+            Question question = createQuestion("testTitle", "abcdefghijklmn", authorId);
+            Answer answer = createAnswer("testContent1", question.getId(), userId);
             Long answerId = answer.getId();
             RecommendType recommendType = RecommendType.DOWN;
 
@@ -204,11 +204,11 @@ class AnswerRecommendRepositoryAdapterTest extends MysqlJpaTestSupport {
             Long authorId = 1L;
             Long userId = 101L;
 
-            Question question = saveQuestion("testTitle", "abcdefghijklmn", authorId);
-            Answer answer = saveAnswer("testContent1", question.getId(), userId);
+            Question question = createQuestion("testTitle", "abcdefghijklmn", authorId);
+            Answer answer = createAnswer("testContent1", question.getId(), userId);
             Long answerId = answer.getId();
 
-            saveAnswerRecommend(RecommendType.UP, answerId, userId);
+            createAnswerRecommend(RecommendType.UP, answerId, userId);
 
             // when
             adapter.upsert(answerId, userId, RecommendType.DOWN.name());

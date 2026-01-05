@@ -58,6 +58,9 @@ jwt:
     secure: true
     http-only: true
 
+frontend:
+  base-url: http://localhost:3000
+
 aws:
   s3:
     bucket-name: debugging-rounge-bucket
